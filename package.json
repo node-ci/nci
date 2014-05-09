@@ -1,0 +1,35 @@
+{
+  "name": "nci",
+  "version": "0.1.0-alpha",
+  "description": "Continuous integration server written in node.js",
+  "bin": {
+    "nci": "bin/nci"
+  },
+  "scripts": {
+    "test": "mocha --bail --reporter=spec test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/okv/nci.git"
+  },
+  "keywords": [
+    "continuous",
+    "integration",
+    "server",
+    "ci",
+    "build"
+  ],
+  "author": "Oleg Korobenko <oleg.korobenko@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/okv/nci/issues"
+  },
+  "homepage": "https://github.com/okv/nci",
+  "dependencies": {
+    "twostep": "0.4.1"
+  },
+  "devDependencies": {
+    "expect.js": "0.3.1",
+    "mocha": "1.18.2"
+  }
+}
