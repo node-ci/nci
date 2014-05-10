@@ -3,7 +3,8 @@
 var expect = require('expect.js'),
 	path = require('path'),
 	fs = require('fs'),
-	createScm = require('../lib/scm').createScm;
+	createScm = require('../lib/scm').createScm,
+	SpawnCommand = require('../lib/command/spawn').SpawnCommand;
 
 
 ['mercurial'].forEach(function(type) {
@@ -12,10 +13,14 @@ var expect = require('expect.js'),
 			repositoryName = 'test-repository',
 			repositoryPath = path.join(path.join(__dirname, 'repos'), repositoryName);
 
+		function rmdir(dir, callback) {
+			new SpawnCommand().exec({cmd: 'rm', args: ['-R', dir]}, callback);
+		}
+
 		it('remove test repository dir if it exists', function(done) {
 			if (fs.exists(repositoryPath, function(isExists) {
 				if (isExists) {
-					scm._exec('rm', ['-R', repositoryPath], done);
+					rmdir(repositoryPath, done);
 				} else {
 					done();
 				}
@@ -101,7 +106,7 @@ var expect = require('expect.js'),
 		});
 
 		it('remove test repository dir', function(done) {
-			scm._exec('rm', ['-R', repositoryPath], done);
+			rmdir(repositoryPath, done);
 		});
 	});
 });
