@@ -22,9 +22,13 @@ var expect = require('expect.js'),
 			}));
 		});
 
-		var scm = createScm({
-			type: type,
-			src: path.join(__dirname, 'repos', type)
+		var scm;
+
+		it('create scm instance attached to new repository without errors', function() {
+			scm = createScm({
+				type: type,
+				repository: path.join(__dirname, 'repos', type)
+			});
 		});
 
 		var currentRev = data.rev0.id;
@@ -77,6 +81,21 @@ var expect = require('expect.js'),
 			scm.getId(function(err, id) {
 				if (err) return done(err);
 				expect(id).equal(data.rev2.id);
+				done();
+			});
+		});
+
+		it('create scm instance attached to existing `cwd` without errors', function() {
+			scm = createScm({type: type, cwd: repositoryPath});
+		});
+
+		it('expect repository log from rev0 to default revision equals to ' +
+			'rev1 and rev2 (in reverse order)', function(done) {
+			scm.getChanges(data.rev0.id, scm.defaultRev, function(err, changes) {
+				if (err) return done(err);
+				expect(changes).ok();
+				expect(changes).length(2);
+				expect(changes).eql([data.rev2, data.rev1]);
 				done();
 			});
 		});
