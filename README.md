@@ -14,6 +14,7 @@ data streams (from shell commands, etc))
 * Tasks relations can be set easily (runAfter, runBefore, prevents, prevented)
 it also can be attached to the specific status or branch (auto deploy could a
 separate task in this case)
+* Simple API for triggering build on scm hook
 * Build can be continued from the current failed step
 * Failing of build step can be prevented if special condition for the build step
 is defined and matched (e.g. ui tests timeout error or internet connection
