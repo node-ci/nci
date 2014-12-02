@@ -14,7 +14,7 @@ var expect = require('expect.js'),
 			repositoryPath = path.join(path.join(__dirname, 'repos'), repositoryName);
 
 		function rmdir(dir, callback) {
-			new SpawnCommand().exec({cmd: 'rm', args: ['-R', dir]}, callback);
+			new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
 		}
 
 		it('remove test repository dir if it exists', function(done) {
