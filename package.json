@@ -6,7 +6,7 @@
     "nci": "bin/nci"
   },
   "scripts": {
-    "test": "mocha --bail --reporter=spec test"
+    "test": "mocha --bail --reporter=spec test/index"
   },
   "repository": {
     "type": "git",
