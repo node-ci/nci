@@ -4,7 +4,7 @@ var expect = require('expect.js'),
 	path = require('path'),
 	fs = require('fs'),
 	createScm = require('../lib/scm').createScm,
-	SpawnCommand = require('../lib/command/spawn').SpawnCommand;
+	SpawnCommand = require('../lib/command/spawn').Command;
 
 
 ['mercurial'].forEach(function(type) {
