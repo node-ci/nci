@@ -8,7 +8,7 @@ describe('Shell command', function() {
 	var shellCommand;
 	it('Should be created without errors', function() {
 		shellCommand = new ShellCommand({
-			isEmit: true
+			emitOut: true
 		});
 	});
 
