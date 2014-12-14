@@ -16,16 +16,36 @@ describe('Shell command', function() {
 		expect(shellCommand.shell).equal('/bin/sh');
 	});
 
+	var collectData = function(result, field) {
+		return function(data) {
+			result[field] += data;
+		};
+	};
+
+	var std = {out: '', err: ''};
 	it('echo "Hello world" should be done', function(done) {
-		var stdout = '';
-		shellCommand.on('stdout', function(data) {
-			stdout += data;
-		});
-		shellCommand.run({cmd: 'echo "Hello world"'}, function(err) {
+		shellCommand.on('stdout', collectData(std, 'out'));
+		shellCommand.on('stderr', collectData(std, 'err'));
+		shellCommand.run({cmd: 'echo "Hello world1"'}, function(err) {
 			expect(err).not.ok();
-			expect(stdout).equal('Hello world\n');
+			expect(std.err).equal('');
+			expect(std.out).equal('Hello world1\n');
 			done();
 		});
 	});
 
+	it('echo1 "Hello world" should fails', function(done) {
+		std.out = '';
+		std.err = '';
+		shellCommand.run({cmd: 'echo1 "Hello world"'}, function(err) {
+			expect(err).ok();
+			expect(err).an(Error);
+			expect(err.message).equal(
+				'Spawned command outputs to stderr: /bin/sh: 1: echo1: not found\n'
+			);
+			expect(std.err).equal('');
+			expect(std.out).equal('');
+			done();
+		});
+	});
 });
