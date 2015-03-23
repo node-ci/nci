@@ -30,22 +30,23 @@ var expect = require('expect.js'),
 		it('instance should be created without errors', function() {
 			executor = createExecutor({
 				type: type,
-				cwd: workspacePath
+				project: {
+					dir: __dirname,
+					scm: {
+						type: 'mercurial',
+						repository: path.join(__dirname, 'repos', 'mercurial'),
+						rev: 'default'
+					},
+					steps: [
+						{type: 'shell', cmd: 'echo 1'},
+						{type: 'shell', cmd: 'echo 2'}
+					]
+				}
 			});
 		});
 
 		it('should run', function(done) {
-			executor.run({
-				scm: {
-					type: 'mercurial',
-					repository: path.join(__dirname, 'repos', 'mercurial'),
-					rev: 'default'
-				},
-				steps: [
-					{type: 'shell', cmd: 'echo 1'},
-					{type: 'shell', cmd: 'echo 2'}
-				]
-			}, done);
+			executor.run({}, done);
 		});
 	});
 });
