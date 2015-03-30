@@ -1,5 +1,6 @@
 'use strict';
 
 require('./commands');
-require('./scm')
-require('./executor')
+require('./scm');
+require('./executor');
+require('./node');

@@ -32,6 +32,7 @@ var expect = require('expect.js'),
 				type: type,
 				project: {
 					dir: __dirname,
+					name: 'test project',
 					scm: {
 						type: 'mercurial',
 						repository: path.join(__dirname, 'repos', 'mercurial'),
