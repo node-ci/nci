@@ -1,0 +1,24 @@
+{
+  "name": "nci",
+  "version": "0.0.0",
+  "homepage": "https://github.com/okv/nci",
+  "authors": [],
+  "dependencies": {
+    "underscore": "1.8.2",
+    "moment": "2.9.0",
+    "react": "~0.13.1",
+    "requirejs": "~2.1.17"
+  },
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components/",
+    "test",
+    "tests"
+  ]
+}
