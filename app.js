@@ -10,7 +10,6 @@ var app = http.createServer(function(req, res, next) {
 	if (req.url.indexOf('/data.io.js') === -1) {
 		if (req.url.indexOf('/js') === -1) {
 			// Compile a function
-			console.log(1234);
 			var index = jade.compileFile(__dirname + '/views/index.jade');
 			res.write(index());
 			res.end();
