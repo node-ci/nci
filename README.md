@@ -16,6 +16,9 @@ it also can be attached to the specific branch or commit (e.g. release commits
 can trigger auto deploy tasks)
 * Ability to build every or specified commits (even if they pushed in a bunch)
 * Simple API for triggering build on scm hook
+* Project dependencies (all projects specified at dependencies should be built
+before build current project) and optional start for all projects after ci
+restart
 * Build can be continued from the current failed step
 * Failing of build step can be prevented if special condition for the build step
 is defined and matched (e.g. ui tests timeout error or internet connection
