@@ -6,8 +6,8 @@
   "dependencies": {
     "underscore": "1.8.2",
     "moment": "2.9.0",
-    "react": "~0.13.1",
-    "requirejs": "~2.1.17"
+    "react": "0.13.1",
+    "requirejs": "2.1.17"
   },
   "moduleType": [
     "amd"
