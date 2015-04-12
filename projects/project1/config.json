@@ -1,0 +1,12 @@
+{
+	"name": "project1",
+	"scm": {
+		"type": "mercurial",
+		"repository": "./test/repos/mercurial",
+		"rev": "default"
+	},
+	"steps": [
+		{"type": "shell", "cmd": "echo 1 > 1.txt"},
+		{"type": "shell", "cmd": "echo 2 > 2.txt"}
+	]
+}
