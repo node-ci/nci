@@ -9,14 +9,16 @@ var projects,
 project.loadAll('projects', function(err, loadedProjects) {
 	if (err) throw err;
 	projects = loadedProjects;
-	projectConfigs = _(projects).pluck('config');
-	console.log('Loaded projects: ', _(projectConfigs).pluck('name'));
+	console.log(
+		'Loaded projects: ',
+		_(projects).chain().pluck('config').pluck('name').value()
+	);
 });
 
 module.exports = function(data) {
 	var resource = data.resource('projects');
 
 	resource.use('read', function(req, res) {
-		res.send(projectConfigs);
+		res.send(_(projects).pluck('config'));
 	});
 };
