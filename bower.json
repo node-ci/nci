@@ -6,7 +6,7 @@
   "dependencies": {
     "underscore": "1.8.2",
     "moment": "2.9.0",
-    "react": "0.13.1",
+    "react": "0.13.2",
     "requirejs": "2.1.17",
     "jquery": "1.10.2"
   },
