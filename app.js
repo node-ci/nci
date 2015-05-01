@@ -5,7 +5,7 @@ var nodeStatic = require('node-static');
 var jade = require('jade');
 
 var staticServer = new nodeStatic.Server('./static');
-var app = http.createServer(function(req, res, next) {
+var server = http.createServer(function(req, res, next) {
 	// serve index for all app pages
 	if (req.url.indexOf('/data.io.js') === -1) {
 		if (req.url.indexOf('/js') === -1) {
@@ -19,9 +19,14 @@ var app = http.createServer(function(req, res, next) {
 	}
 });
 
-var io = require('socket.io')(app);
-var data = require('data.io')(io);
+var socketio = require('socket.io')(server);
+var dataio = require('data.io')(socketio);
 
-require('./resources')(data);
+var app = {
+	server: server,
+	dataio: dataio
+};
 
-app.listen(3000);
+require('./resources')(app);
+
+app.server.listen(3000);

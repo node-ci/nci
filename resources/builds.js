@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(data) {
+module.exports = function(app) {
 	var builds = [{
 		project: {
 			name: 'foo'
@@ -11,7 +11,7 @@ module.exports = function(data) {
 		status: 'inprogress'
 	}];
 
-	var resource = data.resource('builds');
+	var resource = app.dataio.resource('builds');
 
 	resource.use('readAll', function(req, res) {
 		console.log('readAll');
