@@ -20,7 +20,7 @@ var server = http.createServer(function(req, res, next) {
 });
 
 var socketio = require('socket.io')(server);
-var dataio = require('data.io')(socketio);
+var dataio = require('./dataio')(socketio);
 
 var app = {
 	server: server,

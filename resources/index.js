@@ -2,8 +2,8 @@
 
 var _ = require('underscore');
 
-module.exports = function(data) {
+module.exports = function(app) {
 	_(['builds', 'projects']).each(function(resource) {
-		require('./' + resource)(data);
+		require('./' + resource)(app);
 	});
 };
