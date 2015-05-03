@@ -28,6 +28,16 @@ define([
 	});
 
 	builds.subscribe(function(data, action) {
-		$('#content').append(action.action + ': ' + JSON.stringify(data));
+		$('#content').append(
+			action.action + ': ' + JSON.stringify(data) + '<br>'
+		);
+		if (action.action === 'create') {
+			var name = 'build' + data.id;
+			connect.resource(name).subscribe(function(data, action) {
+				$('#content').append(
+					'<br>' + name + ': ' + data + '<br>'
+				);
+			});
+		}
 	});
 });

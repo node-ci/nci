@@ -19,16 +19,28 @@ project.loadAll('projects', function(err, loadedProjects) {
 });
 
 module.exports = function(app) {
+	var buildsSequnce = 0;
 
 	var distributor = new Distributor({
 		nodes: [{type: 'local', maxExecutorsCount: 1}],
 		onBuildUpdate: function(build, callback) {
 			var buildsResource = app.dataio.resource('builds');
+			if (build.status === 'waiting') {
+				build.id = ++buildsSequnce;
+				// create resource for build data
+				var buildDataResource = app.dataio.resource('build' + build.id);
+				buildDataResource.on('connection', function(client) {
+					client.emit('sync', 'data', '< collected data >');
+				});
+			}
 			buildsResource.clientEmitSync(
 				build.status === 'waiting' ? 'create' : 'update',
 				build
 			);
 			callback(null, build);
+		},
+		onBuildData: function(build, data) {
+			app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 		}
 	});
 
