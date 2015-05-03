@@ -1,33 +1,36 @@
 'use strict';
 
 define([
-	'underscore', 'react', 'socketio', 'dataio', 'jquery'
+	'react', 'templates/app/index', 'app/components/index',
+	'app/actions/project'
 ], function(
-	_, React, socketio, dataio, $
+	React, template, Components, ProjectActions
 ) {
-	var connect = dataio(socketio.connect());
+	//var projectsTemplate = _($('#projects-template').html()).template();
+	//$('#content').on('click', '.js-projects .js-run', function() {
+		//var projectName = $(this).parent('.js-project').data('name');
+		//projects.sync('run', {projectName: projectName}, function(err, result) {
+			//$('#content').append(
+				//(err && err.message)
+			//);
+		//});
+	//});
 
-	var projects = connect.resource('projects');
-	var builds = connect.resource('builds');
+	//projects.sync('read', function(err, projects) {
+		//console.log('read complete');
+		////$('#content').html(
+			////(err && err.message) ||
+			////projectsTemplate({projects: projects})
+		////);
+	//});
 
-	var projectsTemplate = _($('#projects-template').html()).template();
-	$('#content').on('click', '.js-projects .js-run', function() {
-		var projectName = $(this).parent('.js-project').data('name');
-		projects.sync('run', {projectName: projectName}, function(err, result) {
-			$('#content').append(
-				(err && err.message)
-			);
-		});
-	});
+	//builds.subscribe(function(data, action) {
+		//$('#content').append(action.action + ': ' + JSON.stringify(data));
+	//});
 
-	projects.sync('read', function(err, projects) {
-		$('#content').html(
-			(err && err.message) ||
-			projectsTemplate({projects: projects})
-		);
-	});
+	React.render(template({
+		App: Components.App
+	}), document.getElementById('react-content'));
 
-	builds.subscribe(function(data, action) {
-		$('#content').append(action.action + ': ' + JSON.stringify(data));
-	});
+	ProjectActions.readAll();
 });
