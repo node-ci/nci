@@ -25,7 +25,7 @@ module.exports = function(app) {
 		nodes: [{type: 'local', maxExecutorsCount: 1}],
 		onBuildUpdate: function(build, callback) {
 			var buildsResource = app.dataio.resource('builds');
-			if (build.status === 'waiting') {
+			if (build.status === 'queued') {
 				build.id = ++buildsSequnce;
 				// create resource for build data
 				var buildDataResource = app.dataio.resource('build' + build.id);
@@ -34,7 +34,7 @@ module.exports = function(app) {
 				});
 			}
 			buildsResource.clientEmitSync(
-				build.status === 'waiting' ? 'create' : 'update',
+				build.status === 'queued' ? 'create' : 'update',
 				build
 			);
 			callback(null, build);

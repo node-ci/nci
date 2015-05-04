@@ -43,7 +43,7 @@ describe('Distributor', function() {
 		it('instance should be created without errors', function() {
 			var number = 1;
 			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'waiting'}},
+				1: {queue: {length: 0}, build: {status: 'queued'}},
 				2: {queue: {length: 1}, build: {status: 'in-progress'}},
 				3: {queue: {length: 0}, build: {status: 'done'}},
 				4: 'Should never happend'
@@ -92,7 +92,7 @@ describe('Distributor', function() {
 		it('instance should be created without errors', function() {
 			var number = 1;
 			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'waiting'}},
+				1: {queue: {length: 0}, build: {status: 'queued'}},
 				2: {queue: {length: 1}, build: {status: 'in-progress'}},
 				3: {
 					queue: {length: 0},
