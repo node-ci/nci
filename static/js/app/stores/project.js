@@ -5,15 +5,12 @@ define([
 ], function(Reflux, ProjectActions, resources) {
 	var Store = Reflux.createStore({
 		init: function() {
-			this.listenTo(ProjectActions.load, this.load);
 			this.listenTo(ProjectActions.readAll, this.readAll);
 		},
-		load: function(items) {
-			this.trigger(items);
-		},
 		readAll: function() {
+			var self = this;
 			resources.projects.sync('read', function(err, projects) {
-				ProjectActions.load(projects)
+				self.trigger(projects);
 			});
 		}
 	});

@@ -1,4 +1,4 @@
 div
 	h2 projects list
-	each project in items
-		Item(item=project)
+	each project, index in items
+		Item(item=project, key=project.name)
