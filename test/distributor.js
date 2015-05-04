@@ -2,7 +2,8 @@
 
 var Distributor = require('../lib/distributor').Distributor,
 	Node = require('../lib/node').Node,
-	expect = require('expect.js');
+	expect = require('expect.js'),
+	EventEmitter = require('events').EventEmitter;
 
 
 describe('Distributor', function() {
@@ -13,7 +14,9 @@ describe('Distributor', function() {
 		return function(params) {
 			var node = new Node(params);
 			node._createExecutor = function() {
-				return {run: executorRun};
+				var executor = new EventEmitter();
+				executor.run = executorRun;
+				return executor;
 			};
 			return node;
 		};
