@@ -1,7 +1,12 @@
 doctype html
 html
 	head
-		title test
+		title nci
+
+		style.
+			.js-run, .js-show-console { cursor: pointer; }
+			body { font-family: monospace; font-size: 16px; }
+
 		script(data-main="/js/main" src="/js/libs/requirejs/require.js")
 		script(type="text/javascript").
 			require(['app/app']);
@@ -13,7 +18,7 @@ html
 			|	 <% _(projects).each(function(project) { %>
 			|	 	<div class="js-project" data-name="<%= project.name %>">
 			|	 		<span><%= project.name %></span>
-			|	 		<span class="js-run">&rarr;</span>
+			|	 		<span class="js-run">&#8658;</span>
 			|	 	</div>
 			|	 <% }); %>
 			| </div>
@@ -25,7 +30,7 @@ html
 			|	 		<span>#<%= build.id %></span>
 			|	 		<span><%= build.project.name %></span>
 			|	 		<span><%= build.status %></span>
-			|	 		<span class="js-show-console">&rarr;</span>
+			|	 		<span class="js-show-console">&#8631;</span>
 			|	 	</div>
 			|	 <% }); %>
 			| </div>
