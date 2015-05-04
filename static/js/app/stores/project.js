@@ -13,8 +13,6 @@ define([
 		},
 		readAll: function() {
 			resources.projects.sync('read', function(err, projects) {
-				console.log(err);
-				console.log(projects);
 				ProjectActions.load(projects)
 			});
 		}
