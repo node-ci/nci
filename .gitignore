@@ -1,4 +1,5 @@
 node_modules
 test/workspace
 static/js/libs
+static/js/templates
 projects/**/workspace
