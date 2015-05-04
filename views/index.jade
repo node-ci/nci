@@ -7,8 +7,6 @@ html
 			require(['app/app']);
 
 	body
-		h1 hello world
-
 
 		script#projects-template(type="text/template")
 			| <div class="js-projects">
@@ -20,5 +18,25 @@ html
 			|	 <% }); %>
 			| </div>
 
+		script#builds-template(type="text/template")
+			| <div class="js-builds">
+			|	 <% _(builds).each(function(build) { %>
+			|	 	<div class="js-build" data-id="<%= build.id %>">
+			|	 		<span>#<%= build.id %></span>
+			|	 		<span><%= build.project.name %></span>
+			|	 		<span><%= build.status %></span>
+			|	 		<span class="js-show-console">&rarr;</span>
+			|	 	</div>
+			|	 <% }); %>
+			| </div>
+
+		h2 Projects
+		#projects
+
+		h2 Builds
+		#builds
+
+		h2 Build console
+		#build-console
 
 		#content

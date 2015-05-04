@@ -7,8 +7,10 @@
 	},
 	"steps": [
 		{"type": "shell", "cmd": "echo \"hello, cur dir is `pwd`\""},
-		{"type": "shell", "cmd": "sleep 3"},
+		{"type": "shell", "cmd": "sleep 4"},
 		{"type": "shell", "cmd": "echo 1 > 1.txt"},
-		{"type": "shell", "cmd": "echo 2 > 2.txt"}
+		{"type": "shell", "cmd": "sleep 4"},
+		{"type": "shell", "cmd": "echo 2 > 2.txt"},
+		{"type": "shell", "cmd": "cat 1.txt 2.txt"}
 	]
 }
