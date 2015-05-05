@@ -5,7 +5,7 @@ define(['_dataio'], function(dataio) {
 		var connect = dataio(socket);
 
 		/*
-		 * Extend resource
+		 * Extend Resource
 		 */
 		var resource = connect.resource('__someResource__'),
 			resourcePrototype = Object.getPrototypeOf(resource);

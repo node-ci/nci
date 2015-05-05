@@ -30,6 +30,7 @@ html
 			|	 		<span>#<%= build.id %></span>
 			|	 		<span><%= build.project.name %></span>
 			|	 		<span><%= build.status %></span>
+			|	 		<span><%= build.currentStep && build.status === 'in-progress' ? '(' + build.currentStep + ')' : '' %></span>
 			|	 		<span class="js-show-console">&#8631;</span>
 			|	 	</div>
 			|	 <% }); %>
