@@ -36,6 +36,7 @@ define([
 		$('#build-console').prev('h2').html('Build #' + buildId + ' console');
 		$('#build-console').html('');
 
+		connect.resource(resourceName).unsubscribeAll();
 		connect.resource(resourceName).subscribe(function(data) {
 			$('#build-console').append('<div>' + data + '</div>');
 		});

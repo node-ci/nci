@@ -5,7 +5,7 @@ require.config({
 	paths: {
 		underscore: 'libs/underscore/underscore',
 		react: 'libs/react/react-with-addons',
-		dataio: '/data.io',
+		_dataio: '/data.io',
 		socketio: '/socket.io/socket.io.js',
 		jquery: 'libs/jquery/jquery'
 	}
