@@ -6,7 +6,7 @@
 		"rev": "default"
 	},
 	"steps": [
-		{"type": "shell", "cmd": "echo \"hello, cur dir is `pwd`\""},
+		{"type": "shell", "cmd": "sleep 2 && echo \"hello, cur dir is `pwd`\""},
 		{"type": "shell", "name": "sleep", "cmd": "sleep 4"},
 		{"type": "shell", "cmd": "echo 1 > 1.txt"},
 		{"type": "shell", "cmd": "sleep 4"},
