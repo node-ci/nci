@@ -1,12 +1,16 @@
 'use strict';
 
 define([
-	'react', 'templates/app/components/projects/item'
-], function(React, template) {
+	'react', 'app/actions/project', 'templates/app/components/projects/item'
+], function(React, ProjectActions, template) {
 	var Component = React.createClass({
+		onProjectSelect: function(projectName) {
+			ProjectActions.run(projectName)
+		},
 		render: function() {
 			return template({
-				item: this.props.item
+				item: this.props.item,
+				onProjectSelect: this.onProjectSelect
 			});
 		}
 	});

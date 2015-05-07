@@ -3,13 +3,18 @@
 define([
 	'reflux', 'app/actions/project', 'app/resources'
 ], function(Reflux, ProjectActions, resources) {
+	var resource = resources.projects;
+
 	var Store = Reflux.createStore({
-		init: function() {
-			this.listenTo(ProjectActions.readAll, this.readAll);
+		listenables: ProjectActions,
+		onRun: function(projectName) {
+			resource.sync('run', {projectName: projectName}, function(err, result) {
+				console.log('run project, shoould get queue');
+			});
 		},
-		readAll: function() {
+		onReadAll: function() {
 			var self = this;
-			resources.projects.sync('read', function(err, projects) {
+			resource.sync('read', function(err, projects) {
 				self.trigger(projects);
 			});
 		}

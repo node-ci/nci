@@ -9,7 +9,8 @@
     "react": "0.13.2",
     "requirejs": "2.1.17",
     "jquery": "1.10.2",
-    "reflux": "~0.2.7"
+    "reflux": "0.2.7",
+    "bootstrap": "3.3.4"
   },
   "moduleType": [
     "amd"
