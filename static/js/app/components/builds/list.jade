@@ -1,0 +1,6 @@
+div
+	h2 builds list
+	- console.log(items)
+	ul.list-group
+		each build, index in items
+			Item(item=build, key=build.id)

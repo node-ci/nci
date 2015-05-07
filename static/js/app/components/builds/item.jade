@@ -1,0 +1,5 @@
+li.list-group-item
+	span.badge= item.status
+	a.pull-right(href="javascript:void(0);", onClick=onBuildSelect(item.id), style={marginRight: '5px'}) show console output
+	span Build #
+	span= item.id

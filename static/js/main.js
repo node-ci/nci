@@ -6,7 +6,7 @@ require.config({
 		underscore: 'libs/underscore/underscore',
 		react: 'libs/react/react-with-addons',
 		reflux: 'libs/reflux/dist/reflux',
-		dataio: '/data.io',
+		_dataio: '/data.io',
 		socketio: '/socket.io/socket.io.js',
 		jquery: 'libs/jquery/jquery'
 	}

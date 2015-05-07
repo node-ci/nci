@@ -2,7 +2,8 @@
 
 var Distributor = require('../lib/distributor').Distributor,
 	Node = require('../lib/node').Node,
-	expect = require('expect.js');
+	expect = require('expect.js'),
+	EventEmitter = require('events').EventEmitter;
 
 
 describe('Distributor', function() {
@@ -13,7 +14,9 @@ describe('Distributor', function() {
 		return function(params) {
 			var node = new Node(params);
 			node._createExecutor = function() {
-				return {run: executorRun};
+				var executor = new EventEmitter();
+				executor.run = executorRun;
+				return executor;
 			};
 			return node;
 		};
@@ -43,7 +46,7 @@ describe('Distributor', function() {
 		it('instance should be created without errors', function() {
 			var number = 1;
 			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'waiting'}},
+				1: {queue: {length: 0}, build: {status: 'queued'}},
 				2: {queue: {length: 1}, build: {status: 'in-progress'}},
 				3: {queue: {length: 0}, build: {status: 'done'}},
 				4: 'Should never happend'
@@ -92,7 +95,7 @@ describe('Distributor', function() {
 		it('instance should be created without errors', function() {
 			var number = 1;
 			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'waiting'}},
+				1: {queue: {length: 0}, build: {status: 'queued'}},
 				2: {queue: {length: 1}, build: {status: 'in-progress'}},
 				3: {
 					queue: {length: 0},

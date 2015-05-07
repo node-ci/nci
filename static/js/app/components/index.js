@@ -2,10 +2,12 @@
 
 define([
 	'app/components/projects/index',
+	'app/components/builds/index',
 	'app/components/app',
-], function(ProjectsComponents, App) {
+], function(ProjectsComponents, BuildsComponents, App) {
 	return {
 		App: App,
-		ProjectsComponents: ProjectsComponents
+		ProjectsComponents: ProjectsComponents,
+		BuildsComponents: BuildsComponents
 	};
 });

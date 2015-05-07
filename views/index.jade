@@ -1,26 +1,14 @@
 doctype html
 html
 	head
-		title test
+		title nci
+
+		// do it temporary
+		link(href="/js/libs/bootstrap/dist/css/bootstrap.css", rel="stylesheet", type="text/css")
+
 		script(data-main="/js/main" src="/js/libs/requirejs/require.js")
 		script(type="text/javascript").
 			require(['app/app']);
 
 	body
-		h1 hello world
-
-
-		script#projects-template(type="text/template")
-			| <div class="js-projects">
-			|	 <% _(projects).each(function(project) { %>
-			|	 	<div class="js-project" data-name="<%= project.name %>">
-			|	 		<span><%= project.name %></span>
-			|	 		<span class="js-run">&rarr;</span>
-			|	 	</div>
-			|	 <% }); %>
-			| </div>
-
-
 		#content
-
-		#react-content

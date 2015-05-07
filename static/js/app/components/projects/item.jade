@@ -1,1 +1,3 @@
-h1(onClick=onProjectSelect(item.name))= item.name
+li.list-group-item
+	a.pull-right(href="javascript:void(0);", onClick=onProjectSelect(item.name)) start build
+	span= item.name
