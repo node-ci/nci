@@ -14,17 +14,21 @@ define([
 		},
 
 		onReadConsoleOutput: function(buildId) {
-			this.output = ''
+			var self = this;
 
-			var resourceName = 'build' + buildId,
-				self = this;
+			self.output = '';
+
+			var resourceName = 'build' + buildId;
 
 			connect.resource(resourceName).unsubscribeAll();
 			connect.resource(resourceName).subscribe(function(data) {
 				self.output += data;
+
+				if (!/\n$/.test(self.output)) self.output += '\n';
+
 				self.trigger({
 					name: 'Console for build #' + buildId,
-					data: data
+					data: self.output
 				});
 			});
 		}

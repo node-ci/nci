@@ -1,5 +1,7 @@
-li.list-group-item
+li.list-group-item(title= item.status === 'in-progress' ? 'Current step is: ' + item.currentStep : 'Build is done')
 	span.badge= item.status
 	a.pull-right(href="javascript:void(0);", onClick=onBuildSelect(item.id), style={marginRight: '5px'}) show console output
-	span Build #
+	span #
 	span= item.id
+	span 
+	span= item.project.name
