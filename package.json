@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test": "mocha --bail --reporter=spec test/index",
-    "dev": "nodemon app.js"
+    "dev": "gulp"
   },
   "repository": {
     "type": "git",
