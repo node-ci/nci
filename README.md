@@ -6,10 +6,10 @@ work in progress...
 
 ## TODO for release 1.0
 
-* Dashboard(builds list, projects autocomlete)
+* Dashboard (builds list, projects autocomlete)
 * Build page (build info, console)
 * Url for trigger build run
-* YAML project configs
+* YAML project and server(executors count, etc) configs
 * Persistent builds
 * Project relations (blocks, triggers, etc)
 * Mail and jabber notifications (with commits, current step and error)

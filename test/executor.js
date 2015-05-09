@@ -46,8 +46,18 @@ var expect = require('expect.js'),
 			});
 		});
 
-		it('should run', function(done) {
-			executor.run({}, done);
+		it('should run', function() {
+			executor.run({}, function(err) {
+				expect(err).not.ok();
+			});
 		});
+
+		it('should emit scm data', function(done) {
+			executor.on('scmData', function(scmData) {
+				expect(scmData).have.keys('rev', 'changes');
+				done();
+			});
+		});
+
 	});
 });
