@@ -13,7 +13,8 @@ mixin statusText(build)
 .build(class="build__#{build.status}")
 	.pull-right
 		div
-			a(href="javascript:void(0);", onClick=this.onBuildSelect(build.id), style={marginRight: '5px'}) show console
+			a(href="javascript:void(0);", onClick=this.onBuildSelect(build.id), style={marginRight: '5px'}) 
+				i.fa.fa-2x.fa-repeat(title="Rebuild", style={marginTop: '5px'}, onClick=this.onRebuildProject(build.project.name))
 	.build_header
 		span #
 		span= build.id
