@@ -1,7 +1,20 @@
-li.list-group-item(title= item.status === 'in-progress' ? 'Current step is: ' + item.currentStep : 'Build is done')
-	span.badge= item.status
-	a.pull-right(href="javascript:void(0);", onClick=onBuildSelect(item.id), style={marginRight: '5px'}) show console output
+mixin statusText(build)
 	span #
-	span= item.id
+	span= build.id
 	span 
-	span= item.project.name
+	if build.status === 'in-progress'
+		span current step is: 
+		span= build.currentStep
+
+	if build.status === 'queued'
+		span build queued
+
+	if build.status === 'done'
+		span build done
+
+.build(class="build__#{build.status}")
+	.pull-right
+		span= build.project.name
+	.build_header
+		+ statusText(build)
+	a.pull-right(href="javascript:void(0);", onClick=onBuildSelect(build.id), style={marginRight: '5px'}) show console output

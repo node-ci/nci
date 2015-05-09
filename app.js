@@ -8,7 +8,7 @@ var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
 	// serve index for all app pages
 	if (req.url.indexOf('/data.io.js') === -1) {
-		if (req.url.indexOf('/js') === -1) {
+		if (!req.url.match(/(js|css|fonts)/)) {
 			// Compile a function
 			var index = jade.compileFile(__dirname + '/views/index.jade');
 			res.write(index());

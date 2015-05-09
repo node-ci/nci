@@ -1,5 +1,7 @@
 node_modules
 test/workspace
+static/css/**/*.css
+static/fonts
 static/js/libs
 static/js/templates
 projects/**/workspace

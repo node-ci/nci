@@ -10,7 +10,7 @@ define([
 		},
 		render: function() {
 			return template({
-				item: this.props.item,
+				build: this.props.build,
 				onBuildSelect: this.onBuildSelect
 			});
 		}
