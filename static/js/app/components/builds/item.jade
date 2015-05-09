@@ -1,20 +1,48 @@
 mixin statusText(build)
-	span #
-	span= build.id
-	span 
 	if build.status === 'in-progress'
-		span current step is: 
-		span= build.currentStep
+		span in progress
 
 	if build.status === 'queued'
-		span build queued
+		span queued
 
 	if build.status === 'done'
-		span build done
+		span done
+
+- var build = this.props.build;
 
 .build(class="build__#{build.status}")
 	.pull-right
-		span= build.project.name
+		div
+			a(href="javascript:void(0);", onClick=this.onBuildSelect(build.id), style={marginRight: '5px'}) show console
 	.build_header
-		+ statusText(build)
-	a.pull-right(href="javascript:void(0);", onClick=onBuildSelect(build.id), style={marginRight: '5px'}) show console output
+		span #
+		span= build.id
+		span 
+		a(href="javascript:void(0)")= build.project.name
+	div
+		if build.scm
+			span.build_info
+				i.fa.fa-fw.fa-code-fork
+				span= build.scm.rev.id
+
+			span.build_info
+				i.fa.fa-fw.fa-comment-o
+				| 
+				span= build.scm.rev.comment
+
+		if build.endDate
+			span.build_info
+				i.fa.fa-fw.fa-clock-o
+				| builded at 
+				DateTime(date=new Date(build.createDate))
+		else
+			if build.startDate
+				span.build_info
+					i.fa.fa-fw.fa-clock-o
+					| started at 
+					DateTime(date=new Date(build.createDate))
+			else
+				span.build_info
+					i.fa.fa-fw.fa-clock-o
+					| queued at 
+					DateTime(date=new Date(build.createDate))

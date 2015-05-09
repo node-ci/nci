@@ -1,7 +1,7 @@
 'use strict';
 
 define([
-	'react', 'app/actions/project', 'templates/app/components/projects/item'
+	'react', 'app/actions/project', 'templates/app/components/projects/item',
 ], function(React, ProjectActions, template) {
 	var Component = React.createClass({
 		onProjectSelect: function(projectName) {

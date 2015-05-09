@@ -1,19 +1,20 @@
 'use strict';
 
 define([
-	'react', 'app/actions/build', 'templates/app/components/builds/item'
-], function(React, BuildActions, template) {
+	'react', 'app/actions/build', 'templates/app/components/builds/item',
+	'app/components/common/index'
+], function(React, BuildActions, template, CommonComponents) {
+	template = template.locals({
+		DateTime: CommonComponents.DateTime
+	});
+	console.log(CommonComponents.DateTime);
+
 	var Component = React.createClass({
 		onBuildSelect: function(buildId) {
 			console.log('on build select');
 			BuildActions.readConsoleOutput(buildId);
 		},
-		render: function() {
-			return template({
-				build: this.props.build,
-				onBuildSelect: this.onBuildSelect
-			});
-		}
+		render: template
 	});
 
 	return Component;
