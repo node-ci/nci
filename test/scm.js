@@ -45,10 +45,10 @@ var expect = require('expect.js'),
 			expect(scm.cwd).equal(repositoryPath);
 		});
 
-		it('expect current id equals to rev0', function(done) {
-			scm.getId(function(err, id) {
+		it('expect current revision equals to rev0', function(done) {
+			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(id).equal(data.rev0.id);
+				expect(rev).eql(data.rev0);
 				done();
 			});
 		});
@@ -83,9 +83,9 @@ var expect = require('expect.js'),
 			});
 
 		it('expect current revision equals to rev2', function(done) {
-			scm.getId(function(err, id) {
+			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(id).equal(data.rev2.id);
+				expect(rev).eql(data.rev2);
 				done();
 			});
 		});
