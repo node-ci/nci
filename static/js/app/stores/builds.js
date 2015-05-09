@@ -22,13 +22,14 @@ define([
 		},
 
 		init: function() {
-			resource.subscribe(this._onAction);
+			resource.subscribe('create', 'update', this._onAction);
 		},
 
 		onReadAll: function() {
 			var self = this;
 			resource.sync('read', function(err, builds) {
-				self.trigger(builds);
+				self.builds = builds;
+				self.trigger(self.builds);
 			});
 		}
 	});

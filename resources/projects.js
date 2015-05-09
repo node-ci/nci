@@ -1,8 +1,10 @@
 'use strict';
 
-var _ = require('underscore'),
+var Steppy = require('twostep').Steppy,
+	_ = require('underscore'),
 	project = require('../lib/project'),
-	Distributor = require('../lib/distributor').Distributor;
+	Distributor = require('../lib/distributor').Distributor,
+	db = require('../db');
 
 var projects, projectsHash;
 
@@ -19,25 +21,34 @@ project.loadAll('projects', function(err, loadedProjects) {
 });
 
 module.exports = function(app) {
-	var buildsSequnce = 0;
 
 	var distributor = new Distributor({
 		nodes: [{type: 'local', maxExecutorsCount: 1}],
 		onBuildUpdate: function(build, callback) {
-			var buildsResource = app.dataio.resource('builds');
-			if (build.status === 'queued') {
-				build.id = ++buildsSequnce;
-				// create resource for build data
-				var buildDataResource = app.dataio.resource('build' + build.id);
-				buildDataResource.on('connection', function(client) {
-					client.emit('sync', 'data', '< collected data >');
-				});
-			}
-			buildsResource.clientEmitSync(
-				build.status === 'queued' ? 'create' : 'update',
-				build
+			Steppy(
+				function() {
+					db.builds.put(build, this.slot());
+				},
+				function() {
+					var buildsResource = app.dataio.resource('builds');
+
+					if (build.status === 'queued') {
+						// create resource for build data
+						var buildDataResource = app.dataio.resource('build' + build.id);
+						buildDataResource.on('connection', function(client) {
+							client.emit('sync', 'data', '< collected data >');
+						});
+					}
+
+					buildsResource.clientEmitSync(
+						build.status === 'queued' ? 'create' : 'update',
+						build
+					);
+
+					this.pass(build);
+				},
+				callback
 			);
-			callback(null, build);
 		},
 		onBuildData: function(build, data) {
 			app.dataio.resource('build' + build.id).clientEmitSync('data', data);
