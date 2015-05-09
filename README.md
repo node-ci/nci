@@ -4,6 +4,19 @@ nci - Continuous integration server written in node.js
 
 work in progress...
 
+## TODO for release 1.0
+
+* Dashboard(builds list, projects autocomlete)
+* Build page (build info, console)
+* Url for trigger build run
+* YAML project configs
+* Persistent builds
+* Project relations (blocks, triggers, etc)
+* Mail and jabber notifications (with commits, current step and error)
+* Work with git and mercurial (build every commit, commit with tag, etc)
+* Awesome build output (very close to terminal)
+* Semantic versioning and plugins
+
 
 ## Roadmap
 
