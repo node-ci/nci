@@ -40,9 +40,9 @@ mixin statusText(build)
 				span.build_info
 					i.fa.fa-fw.fa-clock-o
 					| started at 
-					DateTime(date=new Date(build.createDate))
+					DateTime(date=new Date(build.startDate))
 			else
 				span.build_info
 					i.fa.fa-fw.fa-clock-o
 					| queued at 
-					DateTime(date=new Date(build.createDate))
+					DateTime(date=new Date(build.endDate))
