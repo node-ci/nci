@@ -11,7 +11,8 @@
     "jquery": "1.10.2",
     "reflux": "0.2.7",
     "bootstrap": "3.3.4",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "4.3.0",
+    "react-router": "0.13.3"
   },
   "moduleType": [
     "amd"
