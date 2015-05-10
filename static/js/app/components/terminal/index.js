@@ -1,7 +1,7 @@
 'use strict';
 
 define([
-	'app/components/console/console',
+	'app/components/terminal/terminal',
 ], function(Console) {
 	return {
 		Console: Console

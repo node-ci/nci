@@ -13,7 +13,10 @@ mixin statusText(build)
 .build(class="build__#{build.status}")
 	.build_controls.pull-right
 		a(href="javascript:void(0);", onClick=this.onBuildSelect(build.id))
-			i.fa.fa-2x.fa-repeat(title="Rebuild", style={marginTop: '5px'}, onClick=this.onRebuildProject(build.project.name))
+			i.fa.fa-2x.fa-repeat(title="Rebuild", style={marginRight: '15px'}, onClick=this.onRebuildProject(build.project.name))
+		a(href="javascript:void(0);", onClick=this.onShowTerminal)
+			i.fa.fa-2x.fa-terminal(title="Rebuild")
+
 	.build_header
 		span #
 		span= build.id
@@ -34,7 +37,7 @@ mixin statusText(build)
 			span.build_info
 				i.fa.fa-fw.fa-clock-o
 				| builded at 
-				DateTime(date=new Date(build.createDate))
+				DateTime(date=new Date(build.endDate))
 		else
 			if build.startDate
 				span.build_info
@@ -45,4 +48,8 @@ mixin statusText(build)
 				span.build_info
 					i.fa.fa-fw.fa-clock-o
 					| queued at 
-					DateTime(date=new Date(build.endDate))
+					DateTime(date=new Date(build.createDate))
+
+	if this.state.showTerminal
+		.build_terminal
+			Terminal(build=build)

@@ -13,7 +13,7 @@ define([
 			console.log('init builds console output');
 		},
 
-		onReadConsoleOutput: function(buildId) {
+		onReadTerminalOutput: function(buildId) {
 			var self = this;
 
 			self.output = '';
@@ -27,6 +27,7 @@ define([
 				if (!/\n$/.test(self.output)) self.output += '\n';
 
 				self.trigger({
+					buildId: buildId,
 					name: 'Console for build #' + buildId,
 					data: self.output
 				});

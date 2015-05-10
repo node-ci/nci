@@ -3,16 +3,19 @@
 define([
 	'react',
 	'reflux',
-	'app/stores/console',
-	'templates/app/components/console/console'
-], function(React, Reflux, consoleStore, template) {
+	'app/stores/terminal',
+	'templates/app/components/terminal/terminal'
+], function(React, Reflux, terminalStore, template) {
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
 		componentDidMount: function() {
-			this.listenTo(consoleStore, this.updateItems);
+			this.listenTo(terminalStore, this.updateItems);
 		},
 		updateItems: function(data) {
-			this.setState({data: data});
+			// listen just our console update
+			if (data.buildId === this.props.build.id) {
+				this.setState({data: data});
+			}
 		},
 		render: function() {
 			return template(this.state.data);

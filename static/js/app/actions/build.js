@@ -2,7 +2,7 @@
 
 define(['reflux'], function(Reflux) {
 	var Actions = Reflux.createActions([
-		'readConsoleOutput',
+		'readTerminalOutput',
 		'readAll'
 	]);
 

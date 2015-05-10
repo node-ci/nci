@@ -21,7 +21,6 @@ define([
 	);
 
 	Router.run(routes, Router.HistoryLocation, function(Handler) {
-		console.log(Handler);
 		React.render(template({
 			Component: Handler
 		}), document.getElementById('content'));
