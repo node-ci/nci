@@ -51,7 +51,7 @@ describe('Distributor', function() {
 				3: {queue: {length: 0}, build: {status: 'done'}},
 				4: 'Should never happend'
 			};
-			var onBuildUpdate = function(build, callback) {
+			var saveBuild = function(build, callback) {
 				expectUpdateBuild(distributor, build, number, conditionsHash);
 				number++;
 				callback(null, build)
@@ -59,7 +59,7 @@ describe('Distributor', function() {
 
 			distributor = new Distributor({
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
-				onBuildUpdate: onBuildUpdate
+				saveBuild: saveBuild
 			});
 		});
 
@@ -103,7 +103,7 @@ describe('Distributor', function() {
 				},
 				4: 'Should never happend'
 			};
-			var onBuildUpdate = function(build, callback) {
+			var saveBuild = function(build, callback) {
 				expectUpdateBuild(distributor, build, number, conditionsHash);
 				number++;
 				callback(null, build)
@@ -111,7 +111,7 @@ describe('Distributor', function() {
 
 			distributor = new Distributor({
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
-				onBuildUpdate: onBuildUpdate
+				saveBuild: saveBuild
 			});
 		});
 

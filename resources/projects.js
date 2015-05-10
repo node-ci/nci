@@ -24,27 +24,12 @@ module.exports = function(app) {
 
 	var distributor = new Distributor({
 		nodes: [{type: 'local', maxExecutorsCount: 1}],
-		onBuildUpdate: function(build, callback) {
+		saveBuild: function(build, callback) {
 			Steppy(
 				function() {
 					db.builds.put(build, this.slot());
 				},
 				function() {
-					var buildsResource = app.dataio.resource('builds');
-
-					if (build.status === 'queued') {
-						// create resource for build data
-						var buildDataResource = app.dataio.resource('build' + build.id);
-						buildDataResource.on('connection', function(client) {
-							client.emit('sync', 'data', '< collected data >');
-						});
-					}
-
-					buildsResource.clientEmitSync(
-						build.status === 'queued' ? 'create' : 'update',
-						build
-					);
-
 					this.pass(build);
 				},
 				callback
@@ -53,6 +38,22 @@ module.exports = function(app) {
 		onBuildData: function(build, data) {
 			app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 		}
+	});
+
+	distributor.on('buildUpdate', function(build, changes) {
+		var buildsResource = app.dataio.resource('builds');
+
+		if (build.status === 'queued') {
+			// create resource for build data
+			var buildDataResource = app.dataio.resource('build' + build.id);
+			buildDataResource.on('connection', function(client) {
+				client.emit('sync', 'data', '< collected data >');
+			});
+		}
+
+		buildsResource.clientEmitSync('change', {
+			buildId: build.id, changes: changes
+		});
 	});
 
 	var resource = app.dataio.resource('projects');

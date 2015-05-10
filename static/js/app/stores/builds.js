@@ -10,19 +10,21 @@ define([
 		listenables: BuildActions,
 		builds: [],
 
-		_onAction: function(build, action) {
-			var oldBuild = _(this.builds).findWhere({id: build.id});
+		onChange: function(data, action) {
+			var oldBuild = _(this.builds).findWhere({id: data.buildId});
 			if (oldBuild) {
-				_(oldBuild).extend(build);
+				_(oldBuild).extend(data.changes);
 			} else {
-				this.builds.unshift(build);
+				this.builds.unshift(
+					_({id: data.buildId}).extend(data.changes)
+				);
 			}
 
 			this.trigger(this.builds);
 		},
 
 		init: function() {
-			resource.subscribe('create', 'update', this._onAction);
+			resource.subscribe('change', this.onChange);
 		},
 
 		onReadAll: function() {
