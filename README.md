@@ -10,11 +10,12 @@ work in progress...
 * Build page (build info, console)
 * Url for trigger build run
 * YAML project and server(executors count, etc) configs
-* Persistent builds
+* Persistent build and console output information
 * Project relations (blocks, triggers, etc)
 * Mail and jabber notifications (with commits, current step and error)
 * Work with git and mercurial (build every commit, commit with tag, etc)
 * Awesome build output (very close to terminal)
+* Ability to change build parameters from ui (at least target branch)
 * Semantic versioning and plugins
 
 
