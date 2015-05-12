@@ -4,4 +4,4 @@ static/css/**/*.css
 static/fonts
 static/js/libs
 static/js/templates
-projects/**/workspace
+data/projects/**/workspace

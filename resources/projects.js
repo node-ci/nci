@@ -4,38 +4,40 @@ var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	project = require('../lib/project'),
 	Distributor = require('../lib/distributor').Distributor,
-	db = require('../db');
-
-var projects, projectsHash;
-
-project.loadAll('projects', function(err, loadedProjects) {
-	if (err) throw err;
-	projects = loadedProjects;
-	projectsHash = _(projects).indexBy(function(project) {
-		return project.config.name;
-	});
-	console.log(
-		'Loaded projects: ',
-		_(projects).chain().pluck('config').pluck('name').value()
-	);
-});
-
-var distributor = new Distributor({
-	nodes: [{type: 'local', maxExecutorsCount: 1}],
-	saveBuild: function(build, callback) {
-		Steppy(
-			function() {
-				db.builds.put(build, this.slot());
-			},
-			function() {
-				this.pass(build);
-			},
-			callback
-		);
-	}
-});
+	db = require('../db'),
+	path = require('path');
 
 module.exports = function(app) {
+
+	var projectsDir = path.join(app.dir, 'projects'),
+		projects, projectsHash;
+
+	project.loadAll(projectsDir, function(err, loadedProjects) {
+		if (err) throw err;
+		projects = loadedProjects;
+		projectsHash = _(projects).indexBy(function(project) {
+			return project.config.name;
+		});
+		console.log(
+			'Loaded projects: ',
+			_(projects).chain().pluck('config').pluck('name').value()
+		);
+	});
+
+	var distributor = new Distributor({
+		nodes: [{type: 'local', maxExecutorsCount: 1}],
+		saveBuild: function(build, callback) {
+			Steppy(
+				function() {
+					db.builds.put(build, this.slot());
+				},
+				function() {
+					this.pass(build);
+				},
+				callback
+			);
+		}
+	});
 
 	distributor.on('buildUpdate', function(build, changes) {
 		var buildsResource = app.dataio.resource('builds');

@@ -3,6 +3,7 @@
 var http = require('http');
 var nodeStatic = require('node-static');
 var jade = require('jade');
+var path = require('path');
 
 var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
@@ -23,6 +24,8 @@ var socketio = require('socket.io')(server);
 var dataio = require('./dataio')(socketio);
 
 var app = {
+	// path to root dir (with projects, builds etc)
+	dir: path.join(process.cwd(), 'data'),
 	server: server,
 	dataio: dataio
 };
