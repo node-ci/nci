@@ -5,14 +5,14 @@ var Steppy = require('twostep').Steppy,
 	project = require('../lib/project'),
 	Distributor = require('../lib/distributor').Distributor,
 	db = require('../db'),
-	path = require('path');
+	path = require('path'),
+	fs = require('fs');
 
 module.exports = function(app) {
 
-	var projectsDir = path.join(app.dir, 'projects'),
-		projects, projectsHash;
+	var projects, projectsHash;
 
-	project.loadAll(projectsDir, function(err, loadedProjects) {
+	project.loadAll(app.config.paths.projects, function(err, loadedProjects) {
 		if (err) throw err;
 		projects = loadedProjects;
 		projectsHash = _(projects).indexBy(function(project) {
@@ -39,6 +39,10 @@ module.exports = function(app) {
 		}
 	});
 
+	var getBuildDataFilePath = function(build) {
+		return path.join(app.config.paths.builds, build.id + '.log');
+	};
+
 	distributor.on('buildUpdate', function(build, changes) {
 		var buildsResource = app.dataio.resource('builds');
 
@@ -46,7 +50,15 @@ module.exports = function(app) {
 			// create resource for build data
 			var buildDataResource = app.dataio.resource('build' + build.id);
 			buildDataResource.on('connection', function(client) {
-				client.emit('sync', 'data', '< collected data >');
+				var callback = this.async();
+				fs.createReadStream(getBuildDataFilePath(build), {encoding: 'utf8'})
+					.on('data', function(data) {
+						client.emit('sync', 'data', data);
+					})
+					.on('end', callback)
+					.on('error', function(err) {
+						console.log(err.stack || err);
+					});
 			});
 		}
 
@@ -55,7 +67,25 @@ module.exports = function(app) {
 		});
 	});
 
+	var writeStreamsHash = {};
+
 	distributor.on('buildData', function(build, data) {
+		if (!/\n$/.test(data)) {
+			data += '\n';
+		}
+
+		var filePath = getBuildDataFilePath(build);
+		writeStreamsHash[filePath] = (
+			writeStreamsHash[filePath] ||
+			fs.createWriteStream(getBuildDataFilePath(build), {encoding: 'utf8'})
+		);
+		// TODO: close ended files
+		writeStreamsHash[filePath]
+			.on('error', function(err) {
+				console.log(err.stack || err);
+			})
+			.write(data);
+
 		app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 	});
 

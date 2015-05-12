@@ -24,8 +24,6 @@ define([
 			connect.resource(resourceName).subscribe(function(data) {
 				self.output += data;
 
-				if (!/\n$/.test(self.output)) self.output += '\n';
-
 				self.trigger({
 					buildId: buildId,
 					name: 'Console for build #' + buildId,

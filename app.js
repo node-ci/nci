@@ -1,9 +1,10 @@
 'use strict';
 
-var http = require('http');
-var nodeStatic = require('node-static');
-var jade = require('jade');
-var path = require('path');
+var http = require('http'),
+	nodeStatic = require('node-static'),
+	jade = require('jade'),
+	path = require('path'),
+	fs = require('fs');
 
 var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
@@ -24,11 +25,20 @@ var socketio = require('socket.io')(server);
 var dataio = require('./dataio')(socketio);
 
 var app = {
-	// path to root dir (with projects, builds etc)
-	dir: path.join(process.cwd(), 'data'),
 	server: server,
 	dataio: dataio
 };
+
+app.config = {};
+app.config.paths = {};
+
+// path to root dir (with projects, builds etc)
+app.config.paths.data = path.join(process.cwd(), 'data');
+app.config.paths.projects = path.join(app.config.paths.data, 'projects');
+app.config.paths.builds = path.join(app.config.paths.data, 'builds');
+fs.exists(app.config.paths.builds, function(exists) {
+	if (!exists) fs.mkdir(app.config.paths.builds);
+});
 
 require('./resources')(app);
 

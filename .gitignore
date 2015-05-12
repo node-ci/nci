@@ -5,3 +5,4 @@ static/fonts
 static/js/libs
 static/js/templates
 data/projects/**/workspace
+data/builds
