@@ -20,25 +20,22 @@ project.loadAll('projects', function(err, loadedProjects) {
 	);
 });
 
-module.exports = function(app) {
+var distributor = new Distributor({
+	nodes: [{type: 'local', maxExecutorsCount: 1}],
+	saveBuild: function(build, callback) {
+		Steppy(
+			function() {
+				db.builds.put(build, this.slot());
+			},
+			function() {
+				this.pass(build);
+			},
+			callback
+		);
+	}
+});
 
-	var distributor = new Distributor({
-		nodes: [{type: 'local', maxExecutorsCount: 1}],
-		saveBuild: function(build, callback) {
-			Steppy(
-				function() {
-					db.builds.put(build, this.slot());
-				},
-				function() {
-					this.pass(build);
-				},
-				callback
-			);
-		},
-		onBuildData: function(build, data) {
-			app.dataio.resource('build' + build.id).clientEmitSync('data', data);
-		}
-	});
+module.exports = function(app) {
 
 	distributor.on('buildUpdate', function(build, changes) {
 		var buildsResource = app.dataio.resource('builds');
@@ -54,6 +51,10 @@ module.exports = function(app) {
 		buildsResource.clientEmitSync('change', {
 			buildId: build.id, changes: changes
 		});
+	});
+
+	distributor.on('buildData', function(build, data) {
+		app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 	});
 
 	var resource = app.dataio.resource('projects');
