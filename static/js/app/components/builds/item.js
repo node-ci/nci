@@ -25,7 +25,7 @@ define([
 		},
 		onShowTerminal: function(build) {
 			this.setState({showTerminal: !this.state.showTerminal});
-			BuildActions.readTerminalOutput(this.props.build.id);
+			BuildActions.readTerminalOutput(this.props.build);
 		},
 		onBuildSelect: function(buildId) {
 			console.log('on build select');

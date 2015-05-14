@@ -10,6 +10,8 @@ var Steppy = require('twostep').Steppy,
 
 module.exports = function(app) {
 
+	var resource = app.dataio.resource('projects');
+
 	var projects, projectsHash;
 
 	project.loadAll(app.config.paths.projects, function(err, loadedProjects) {
@@ -39,32 +41,57 @@ module.exports = function(app) {
 		}
 	});
 
-	var getBuildDataFilePath = function(build) {
-		return path.join(app.config.paths.builds, build.id + '.log');
+	var getBuildLogPath = function(buildId) {
+		return path.join(app.config.paths.builds, buildId + '.log');
+	};
+
+	var buildDataResourcesHash = {};
+
+	// create resource for build data
+	var createBuildDataResource = function(build) {
+		if (build.id in buildDataResourcesHash) {
+			return;
+		}
+		var buildDataResource = app.dataio.resource('build' + build.id);
+		buildDataResource.on('connection', function(client) {
+			var callback = this.async();
+			var stream = fs.createReadStream(
+				getBuildLogPath(build.id),
+				{encoding: 'utf8'}
+			);
+			stream
+				.on('readable', function() {
+					var data = stream.read();
+					while (data) {
+						client.emit('sync', 'data', data);
+						data = stream.read();
+					}
+				})
+				.on('end', callback)
+				.on('error', function(err) {
+					console.log(err.stack || err);
+				});
+		});
+		buildDataResourcesHash[build.id] = buildDataResource;
 	};
 
 	distributor.on('buildUpdate', function(build, changes) {
 		var buildsResource = app.dataio.resource('builds');
 
 		if (build.status === 'queued') {
-			// create resource for build data
-			var buildDataResource = app.dataio.resource('build' + build.id);
-			buildDataResource.on('connection', function(client) {
-				var callback = this.async();
-				fs.createReadStream(getBuildDataFilePath(build), {encoding: 'utf8'})
-					.on('data', function(data) {
-						client.emit('sync', 'data', data);
-					})
-					.on('end', callback)
-					.on('error', function(err) {
-						console.log(err.stack || err);
-					});
-			});
+			// remove prev log if it exists - for development
+			fs.unlink(getBuildLogPath(build.id));
+			createBuildDataResource(build);
 		}
 
 		buildsResource.clientEmitSync('change', {
 			buildId: build.id, changes: changes
 		});
+	});
+
+	resource.use('createBuildDataResource', function(req, res) {
+		createBuildDataResource({id: req.data.id});
+		res.send();
 	});
 
 	var writeStreamsHash = {};
@@ -74,10 +101,10 @@ module.exports = function(app) {
 			data += '\n';
 		}
 
-		var filePath = getBuildDataFilePath(build);
+		var filePath = getBuildLogPath(build.id);
 		writeStreamsHash[filePath] = (
 			writeStreamsHash[filePath] ||
-			fs.createWriteStream(getBuildDataFilePath(build), {encoding: 'utf8'})
+			fs.createWriteStream(getBuildLogPath(build.id), {encoding: 'utf8'})
 		);
 		// TODO: close ended files
 		writeStreamsHash[filePath]
@@ -88,8 +115,6 @@ module.exports = function(app) {
 
 		app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 	});
-
-	var resource = app.dataio.resource('projects');
 
 	resource.use('read', function(req, res) {
 		res.send(_(projects).pluck('config'));

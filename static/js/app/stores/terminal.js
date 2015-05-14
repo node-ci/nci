@@ -7,27 +7,23 @@ define([
 	var Store = Reflux.createStore({
 		listenables: BuildActions,
 
-		output: '',
-
 		init: function() {
 			console.log('init builds console output');
 		},
 
-		onReadTerminalOutput: function(buildId) {
-			var self = this;
+		onReadTerminalOutput: function(build) {
+			var self = this,
+				output = '',
+				resourceName = 'build' + build.id;
 
-			self.output = '';
-
-			var resourceName = 'build' + buildId;
-
-			connect.resource(resourceName).unsubscribeAll();
-			connect.resource(resourceName).subscribe(function(data) {
-				self.output += data;
+			connect.resource(resourceName).reconnect();
+			connect.resource(resourceName).subscribe('data', function(data) {
+				output += data;
 
 				self.trigger({
-					buildId: buildId,
-					name: 'Console for build #' + buildId,
-					data: self.output
+					buildId: build.id,
+					name: 'Console for build #' + build.id,
+					data: output
 				});
 			});
 		}

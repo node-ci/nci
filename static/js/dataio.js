@@ -10,8 +10,18 @@ define(['_dataio'], function(dataio) {
 		var resource = connect.resource('__someResource__'),
 			resourcePrototype = Object.getPrototypeOf(resource);
 
-		resourcePrototype.unsubscribeAll = function() {
+		resourcePrototype.disconnect = function() {
+			this.socket.disconnect();
 			this.socket.removeAllListeners();
+		};
+
+		resourcePrototype.connect = function() {
+			this.socket.connect();
+		};
+
+		resourcePrototype.reconnect = function() {
+			this.disconnect();
+			this.connect();
 		};
 
 		return connect;
