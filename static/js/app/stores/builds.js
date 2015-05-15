@@ -30,6 +30,7 @@ define([
 		onReadAll: function() {
 			var self = this;
 			resource.sync('read', function(err, builds) {
+				if (err) throw err;
 				self.builds = builds;
 				self.trigger(self.builds);
 			});

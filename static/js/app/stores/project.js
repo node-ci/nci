@@ -15,6 +15,7 @@ define([
 		onReadAll: function() {
 			var self = this;
 			resource.sync('read', function(err, projects) {
+				if (err) throw err;
 				self.trigger(projects);
 			});
 		}
