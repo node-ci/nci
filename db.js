@@ -1,6 +1,8 @@
 'use strict';
 
-var nlevel = require('nlevel'),
+var Steppy = require('twostep').Steppy,
+	_ = require('underscore'),
+	nlevel = require('nlevel'),
 	ldb = nlevel.db('path/to/db/ignored/for/memdown', {
 		db: require('memdown'),
 		valueEncoding: 'json'
@@ -14,40 +16,53 @@ exports.builds = new nlevel.DocsSection(ldb, 'builds', {
 	]
 });
 
-exports.builds.idGenerator = getNextId;
-
-// TODO: move to nlevel
-var superPut = nlevel.DocsSection.prototype.put;
-nlevel.DocsSection.prototype.put = function(docs, callback) {
-	var self = this;
-	if (!Array.isArray(docs)) docs = [docs];
-	if (this.idGenerator && docs[0] && 'id' in docs[0] === false) {
-		if (docs.every(function(doc) { return 'id' in doc === false; })) {
-			this.idGenerator(function(err, id) {
-				if (err) return callback(err);
-				docs.forEach(function(doc) {
-					doc.id = id;
-					id++;
-				});
-				superPut.call(self, docs, callback);
-			});
-		} else {
-			return callback(new Error(
-				'Documents with id and without should not be ' +
-				'mixed on put when id generator is set'
-			));
-		}
-	} else {
-		return superPut.call(this, docs, callback);
-	}
+exports.builds._beforePut = function(docs, callback) {
+	generateIds(this, docs, callback);
 };
 
-function getNextId(callback) {
-	this.find({
-		start: {createDate: ''}, limit: 1, reverse: true
-	}, function(err, docs) {
-		callback(err, !err && docs[0] && ++docs[0].id || 1);
+function generateIds(section, docs, callback) {
+	Steppy(
+		function() {
+			if (isAllDocsWithId(docs)) {
+				return callback();
+			}
+
+			var mixedIdsError = checkForMixedIds(docs);
+			if (mixedIdsError) throw mixedIdsError;
+
+			section.find({
+				start: {createDate: ''}, limit: 1, reverse: true
+			}, this.slot());
+		},
+		function(err, lastDocs) {
+			var id = lastDocs[0] && ++lastDocs[0].id || 1;
+
+			_(docs).each(function(doc) {
+				doc.id = id;
+				id++;
+			});
+
+			this.pass(null);
+		},
+		callback
+	);
+}
+
+function isAllDocsWithId(docs) {
+	return _(docs).all(function(doc) {
+		return 'id' in doc;
 	});
+}
+
+function checkForMixedIds(docs) {
+	var isAllWithoutId = _(docs).all(function(doc) {
+		return 'id' in doc === false;
+	});
+	if (!isAllWithoutId) {
+		return new Error(
+			'Documents with id and without should not be mixed'
+		);
+	}
 }
 
 function pickId(doc) {
