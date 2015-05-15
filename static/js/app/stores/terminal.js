@@ -16,16 +16,29 @@ define([
 				output = '',
 				resourceName = 'build' + build.id;
 
-			connect.resource(resourceName).reconnect();
-			connect.resource(resourceName).subscribe('data', function(data) {
-				output += data;
+			var connectToBuildDataResource = function() {
+				connect.resource(resourceName).reconnect();
+				connect.resource(resourceName).subscribe('data', function(data) {
+					output += data;
 
-				self.trigger({
-					buildId: build.id,
-					name: 'Console for build #' + build.id,
-					data: output
+					self.trigger({
+						buildId: build.id,
+						name: 'Console for build #' + build.id,
+						data: output
+					});
 				});
-			});
+			};
+
+			// create data resource for completed build
+			if (build.status === 'done' || build.status === 'error') {
+				connect.resource('projects')
+					.sync('createBuildDataResource', function(err) {
+						if (err) throw err;
+						connectToBuildDataResource();
+					});
+			} else {
+				connectToBuildDataResource();
+			}
 		}
 	});
 
