@@ -18,10 +18,11 @@ mixin statusText(build)
 			i.fa.fa-2x.fa-terminal(title="Rebuild")
 
 	.build_header
-		span #
-		span= build.id
-		span 
 		a(href="javascript:void(0)")= build.project.name
+		if build.number
+			span 
+			span #
+			span= build.number
 	div
 		if build.scm
 			span.build_info

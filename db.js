@@ -12,23 +12,73 @@ exports.builds = new nlevel.DocsSection(ldb, 'builds', {
 	projections: [
 		{key: {createDate: 1}, value: pickId},
 		{key: {descCreateDate: descCreateDate, id: 1}},
-		{key: {project: 1, descCreateDate: descCreateDate, id: 1}}
+		{key: {
+			projectName: function(build) {
+				return build.project.name;
+			},
+			descCreateDate: descCreateDate,
+			id: 1
+		}}
 	]
 });
 
-exports.builds._beforePut = function(docs, callback) {
-	generateIds(this, docs, callback);
+exports.builds._beforePut = function(builds, callback) {
+	var self = this,
+		build;
+
+	Steppy(
+		function() {
+			if (builds.length > 1) {
+				throw new Error('Build put hooks work only with single build');
+			}
+			build = builds[0];
+
+			// generate number for build
+			if (!build.number && build.status === 'in-progress') {
+				// find last build with number in the same project
+				self.find({
+					start: {projectName: build.project.name, descCreateDate: ''},
+					filter: function(build) {
+						return 'number' in build;
+					},
+					limit: 1
+				}, this.slot());
+			} else {
+				this.pass([]);
+			}
+
+			generateIds(self, builds, this.slot());
+		},
+		function(err, prevBuilds) {
+			var prevBuild = prevBuilds[0];
+			if (!build.number && build.status === 'in-progress') {
+				build.number = prevBuild ? prevBuild.number + 1 : 1;
+			}
+
+			this.pass(null);
+		},
+		callback
+	);
 };
 
 function generateIds(section, docs, callback) {
 	Steppy(
 		function() {
-			if (isAllDocsWithId(docs)) {
+			var isAllDocsWithId = _(docs).all(function(doc) {
+				return 'id' in doc;
+			});
+			if (isAllDocsWithId) {
 				return callback();
 			}
 
-			var mixedIdsError = checkForMixedIds(docs);
-			if (mixedIdsError) throw mixedIdsError;
+			var isAllDocsWithoutId = _(docs).all(function(doc) {
+				return 'id' in doc === false;
+			});
+			if (!isAllDocsWithoutId) {
+				throw new Error(
+					'Documents with id and without should not be mixed'
+				);
+			}
 
 			section.find({
 				start: {createDate: ''}, limit: 1, reverse: true
@@ -46,23 +96,6 @@ function generateIds(section, docs, callback) {
 		},
 		callback
 	);
-}
-
-function isAllDocsWithId(docs) {
-	return _(docs).all(function(doc) {
-		return 'id' in doc;
-	});
-}
-
-function checkForMixedIds(docs) {
-	var isAllWithoutId = _(docs).all(function(doc) {
-		return 'id' in doc === false;
-	});
-	if (!isAllWithoutId) {
-		return new Error(
-			'Documents with id and without should not be mixed'
-		);
-	}
 }
 
 function pickId(doc) {
