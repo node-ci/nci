@@ -8,33 +8,27 @@ define([
 
 	var Store = Reflux.createStore({
 		listenables: BuildActions,
-		builds: [],
+		build: null,
 
 		onChange: function(data, action) {
-			var oldBuild = _(this.builds).findWhere({id: data.buildId});
-			if (oldBuild) {
-				_(oldBuild).extend(data.changes);
-			} else {
-				this.builds.unshift(
-					_({id: data.buildId}).extend(data.changes)
-				);
+			if (this.build && (data.buildId === this.build.id)) {
+				_(this.build).extend(data.changes);
+				this.trigger(this.build);
 			}
-
-			this.trigger(this.builds);
 		},
 
 		init: function() {
 			resource.subscribe('change', this.onChange);
 		},
 
-		onReadAll: function() {
+		onRead: function(id) {
 			var self = this;
-			resource.sync('readAll', function(err, builds) {
+			resource.sync('read', {id: id}, function(err, build) {
 				if (err) throw err;
-				self.builds = builds;
-				self.trigger(self.builds);
+				self.build = build;
+				self.trigger(self.build);
 			});
-		},
+		}
 	});
 
 	return Store;

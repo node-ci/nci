@@ -1,17 +1,18 @@
 'use strict';
 
 define([
-	'react', 'app/actions/project',
+	'react', 'react-router', 'app/actions/project',
 	'app/actions/build', 'templates/app/components/builds/item',
 	'app/components/terminal/terminal',
 	'app/components/common/index'
 ], function(
-	React, ProjectActions, BuildActions, template,
+	React, Router, ProjectActions, BuildActions, template,
 	TerminalComponent, CommonComponents
 ) {
 	template = template.locals({
 		DateTime: CommonComponents.DateTime,
-		Terminal: TerminalComponent
+		Terminal: TerminalComponent,
+		Link: Router.Link
 	});
 
 	var Component = React.createClass({

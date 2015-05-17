@@ -13,16 +13,13 @@ define([
 		},
 		updateItems: function(data) {
 			// listen just our console update
-			if (data.buildId === this.props.build.id) {
+			if (data.buildId === this.props.build) {
 				this.setState({data: data});
 			}
 		},
-		render: function() {
-			return template(this.state.data);
-		},
+		render: template,
 		getInitialState: function() {
 			return {
-				name: '',
 				data: ''
 			};
 		}

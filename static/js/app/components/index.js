@@ -3,11 +3,13 @@
 define([
 	'app/components/projects/index',
 	'app/components/builds/index',
-	'app/components/app',
-], function(ProjectsComponents, BuildsComponents, App) {
+	'app/components/app/component',
+	'app/components/header/component'
+], function(ProjectsComponents, BuildsComponents, App, Header) {
 	return {
 		App: App,
-		ProjectsComponents: ProjectsComponents,
-		BuildsComponents: BuildsComponents
+		Header: Header,
+		Project: ProjectsComponents,
+		Build: BuildsComponents
 	};
 });

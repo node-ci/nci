@@ -116,7 +116,7 @@ module.exports = function(app) {
 		app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 	});
 
-	resource.use('read', function(req, res) {
+	resource.use('readAll', function(req, res) {
 		res.send(_(projects).pluck('config'));
 	});
 

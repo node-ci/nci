@@ -13,12 +13,15 @@ mixin statusText(build)
 .build(class="build__#{build.status}")
 	.build_controls.pull-right
 		a(href="javascript:void(0);", onClick=this.onBuildSelect(build.id))
-			i.fa.fa-2x.fa-repeat(title="Rebuild", style={marginRight: '15px'}, onClick=this.onRebuildProject(build.project.name))
-		a(href="javascript:void(0);", onClick=this.onShowTerminal)
-			i.fa.fa-2x.fa-terminal(title="Rebuild")
+			i.fa.fa-2x.fa-repeat(title="Rebuild", onClick=this.onRebuildProject(build.project.name))
 
 	.build_header
-		a(href="javascript:void(0)")= build.project.name
+		if build.status !== 'queued'
+			Link(to="build", params={id: build.id})
+				span= build.project.name
+		else
+			span= build.project.name
+
 		if build.number
 			span 
 			span #
@@ -53,4 +56,4 @@ mixin statusText(build)
 
 	if this.state.showTerminal
 		.build_terminal
-			Terminal(build=build)
+			Terminal(build=build.id)
