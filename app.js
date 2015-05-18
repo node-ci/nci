@@ -32,6 +32,8 @@ var app = {
 	dataio: dataio
 };
 
+app.lib = {};
+app.lib.reader = reader;
 
 Steppy(
 	function() {
@@ -46,20 +48,26 @@ Steppy(
 		fs.exists(app.config.paths.builds, function(isExists) {
 			stepCallback(null, isExists);
 		});
+	},
+	function(err, isBuildsDirExists) {
+		if (!isBuildsDirExists) {
+			fs.mkdir(app.config.paths.builds, this.slot());
+		} else {
+			this.pass(null);
+		}
+
+		// register plugins
+		require('./lib/reader/yaml').register(app);
 
 		reader.load(app.config.paths.data, 'config', this.slot());
 	},
-	function(err, isBuildsDirExists, config) {
-		if (!isBuildsDirExists) {
-			fs.mkdir(app.config.paths.builds, this.slot());
-		}
-
+	function(err, mkdirResult, config) {
 		_(app.config).defaults(config);
 
-		console.log('Server config:', JSON.stringify(app.config.nodes, null, 4));
+		console.log('Server config:', JSON.stringify(app.config, null, 4));
 
+		// init resources
 		require('./resources')(app);
-
 	},
 	function(err) {
 		if (err) throw err;
