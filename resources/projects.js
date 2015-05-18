@@ -27,7 +27,7 @@ module.exports = function(app) {
 	});
 
 	var distributor = new Distributor({
-		nodes: [{type: 'local', maxExecutorsCount: 1}],
+		nodes: app.config.nodes,
 		saveBuild: function(build, callback) {
 			Steppy(
 				function() {

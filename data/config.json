@@ -1,0 +1,6 @@
+{
+	"nodes": [{
+		"type": "local",
+		"maxExecutorsCount": 1
+	}]
+}

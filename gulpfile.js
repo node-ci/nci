@@ -30,7 +30,7 @@ gulp.task('develop', function() {
 	return nodemon({
 		ignore: ['static/**/*.js', 'app/**/*.js', 'node_modules/**'],
 		script: 'app.js',
-		ext: 'js'
+		ext: 'js,json'
 	});
 });
 
