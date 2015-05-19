@@ -6,11 +6,14 @@ define([
 	'app/actions/build',
 	'app/stores/build',
 	'app/components/terminal/terminal',
-	'templates/app/components/builds/view'
+	'templates/app/components/builds/view',
+	'app/components/common/index'
 ], function(
-	React, Reflux, BuildActions, buildStore, TerminalComponent, template
+	React, Reflux, BuildActions, buildStore, TerminalComponent, template,
+	CommonComponents
 ) {
 	template = template.locals({
+		DateTime: CommonComponents.DateTime,
 		Terminal: TerminalComponent
 	});
 

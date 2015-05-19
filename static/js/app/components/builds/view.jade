@@ -2,4 +2,32 @@ if this.state.build
 	h2
 		span Build #
 		span= this.state.build.number
+
+	if this.state.build.startDate
+		div
+			| Started at 
+			if this.state.build.startDate
+				DateTime(date=new Date(this.state.build.startDate))
+			else
+				| -
+	else
+		div
+			| Queued at 
+			if this.state.build.createDate
+				DateTime(date=new Date(this.state.build.createDate))
+			else
+				| -
+
+	div
+		| Builded at 
+		if this.state.build.endDate
+			DateTime(date=new Date(this.state.build.endDate))
+		else
+			| -
+
+	div
+		if this.state.build.error
+			| Error: 
+			span= this.state.build.error
+
 	Terminal(build=this.state.build.id)

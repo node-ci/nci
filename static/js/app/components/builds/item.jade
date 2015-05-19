@@ -8,6 +8,9 @@ mixin statusText(build)
 	if build.status === 'done'
 		span done
 
+	if build.status === 'error'
+		span error
+
 - var build = this.props.build;
 
 .build(class="build__#{build.status}")
