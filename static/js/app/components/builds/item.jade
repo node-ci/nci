@@ -29,6 +29,11 @@ mixin statusText(build)
 			span 
 			span #
 			span= build.number
+
+		if build.status === 'in-progress' && build.currentStep
+			span  (
+			span= build.currentStep
+			span )
 	div
 		if build.scm
 			span.build_info
