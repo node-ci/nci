@@ -30,7 +30,7 @@ define([
 			};
 
 			// create data resource for completed build
-			if (build.status === 'done' || build.status === 'error') {
+			if (build.completed) {
 				connect.resource('projects')
 					.sync('createBuildDataResource', function(err) {
 						if (err) throw err;
