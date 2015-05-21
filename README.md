@@ -18,6 +18,7 @@ work in progress...
 * Ability to change build parameters from ui (at least target branch)
 * Semantic versioning and plugins
 * Safe id and build numbers generation
+* Better tests coverage
 
 ## Roadmap
 

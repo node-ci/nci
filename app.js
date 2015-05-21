@@ -7,7 +7,8 @@ var http = require('http'),
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	reader = require('./lib/reader');
+	reader = require('./lib/reader'),
+	notifier = require('./lib/notifier');
 
 var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
@@ -34,6 +35,7 @@ var app = {
 
 app.lib = {};
 app.lib.reader = reader;
+app.lib.notifier = notifier;
 
 Steppy(
 	function() {
@@ -58,6 +60,7 @@ Steppy(
 
 		// register plugins
 		require('./lib/reader/yaml').register(app);
+		require('./lib/notifier/console').register(app);
 
 		reader.load(app.config.paths.data, 'config', this.slot());
 	},
@@ -65,6 +68,8 @@ Steppy(
 		_(app.config).defaults(config);
 
 		console.log('Server config:', JSON.stringify(app.config, null, 4));
+
+		notifier.init(app.config.notify, this.slot());
 
 		// init resources
 		require('./resources')(app);

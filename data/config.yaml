@@ -2,3 +2,5 @@
 nodes:
     - type: local
       maxExecutorsCount: 1
+
+notify: {}

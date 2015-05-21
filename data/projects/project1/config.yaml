@@ -6,15 +6,26 @@ scm:
     repository: ./test/repos/mercurial
     rev: default
 
+notify:
+    on:
+        - success
+        - fail
+    to:
+        console:
+        # email:
+        #     - oleg.korobenko@gmail.com
+        # jabber:
+        #     - oleg.korobenko@gmail.com
+
 steps:
     - cmd: >
-          echo "long multiline string" &&
-          sleep 2 &&
-          echo "is not a problem when you're using yaml" &&
-          echo "cur dir is `pwd`"
-    - name: sleep
-      cmd: sleep 4
+        echo "long multiline string" &&
+        sleep 2 &&
+        echo "is not a problem when you're using yaml" &&
+        echo "cur dir is `pwd`"
+    # - name: sleep
+    #   cmd: sleep 4
     - cmd: echo 1 > 1.txt
-    - cmd: sleep 4
+    # - cmd: sleep 4
     - cmd: echo 2 > 2.txt
     - cmd: cat 1.txt 2.txt
