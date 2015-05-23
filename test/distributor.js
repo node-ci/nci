@@ -27,7 +27,7 @@ describe('Distributor', function() {
 		expect(distributor.queue).length(conditions.queue.length);
 		expect(build.status).equal(conditions.build.status);
 		if (build.status === 'error') {
-			expect(build.error.message).eql(conditions.build.error.message);
+			expect(build.error).eql(conditions.build.error.message);
 		}
 	};
 
