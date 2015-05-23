@@ -3,7 +3,8 @@
 var Distributor = require('../lib/distributor').Distributor,
 	Node = require('../lib/node').Node,
 	expect = require('expect.js'),
-	EventEmitter = require('events').EventEmitter;
+	EventEmitter = require('events').EventEmitter,
+	sinon = require('sinon')
 
 
 describe('Distributor', function() {
@@ -31,102 +32,117 @@ describe('Distributor', function() {
 		}
 	};
 
-	describe('with sucess project', function() {
-		var originalCreateNode;
-
+	describe('with success project', function() {
 		before(function() {
-			originalCreateNode = Distributor.prototype._createNode;
-			Distributor.prototype._createNode = createNodeMock(
-				function(params, callback) {
-					setTimeout(callback, 10);
-				}
-			);
+			var executorRun = function(params, callback) {
+				setTimeout(callback, 1);
+			};
+			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
+				executorRun
+			));
 		});
+
+		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
-			var number = 1;
-			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'queued'}},
-				2: {queue: {length: 1}, build: {status: 'in-progress'}},
-				3: {queue: {length: 0}, build: {status: 'done'}},
-				4: 'Should never happend'
-			};
-			var saveBuild = function(build, callback) {
-				expectUpdateBuild(distributor, build, number, conditionsHash);
-				number++;
-				callback(null, build)
-			};
-
 			distributor = new Distributor({
-				nodes: [{type: 'local', maxExecutorsCount: 1}],
-				saveBuild: saveBuild
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
 			});
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function() {
+		it('should run without errors', function(done) {
 			distributor.run(project1, {}, function(err) {
 				expect(err).not.ok();
+				done();
 			});
 		});
 
-		it('wait for project done (should no errors)', function(done) {
-			setTimeout(done, 20);
+		it('build should be queued', function() {
+			var changes = updateBuildSpy.getCall(0).args[1];
+			expect(changes).only.have.keys(
+				'project', 'params', 'createDate', 'status', 'completed'
+			);
+			expect(changes.status).equal('queued');
+			expect(changes.completed).equal(false);
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes).only.have.keys('startDate', 'status');
+			expect(changes.status).equal('in-progress');
+		});
+
+		it('build should be done', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
+			expect(changes).only.have.keys(
+				'endDate', 'status', 'completed', 'error'
+			);
+			expect(changes.status).equal('done');
+			expect(changes.completed).equal(true);
+			expect(changes.error).equal(null);
+		});
+
+		it('update build called 3 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(3);
 		});
 
 		after(function() {
-			Distributor.prototype._createNode = originalCreateNode;
+			Distributor.prototype._createNode.restore();
 		});
 	});
 
 	describe('with fail project', function() {
-		var originalCreateNode;
-
 		before(function() {
-			originalCreateNode = Distributor.prototype._createNode;
-			Distributor.prototype._createNode = createNodeMock(
-				function(params, callback) {
-					setTimeout(function() {
-						callback(new Error('Some error'));
-					}, 10);
-				}
-			);
+			var executorRun = function(params, callback) {
+				setTimeout(function() {
+					callback(new Error('Some error'));
+				}, 1);
+			};
+			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
+				executorRun
+			));
 		});
+
+		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
-			var number = 1;
-			var conditionsHash = {
-				1: {queue: {length: 0}, build: {status: 'queued'}},
-				2: {queue: {length: 1}, build: {status: 'in-progress'}},
-				3: {
-					queue: {length: 0},
-					build: {status: 'error', error: {message: 'Some error'}}
-				},
-				4: 'Should never happend'
-			};
-			var saveBuild = function(build, callback) {
-				expectUpdateBuild(distributor, build, number, conditionsHash);
-				number++;
-				callback(null, build)
-			};
-
 			distributor = new Distributor({
-				nodes: [{type: 'local', maxExecutorsCount: 1}],
-				saveBuild: saveBuild
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
 			});
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run with errors', function() {
+		it('should run without errors', function(done) {
 			distributor.run(project1, {}, function(err) {
 				expect(err).not.ok();
+				done();
 			});
 		});
 
-		it('wait for project done (should no errors)', function(done) {
-			setTimeout(done, 20);
+		it('build should be queued', function() {
+			var changes = updateBuildSpy.getCall(0).args[1];
+			expect(changes.status).equal('queued');
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes.status).equal('in-progress');
+		});
+
+		it('build should be fail', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
+			expect(changes.status).equal('error');
+			expect(changes.completed).equal(true);
+			expect(changes.error).equal('Some error');
+		});
+
+		it('update build called 3 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(3);
 		});
 
 		after(function() {
-			Distributor.prototype._createNode = originalCreateNode;
+			Distributor.prototype._createNode.restore();
 		});
 	});
 });
