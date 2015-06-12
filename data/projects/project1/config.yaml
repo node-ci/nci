@@ -8,8 +8,9 @@ scm:
 
 notify:
     on:
-        - success
-        - fail
+        # - success
+        # - fail
+        - change
     to:
         console:
         # email:

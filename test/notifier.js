@@ -2,7 +2,8 @@
 
 var notifier = require('../lib/notifier'),
 	expect = require('expect.js'),
-	sinon = require('sinon');
+	sinon = require('sinon'),
+	_ = require('underscore');
 
 
 describe('notifier module', function() {
@@ -144,6 +145,89 @@ describe('notifier module', function() {
 				expect(sendSpy.calledOnce).equal(false);
 				done();
 			});
+		});
+	});
+
+	var secondBuild;
+
+	// for all previos build related strategies
+	describe('Stub getting of previos build', function() {
+		it('', function() {
+			sinon.stub(notifier, '_getPrevBuild').callsArgWith(1, null, build);
+		});
+	});
+
+	describe('notify on change', function() {
+		it('set build info', function() {
+			build = {
+				completed: true,
+				status: 'done',
+				number: 1,
+				project: {
+					name: 'project1',
+					notify: {
+						on: ['change'],
+						to: {test: ['recipient1', 'recipient2']}
+					}
+				}
+			};
+			sendSpy.reset();
+		});
+
+		it('should notify for the first build', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(true);
+				done();
+			});
+		});
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'change'},
+				build: build
+			})).equal(true);
+		});
+
+		it('set second build info (same status)', function() {
+			secondBuild = _(build).clone();
+			secondBuild.number = 2;
+			sendSpy.reset();
+		});
+
+		it('should not notify when same second build status', function(done) {
+			notifier.send(secondBuild, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(false);
+				done();
+			});
+		});
+
+		it('set second build info (changed status)', function() {
+			secondBuild.status = 'error';
+			sendSpy.reset();
+		});
+
+		it('should notify when status is changed', function(done) {
+			notifier.send(secondBuild, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(true);
+				done();
+			});
+		});
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'change'},
+				build: secondBuild
+			})).equal(true);
+		});
+
+	});
+
+	describe('Restore getting of previos build', function() {
+		it('', function() {
+			notifier._getPrevBuild.restore();
 		});
 	});
 

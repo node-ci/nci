@@ -13,14 +13,22 @@ exports.builds = new nlevel.DocsSection(ldb, 'builds', {
 		{key: {createDate: 1}, value: pickId},
 		{key: {descCreateDate: descCreateDate, id: 1}},
 		{key: {
-			projectName: function(build) {
-				return build.project.name;
-			},
+			projectName: pickProjectName,
 			descCreateDate: descCreateDate,
+			id: 1
+		}},
+		// note that's unordered projection (coz number is numeric)
+		{key: {
+			projectName: pickProjectName,
+			number: 1,
 			id: 1
 		}}
 	]
 });
+
+function pickProjectName(build) {
+	return build.project.name;
+}
 
 exports.builds._beforePut = function(builds, callback) {
 	var self = this,
