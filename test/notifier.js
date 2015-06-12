@@ -60,18 +60,29 @@ describe('notifier module', function() {
 		});
 	});
 
+	var makeBuild = function(build) {
+		var project = build.project;
+		delete build.project;
+
+		var notify = project.notify;
+		delete project.notify;
+
+		return _({
+			completed: true,
+			project: {
+				notify: _({
+					to: {test: ['recipient1', 'recipient2']}
+				}).extend(notify)
+			}
+		}).extend(build);
+	};
+
 	describe('notify on success', function() {
 		it('set build info', function() {
-			build = {
-				completed: true,
+			build = makeBuild({
 				status: 'done',
-				project: {
-					notify: {
-						on: ['success'],
-						to: {test: ['recipient1', 'recipient2']}
-					}
-				}
-			};
+				project: {notify: {on: ['success']}}
+			});
 			sendSpy.reset();
 		});
 
@@ -106,16 +117,10 @@ describe('notifier module', function() {
 
 	describe('notify on fail', function() {
 		it('set build info', function() {
-			build = {
-				completed: true,
+			build = makeBuild({
 				status: 'error',
-				project: {
-					notify: {
-						on: ['fail'],
-						to: {test: ['recipient1', 'recipient2']}
-					}
-				}
-			};
+				project: {notify: {on: ['fail']}}
+			});
 			sendSpy.reset();
 		});
 
@@ -148,33 +153,67 @@ describe('notifier module', function() {
 		});
 	});
 
-	var secondBuild;
+	var prevBuild;
 
 	// for all previos build related strategies
 	describe('Stub getting of previos build', function() {
 		it('', function() {
-			sinon.stub(notifier, '_getPrevBuild').callsArgWith(1, null, build);
+			sinon.stub(notifier, '_getPrevBuild', function(build, callback) {
+				callback(null, prevBuild);
+			});
 		});
 	});
 
 	describe('notify on change', function() {
 		it('set build info', function() {
-			build = {
-				completed: true,
-				status: 'done',
+			build = makeBuild({
 				number: 1,
-				project: {
-					name: 'project1',
-					notify: {
-						on: ['change'],
-						to: {test: ['recipient1', 'recipient2']}
-					}
-				}
-			};
+				status: 'done',
+				project: {notify: {on: ['change']}}
+			});
 			sendSpy.reset();
 		});
 
-		it('should notify for the first build', function(done) {
+		it('should notify for the first build (without get prev build)',
+			function(done) {
+				notifier._getPrevBuild.reset();
+				notifier.send(build, function(err) {
+					expect(err).not.ok();
+					expect(sendSpy.calledOnce).equal(true);
+					expect(notifier._getPrevBuild.calledOnce).equal(false);
+					done();
+				});
+			}
+		);
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'change'},
+				build: build
+			})).equal(true);
+		});
+
+		it('set previos build info (same status)', function() {
+			build.number = 2;
+			prevBuild = _(build).clone();
+			prevBuild.number = 1;
+			sendSpy.reset();
+		});
+
+		it('should not notify when same previos build status', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(false);
+				done();
+			});
+		});
+
+		it('set previos build info (changed status)', function() {
+			prevBuild.status = 'error';
+			sendSpy.reset();
+		});
+
+		it('should notify when status is changed', function(done) {
 			notifier.send(build, function(err) {
 				expect(err).not.ok();
 				expect(sendSpy.calledOnce).equal(true);
@@ -186,40 +225,6 @@ describe('notifier module', function() {
 			expect(sendSpy.calledWith({
 				notifyReason: {strategy: 'change'},
 				build: build
-			})).equal(true);
-		});
-
-		it('set second build info (same status)', function() {
-			secondBuild = _(build).clone();
-			secondBuild.number = 2;
-			sendSpy.reset();
-		});
-
-		it('should not notify when same second build status', function(done) {
-			notifier.send(secondBuild, function(err) {
-				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(false);
-				done();
-			});
-		});
-
-		it('set second build info (changed status)', function() {
-			secondBuild.status = 'error';
-			sendSpy.reset();
-		});
-
-		it('should notify when status is changed', function(done) {
-			notifier.send(secondBuild, function(err) {
-				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(true);
-				done();
-			});
-		});
-
-		it('should be notified with right params', function() {
-			expect(sendSpy.calledWith({
-				notifyReason: {strategy: 'change'},
-				build: secondBuild
 			})).equal(true);
 		});
 
