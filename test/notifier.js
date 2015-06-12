@@ -9,17 +9,13 @@ describe('notifier module', function() {
 
 	function TestNotifier() {
 	}
-	TestNotifier.prototype.init = sinon.spy(function(params, callback) {
-		callback();
-	});
-	TestNotifier.prototype.send = sinon.spy(function(params, callback) {
-		callback();
-	});
+	TestNotifier.prototype.init = sinon.stub().callsArg(1);
+	TestNotifier.prototype.send = sinon.stub().callsArg(1);
 
 	var sendSpy = TestNotifier.prototype.send;
 
-	describe('before test', function() {
-		it('should allow rigester test notifier', function() {
+	describe('test notifier', function() {
+		it('should be rigestered', function() {
 			notifier.register('test', TestNotifier);
 		});
 
@@ -27,7 +23,7 @@ describe('notifier module', function() {
 			notifier.init({}, done);
 		});
 
-		it('test notifier init method should be called during init', function() {
+		it('init method should be called once during init', function() {
 			expect(TestNotifier.prototype.init.calledOnce).equal(true);
 		});
 	});
