@@ -55,7 +55,7 @@ describe('Distributor', function() {
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run('project1', {}, function(err) {
+			distributor.run({projectName: 'project1'}, function(err) {
 				expect(err).not.ok();
 				done();
 			});
@@ -118,7 +118,7 @@ describe('Distributor', function() {
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run('project1', {}, function(err) {
+			distributor.run({projectName: 'project1'}, function(err) {
 				expect(err).not.ok();
 				done();
 			});
