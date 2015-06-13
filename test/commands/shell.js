@@ -40,9 +40,7 @@ describe('Shell command', function() {
 		shellCommand.run({cmd: 'echo1 "Hello world"'}, function(err) {
 			expect(err).ok();
 			expect(err).an(Error);
-			expect(err.message).equal(
-				'Spawned command outputs to stderr: /bin/sh: 1: echo1: not found\n'
-			);
+			expect(err.message).contain('echo1: not found');
 			expect(std.err).equal('');
 			expect(std.out).equal('');
 			done();
