@@ -104,7 +104,7 @@ module.exports = function(app) {
 	});
 
 	resource.use('readAll', function(req, res) {
-		res.send(_(app.projects).pluck('config'));
+		res.send(app.projects);
 	});
 
 	resource.use('run', function(req, res) {

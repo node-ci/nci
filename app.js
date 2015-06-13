@@ -77,10 +77,7 @@ Steppy(
 	},
 	function(err, projects) {
 		app.projects = projects;
-		console.log(
-			'Loaded projects: ',
-			_(projects).chain().pluck('config').pluck('name').value()
-		);
+		console.log('Loaded projects: ', _(projects).pluck('name'));
 
 		// init resources
 		require('./resources')(app);

@@ -9,9 +9,7 @@ var Distributor = require('../lib/distributor').Distributor,
 
 describe('Distributor', function() {
 	var distributor,
-		projects = [{
-			config: {name: 'project1'}
-		}];
+		projects = [{name: 'project1'}];
 
 	var createNodeMock = function(executorRun) {
 		return function(params) {
