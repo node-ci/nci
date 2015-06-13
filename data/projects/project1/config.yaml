@@ -18,6 +18,11 @@ notify:
         # jabber:
         #     - oleg.korobenko@gmail.com
 
+trigger:
+    after:
+        - status: done
+          project: project2
+
 steps:
     - cmd: >
         echo "long multiline string" &&

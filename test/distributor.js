@@ -9,7 +9,9 @@ var Distributor = require('../lib/distributor').Distributor,
 
 describe('Distributor', function() {
 	var distributor,
-		project1 = {name: 'project1'};
+		projects = [{
+			config: {name: 'project1'}
+		}];
 
 	var createNodeMock = function(executorRun) {
 		return function(params) {
@@ -46,13 +48,14 @@ describe('Distributor', function() {
 
 		it('instance should be created without errors', function() {
 			distributor = new Distributor({
+				projects: projects,
 				nodes: [{type: 'local', maxExecutorsCount: 1}]
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run(project1, {}, function(err) {
+			distributor.run('project1', {}, function(err) {
 				expect(err).not.ok();
 				done();
 			});
@@ -108,13 +111,14 @@ describe('Distributor', function() {
 
 		it('instance should be created without errors', function() {
 			distributor = new Distributor({
+				projects: projects,
 				nodes: [{type: 'local', maxExecutorsCount: 1}]
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run(project1, {}, function(err) {
+			distributor.run('project1', {}, function(err) {
 				expect(err).not.ok();
 				done();
 			});

@@ -8,7 +8,8 @@ var http = require('http'),
 	Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	reader = require('./lib/reader'),
-	notifier = require('./lib/notifier');
+	notifier = require('./lib/notifier'),
+	project = require('./lib/project');
 
 var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
@@ -70,6 +71,16 @@ Steppy(
 		console.log('Server config:', JSON.stringify(app.config, null, 4));
 
 		notifier.init(app.config.notify, this.slot());
+	},
+	function() {
+		project.loadAll(app.config.paths.projects, this.slot());
+	},
+	function(err, projects) {
+		app.projects = projects;
+		console.log(
+			'Loaded projects: ',
+			_(projects).chain().pluck('config').pluck('name').value()
+		);
 
 		// init resources
 		require('./resources')(app);

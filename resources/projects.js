@@ -12,22 +12,9 @@ module.exports = function(app) {
 
 	var resource = app.dataio.resource('projects');
 
-	var projects, projectsHash;
-
-	project.loadAll(app.config.paths.projects, function(err, loadedProjects) {
-		if (err) throw err;
-		projects = loadedProjects;
-		projectsHash = _(projects).indexBy(function(project) {
-			return project.config.name;
-		});
-		console.log(
-			'Loaded projects: ',
-			_(projects).chain().pluck('config').pluck('name').value()
-		);
-	});
-
 	var distributor = new Distributor({
 		nodes: app.config.nodes,
+		projects: app.projects,
 		saveBuild: function(build, callback) {
 			Steppy(
 				function() {
@@ -117,14 +104,13 @@ module.exports = function(app) {
 	});
 
 	resource.use('readAll', function(req, res) {
-		res.send(_(projects).pluck('config'));
+		res.send(_(app.projects).pluck('config'));
 	});
 
 	resource.use('run', function(req, res) {
-		var projectName = req.data.projectName,
-			project = projectsHash[projectName];
-		console.log('Run the project: %j', project || projectName);
-		distributor.run(project.config, {}, function(err, build) {
+		var projectName = req.data.projectName;
+		console.log('Run the project: %j', projectName);
+		distributor.run(projectName, {}, function(err, build) {
 			console.log('>>> err, build = ', err && err.stack || err, build);
 		});
 		res.send();
