@@ -1,2 +1,2 @@
-.terminal
-	pre.terminal_code= this.state.data
+.terminal(onScroll=this.onScroll)
+	.terminal_code(ref="code", onScroll=this.onScroll)!= this.state.data

@@ -9,6 +9,7 @@ require.config({
 		reflux: 'libs/reflux/dist/reflux',
 		_dataio: '/data.io',
 		socketio: '/socket.io/socket.io.js',
-		jquery: 'libs/jquery/jquery'
+		jquery: 'libs/jquery/jquery',
+		ansi_up: 'libs/ansi_up/ansi_up'
 	}
 });

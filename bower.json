@@ -12,7 +12,8 @@
     "reflux": "0.2.7",
     "bootstrap": "3.3.4",
     "font-awesome": "4.3.0",
-    "react-router": "0.13.3"
+    "react-router": "0.13.3",
+    "ansi_up": "1.2.1"
   },
   "moduleType": [
     "amd"
