@@ -20,7 +20,6 @@ define([
 			this.setState({showSearch: false});
 		},
 		updateItems: function(projects) {
-			console.log(projects);
 			this.setState({projects: projects});
 		},
 		onSearchProject: function() {
