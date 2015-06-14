@@ -1,5 +1,4 @@
 {
-	"name": "project2",
 	"scm": {
 		"type": "mercurial",
 		"repository": "./test/repos/mercurial",

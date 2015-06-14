@@ -1,6 +1,4 @@
 
-name: project1
-
 scm:
     type: mercurial
     repository: ./test/repos/mercurial

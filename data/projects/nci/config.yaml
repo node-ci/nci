@@ -1,6 +1,4 @@
 
-name: nci
-
 # still cloning fake repo, coz no git support
 scm:
     type: mercurial
