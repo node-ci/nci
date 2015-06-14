@@ -69,14 +69,20 @@ describe('Distributor', function() {
 			expect(changes.completed).equal(false);
 		});
 
-		it('build should be in-progress', function() {
+		it('build should have empty wait reason', function() {
 			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes).only.have.keys('waitReason');
+			expect(changes.waitReason).equal('');
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
 			expect(changes).only.have.keys('startDate', 'status');
 			expect(changes.status).equal('in-progress');
 		});
 
 		it('build should be done', function() {
-			var changes = updateBuildSpy.getCall(2).args[1];
+			var changes = updateBuildSpy.getCall(3).args[1];
 			expect(changes).only.have.keys(
 				'endDate', 'status', 'completed', 'error'
 			);
@@ -85,8 +91,8 @@ describe('Distributor', function() {
 			expect(changes.error).equal(null);
 		});
 
-		it('update build called 3 times in total', function() {
-			expect(updateBuildSpy.callCount).equal(3);
+		it('update build called 4 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(4);
 		});
 
 		after(function() {
@@ -128,20 +134,26 @@ describe('Distributor', function() {
 			expect(changes.status).equal('queued');
 		});
 
-		it('build should be in-progress', function() {
+		it('build should have empty wait reason', function() {
 			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes).only.have.keys('waitReason');
+			expect(changes.waitReason).equal('');
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
 			expect(changes.status).equal('in-progress');
 		});
 
 		it('build should be fail', function() {
-			var changes = updateBuildSpy.getCall(2).args[1];
+			var changes = updateBuildSpy.getCall(3).args[1];
 			expect(changes.status).equal('error');
 			expect(changes.completed).equal(true);
 			expect(changes.error).equal('Some error');
 		});
 
-		it('update build called 3 times in total', function() {
-			expect(updateBuildSpy.callCount).equal(3);
+		it('update build called 4 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(4);
 		});
 
 		after(function() {

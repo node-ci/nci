@@ -30,6 +30,11 @@ mixin statusText(build)
 			span #
 			span= build.number
 
+		if build.waitReason
+			span  (
+			span= build.waitReason
+			span , waiting)
+
 		if build.status === 'in-progress' && build.currentStep
 			span  (
 			span= build.currentStep
