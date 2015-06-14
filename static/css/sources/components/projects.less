@@ -1,0 +1,43 @@
+.projects-selector {
+	position: relative;
+	width: 300px;
+	color: white;
+	cursor: pointer;
+	&_preview {
+		color: rgba(255, 255, 255, 0.5);
+		padding: 5px 25px 5px 5px;
+		&_text {
+			padding-left: 10px;
+		}
+	}
+
+	&_input {
+		width: 80%;
+		padding-bottom: 3px;
+		padding-left: 10px;
+		border: none;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		background: transparent;
+		outline: none;
+	}
+
+	&_items {
+		position: absolute;
+		width: 100%;
+		padding: 15px 5px 5px;
+		left: 0;
+		background: #2c3e50;
+		list-style: none;
+	}
+
+	&_item {
+		padding: 5px 10px;
+		&_run {
+			color: rgba(255, 255, 255, 0.5);
+			&:hover {
+				color: white;
+				text-decoration: none;
+			}
+		}
+	}
+}

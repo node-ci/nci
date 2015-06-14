@@ -9,7 +9,6 @@ define([
 	'templates/app/components/app/template'
 ], function(React, ProjectActions, BuildActions, Projects, Builds, template) {
 	template = template.locals({
-		ProjectsList: Projects.List,
 		BuildsList: Builds.List
 	});
 
