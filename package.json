@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test": "mocha --bail --reporter=spec test/index",
-    "dev": "gulp"
+    "dev": "gulp",
+    "sync": "npm install && npm prune && bower install && bower prune"
   },
   "repository": {
     "type": "git",
