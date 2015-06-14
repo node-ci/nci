@@ -1,0 +1,20 @@
+
+name: nci
+
+# still cloning fake repo, coz no git support
+scm:
+    type: mercurial
+    repository: ./test/repos/mercurial
+    rev: default
+
+notify:
+    on:
+        - fail
+    to:
+        console:
+
+steps:
+    - cmd: sleep 2
+    - cmd: >
+        cd ../../../../ &&
+        npm test

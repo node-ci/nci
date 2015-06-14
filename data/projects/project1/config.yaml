@@ -35,3 +35,9 @@ steps:
     # - cmd: sleep 4
     - cmd: echo 2 > 2.txt
     - cmd: cat 1.txt 2.txt
+    - shell: /bin/bash
+      cmd: >
+        for i in {1..30}; do
+            echo "tick $i";
+            sleep 0.3;
+        done;
