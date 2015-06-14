@@ -1,4 +1,6 @@
 - console.log('builds', items)
 .builds
+	if !items.length
+		p Build queue is empty
 	each build, index in items
 		Item(build=build, key=build.id)
