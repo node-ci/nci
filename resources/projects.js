@@ -110,7 +110,10 @@ module.exports = function(app) {
 	resource.use('run', function(req, res) {
 		var projectName = req.data.projectName;
 		console.log('Run the project: %s', projectName);
-		distributor.run({projectName: projectName}, function(err, build) {
+		distributor.run({
+			projectName: projectName,
+			initiator: {type: 'user'}
+		}, function(err, build) {
 			console.log('>>> err, build = ', err && err.stack || err, build);
 		});
 		res.send();

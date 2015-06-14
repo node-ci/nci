@@ -1,7 +1,18 @@
 if this.state.build
 	h2
-		span Build #
+		span= this.state.build.project.name
+		span  build #
 		span= this.state.build.number
+
+	div
+		| Initiated by 
+		- var initiator = this.state.build.initiator;
+		if initiator.type === 'user'
+			span user
+		else if initiator.type === 'build'
+			span= initiator.project.name
+			span  build #
+			span= initiator.number
 
 	if this.state.build.startDate
 		div
