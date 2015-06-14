@@ -89,16 +89,17 @@ module.exports = function(app) {
 		}
 
 		var filePath = getBuildLogPath(build.id);
-		writeStreamsHash[filePath] = (
-			writeStreamsHash[filePath] ||
-			fs.createWriteStream(getBuildLogPath(build.id), {encoding: 'utf8'})
-		);
+
+		if (!writeStreamsHash[filePath]) {
+			writeStreamsHash[filePath] = fs.createWriteStream(
+				getBuildLogPath(build.id), {encoding: 'utf8'}
+			);
+			writeStreamsHash[filePath].on('error', function(err) {
+				console.error(err.stack || err);
+			});
+		}
 		// TODO: close ended files
-		writeStreamsHash[filePath]
-			.on('error', function(err) {
-				console.log(err.stack || err);
-			})
-			.write(data);
+		writeStreamsHash[filePath].write(data);
 
 		app.dataio.resource('build' + build.id).clientEmitSync('data', data);
 	});
