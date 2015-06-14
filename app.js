@@ -105,7 +105,7 @@ Steppy(
 				project.load(baseDir, projectName, function(err, project) {
 					if (err) {
 						return console.error(
-							'Error during load project "' + projectName + '": ' +
+							'Error during load project "' + projectName + '": ',
 							err.stack || err
 						);
 					}
