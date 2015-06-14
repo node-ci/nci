@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/okv/nci",
   "dependencies": {
+    "chokidar": "1.0.3",
     "data.io": "0.3.0",
     "jade": "1.9.2",
     "js-yaml": "3.3.1",
