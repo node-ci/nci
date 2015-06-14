@@ -9,6 +9,10 @@ define([
 
 		init: function() {
 			console.log('init builds console output');
+
+			// the only purpose of this hash to reconnect all the time
+			// except first, see notes at using
+			this.connectedResourcesHash = {};
 		},
 
 		onReadTerminalOutput: function(build) {
@@ -17,7 +21,14 @@ define([
 				resourceName = 'build' + build.id;
 
 			var connectToBuildDataResource = function() {
-				connect.resource(resourceName).reconnect();
+				// reconnect for get data below (at subscribe), coz
+				// data emitted only once during connect
+				if (self.connectedResourcesHash[resourceName]) {
+					connect.resource(resourceName).reconnect();
+				} else {
+					self.connectedResourcesHash[resourceName] = 1;
+				}
+
 				connect.resource(resourceName).subscribe('data', function(data) {
 					output += data;
 
