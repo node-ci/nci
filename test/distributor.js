@@ -62,7 +62,8 @@ describe('Distributor', function() {
 		it('build should be queued', function() {
 			var changes = updateBuildSpy.getCall(0).args[1];
 			expect(changes).only.have.keys(
-				'project', 'params', 'createDate', 'status', 'completed'
+				'project', 'initiator', 'params', 'createDate', 'status',
+				'completed'
 			);
 			expect(changes.status).equal('queued');
 			expect(changes.completed).equal(false);
