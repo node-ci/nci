@@ -1,27 +1,14 @@
 'use strict';
 
 var Distributor = require('../../lib/distributor').Distributor,
-	Node = require('../../lib/node').Node,
 	expect = require('expect.js'),
-	EventEmitter = require('events').EventEmitter,
-	sinon = require('sinon')
+	sinon = require('sinon'),
+	createNodeMock = require('./helpers').createNodeMock;
 
 
-describe('Distributor', function() {
+describe('Distributor main', function() {
 	var distributor,
 		projects = [{name: 'project1'}];
-
-	var createNodeMock = function(executorRun) {
-		return function(params) {
-			var node = new Node(params);
-			node._createExecutor = function() {
-				var executor = new EventEmitter();
-				executor.run = executorRun;
-				return executor;
-			};
-			return node;
-		};
-	};
 
 	var expectUpdateBuild = function(distributor, build, number, conditionsHash) {
 		var conditions = conditionsHash[number];
@@ -34,11 +21,8 @@ describe('Distributor', function() {
 
 	describe('with success project', function() {
 		before(function() {
-			var executorRun = function(params, callback) {
-				setTimeout(callback, 1);
-			};
 			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-				executorRun
+				sinon.stub().callsArgAsync(1)
 			));
 		});
 
@@ -97,13 +81,8 @@ describe('Distributor', function() {
 
 	describe('with fail project', function() {
 		before(function() {
-			var executorRun = function(params, callback) {
-				setTimeout(function() {
-					callback(new Error('Some error'));
-				}, 1);
-			};
 			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-				executorRun
+				sinon.stub().callsArgWithAsync(1, new Error('Some error'))
 			));
 		});
 
