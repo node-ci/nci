@@ -21,6 +21,13 @@ trigger:
         - status: done
           project: project2
 
+blockedBy:
+    # - project2
+    - !!js/regexp /project2|nci/
+
+blocks:
+    - project2
+
 steps:
     - cmd: >
         echo "long multiline string" &&
