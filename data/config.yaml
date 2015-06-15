@@ -1,6 +1,6 @@
 
 nodes:
     - type: local
-      maxExecutorsCount: 1
+      maxExecutorsCount: 2
 
 notify: {}
