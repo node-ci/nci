@@ -1,7 +1,7 @@
 'use strict';
 
-var Distributor = require('../lib/distributor').Distributor,
-	Node = require('../lib/node').Node,
+var Distributor = require('../../lib/distributor').Distributor,
+	Node = require('../../lib/node').Node,
 	expect = require('expect.js'),
 	EventEmitter = require('events').EventEmitter,
 	sinon = require('sinon')
