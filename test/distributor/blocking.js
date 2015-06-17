@@ -7,7 +7,12 @@ var Distributor = require('../../lib/distributor').Distributor,
 	Steppy = require('twostep').Steppy;
 
 
-describe('Distributor blocking', function() {
+var expectStatus = function(spy, index, projectName, status) {
+	expect(spy.getCall(index).args[0].project.name).equal(projectName);
+	expect(spy.getCall(index).args[1].status).equal(status);
+};
+
+describe('Distributor blocking with max 2 executors count', function() {
 	var distributor, updateBuildSpy, projects;
 
 	var nodes = [{type: 'local', maxExecutorsCount: 2}];
@@ -18,15 +23,7 @@ describe('Distributor blocking', function() {
 		));
 	});
 
-	describe('should no work when two non-blocking projects run', function() {
-		before(function() {
-			projects = [{
-				name: 'project1',
-			}, {
-				name: 'project2'
-			}];
-		});
-
+	var itRunParallelProjects = function() {
 		it('distributor should be created without errors', function() {
 			distributor = new Distributor({projects: projects, nodes: nodes});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
@@ -47,32 +44,26 @@ describe('Distributor blocking', function() {
 		});
 
 		it('both projects should be queued', function() {
-			var spy = updateBuildSpy;
-			expect(spy.getCall(0).args[0].project.name).equal('project1');
-			expect(spy.getCall(0).args[1].status).equal('queued');
-			expect(spy.getCall(1).args[0].project.name).equal('project2');
-			expect(spy.getCall(1).args[1].status).equal('queued');
+			expectStatus(updateBuildSpy, 0, 'project1', 'queued');
+			expectStatus(updateBuildSpy, 1, 'project2', 'queued');
 		});
 
 		it('both projects should be in-progress', function() {
-			var spy = updateBuildSpy;
-			expect(spy.getCall(2).args[0].project.name).equal('project1');
-			expect(spy.getCall(2).args[1].status).equal('in-progress');
-			expect(spy.getCall(3).args[0].project.name).equal('project2');
-			expect(spy.getCall(3).args[1].status).equal('in-progress');
-		});
-	});
-
-	describe('should work project2 blocked by project1', function() {
-		before(function() {
-			projects = [{
-				name: 'project1',
-			}, {
-				name: 'project2',
-				blockedBy: ['project1']
-			}];
+			expectStatus(updateBuildSpy, 2, 'project1', 'in-progress');
+			expectStatus(updateBuildSpy, 3, 'project2', 'in-progress');
 		});
 
+		it('both projects should be done', function() {
+			expectStatus(updateBuildSpy, 4, 'project1', 'done');
+			expectStatus(updateBuildSpy, 5, 'project2', 'done');
+		});
+
+		it('update build called 6 times totally', function() {
+			expect(updateBuildSpy.callCount).equal(6);
+		});
+	};
+
+	var itRunSequentialProjects = function() {
 		it('distributor should be created without errors', function() {
 			distributor = new Distributor({projects: projects, nodes: nodes});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
@@ -93,17 +84,12 @@ describe('Distributor blocking', function() {
 		});
 
 		it('both projects should be queued', function() {
-			var spy = updateBuildSpy;
-			expect(spy.getCall(0).args[0].project.name).equal('project1');
-			expect(spy.getCall(0).args[1].status).equal('queued');
-			expect(spy.getCall(1).args[0].project.name).equal('project2');
-			expect(spy.getCall(1).args[1].status).equal('queued');
+			expectStatus(updateBuildSpy, 0, 'project1', 'queued');
+			expectStatus(updateBuildSpy, 1, 'project2', 'queued');
 		});
 
 		it('project1 should be in-progress', function() {
-			var spy = updateBuildSpy;
-			expect(spy.getCall(2).args[0].project.name).equal('project1');
-			expect(spy.getCall(2).args[1].status).equal('in-progress');
+			expectStatus(updateBuildSpy, 2, 'project1', 'in-progress');
 		});
 
 		it('project2 should have wait reason (project1)', function() {
@@ -113,6 +99,78 @@ describe('Distributor blocking', function() {
 				'Blocked by currently running "project1"'
 			);
 		});
+
+		it('project1 should be done', function() {
+			expectStatus(updateBuildSpy, 4, 'project1', 'done');
+		});
+
+		it('project2 should be in-progress', function() {
+			expectStatus(updateBuildSpy, 5, 'project2', 'in-progress');
+		});
+
+		it('project2 should be done', function() {
+			expectStatus(updateBuildSpy, 6, 'project2', 'done');
+		});
+
+		it('update build called 7 times totally', function() {
+			expect(updateBuildSpy.callCount).equal(7);
+		});
+	};
+
+	describe('should run 2 non-blocking projects in parallel', function() {
+		before(function() {
+			projects = [{
+				name: 'project1',
+			}, {
+				name: 'project2'
+			}];
+		});
+
+		itRunParallelProjects();
 	});
 
+	describe('should run project1, then 2, when 2 blocked by 1', function() {
+		before(function() {
+			projects = [{
+				name: 'project1',
+			}, {
+				name: 'project2',
+				blockedBy: ['project1']
+			}];
+		});
+
+		itRunSequentialProjects();
+	});
+
+	describe('should run project1, then 2, when 1 blocks 2', function() {
+		before(function() {
+			projects = [{
+				name: 'project1',
+				blocks: ['project2']
+			}, {
+				name: 'project2'
+			}];
+		});
+
+		itRunSequentialProjects();
+	});
+
+	describe(
+		'should run 1, 2 in parallel, when 1 block 3, 2 blocked by 3',
+		function() {
+			before(function() {
+				projects = [{
+					name: 'project1',
+					blocks: ['project3']
+				}, {
+					name: 'project2',
+					blockedBy: ['project3']
+				}, {
+					name: 'project3'
+				}];
+			});
+
+			itRunParallelProjects();
+		}
+	);
 });
