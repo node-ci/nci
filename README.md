@@ -8,17 +8,17 @@ work in progress...
 
 * Dashboard (builds list, projects autocomlete)
 * Build page (build info, console)
-* Url for trigger build run
-* YAML project and server(executors count, etc) configs
-* Persistent build and console output information
-* Project relations (blocks, triggers, etc)
-* Mail and jabber notifications (with commits, current step and error)
-* Work with git and mercurial (build every commit, commit with tag, etc)
 * Awesome build output (very close to terminal)
-* Ability to change build parameters from ui (at least target branch)
-* Semantic versioning and plugins
+* Url for trigger build run
+* ~~YAML project and server(executors count, etc) configs~~
+* ~~Persistent build and console output information~~
+* ~~Project relations (blocks, triggers, etc)~~
+* Mail and jabber notifications (with commits, current step and error)
+* Work with git
+* Build every commit, commit with tag, etc
 * Safe id and build numbers generation
-* Better tests coverage
+* Semantic versioning and plugins
+* ~~Better tests coverage~~
 
 ## Roadmap
 
@@ -40,6 +40,6 @@ is defined and matched (e.g. ui tests timeout error or internet connection
 problems detected by regexp) then step will be rerun without error
 * Approximate remaining build time should be shown
 * Named build steps
-* Target branch can be changed easily from ui
+* Ability to change build parameters from ui (at least target branch)
 * Embedded database (apparently level db)
 * Lightweight (minimal dependencies)
