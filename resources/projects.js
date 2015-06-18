@@ -28,6 +28,9 @@ module.exports = function(app) {
 		}
 	});
 
+	// expose distributor to the app
+	app.distributor = distributor;
+
 	var getBuildLogPath = function(buildId) {
 		return path.join(app.config.paths.builds, buildId + '.log');
 	};

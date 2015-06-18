@@ -9,7 +9,7 @@ work in progress...
 * Dashboard (builds list, projects autocomlete)
 * Build page (build info, console)
 * Awesome build output (very close to terminal)
-* Url for trigger build run
+* ~~Url for trigger build run~~
 * ~~YAML project and server(executors count, etc) configs~~
 * ~~Persistent build and console output information~~
 * ~~Project relations (blocks, triggers, etc)~~

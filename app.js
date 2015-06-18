@@ -135,6 +135,8 @@ Steppy(
 
 		// init resources
 		require('./resources')(app);
+
+		require('./httpApi').register(app);
 	},
 	function(err) {
 		if (err) throw err;

@@ -4,3 +4,7 @@ nodes:
       maxExecutorsCount: 2
 
 notify: {}
+
+httpApi:
+    host: 127.0.0.1
+    port: 3030
