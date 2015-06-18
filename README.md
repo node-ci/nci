@@ -17,8 +17,9 @@ work in progress...
 * Work with git
 * Build every commit, commit with tag, etc
 * Safe id and build numbers generation
-* Semantic versioning and plugins
+* Scheduler
 * ~~Better tests coverage~~
+* Semantic versioning and plugins
 
 ## Roadmap
 
@@ -43,3 +44,4 @@ problems detected by regexp) then step will be rerun without error
 * Ability to change build parameters from ui (at least target branch)
 * Embedded database (apparently level db)
 * Lightweight (minimal dependencies)
+* Cancel build
