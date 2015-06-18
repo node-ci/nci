@@ -7,13 +7,15 @@ work in progress...
 ## TODO for release 1.0
 
 * Dashboard (builds list, projects autocomlete)
-* Build page (build info, console)
+* Build page (build info(dates, changes, etc), console)
 * Awesome build output (very close to terminal)
 * ~~Url for trigger build run~~
 * ~~YAML project and server(executors count, etc) configs~~
 * ~~Persistent build and console output information~~
 * ~~Project relations (blocks, triggers, etc)~~
+* Writes to stderr must not break the build
 * Mail and jabber notifications (with commits, current step and error)
+* Rename notification strategies according to statuses
 * Work with git
 * Build every commit, commit with tag, etc
 * Safe id and build numbers generation
