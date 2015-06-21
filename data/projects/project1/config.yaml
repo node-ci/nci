@@ -6,8 +6,8 @@ scm:
 
 notify:
     on:
-        # - success
-        # - fail
+        # - done
+        # - error
         - change
     to:
         console:

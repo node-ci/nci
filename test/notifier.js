@@ -77,11 +77,11 @@ describe('notifier module', function() {
 		}).extend(build);
 	};
 
-	describe('notify on success', function() {
+	describe('notify on done', function() {
 		it('set build info', function() {
 			build = makeBuild({
 				status: 'done',
-				project: {notify: {on: ['success']}}
+				project: {notify: {on: ['done']}}
 			});
 			sendSpy.reset();
 		});
@@ -96,7 +96,7 @@ describe('notifier module', function() {
 
 		it('should be notified with right params', function() {
 			expect(sendSpy.calledWith({
-				notifyReason: {strategy: 'success'},
+				notifyReason: {strategy: 'done'},
 				build: build
 			})).equal(true);
 		});
@@ -115,11 +115,11 @@ describe('notifier module', function() {
 		});
 	});
 
-	describe('notify on fail', function() {
+	describe('notify on error', function() {
 		it('set build info', function() {
 			build = makeBuild({
 				status: 'error',
-				project: {notify: {on: ['fail']}}
+				project: {notify: {on: ['error']}}
 			});
 			sendSpy.reset();
 		});
@@ -134,7 +134,7 @@ describe('notifier module', function() {
 
 		it('should be notified with right params', function() {
 			expect(sendSpy.calledWith({
-				notifyReason: {strategy: 'fail'},
+				notifyReason: {strategy: 'error'},
 				build: build
 			})).equal(true);
 		});

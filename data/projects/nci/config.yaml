@@ -7,7 +7,7 @@ scm:
 
 notify:
     on:
-        - fail
+        - error
     to:
         console:
 
