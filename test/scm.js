@@ -4,7 +4,8 @@ var expect = require('expect.js'),
 	path = require('path'),
 	fs = require('fs'),
 	createScm = require('../lib/scm').createScm,
-	SpawnCommand = require('../lib/command/spawn').Command;
+	SpawnCommand = require('../lib/command/spawn').Command,
+	mercurialRevs = require('./helpers').mercurialRevs;
 
 
 ['mercurial'].forEach(function(type) {
@@ -36,9 +37,9 @@ var expect = require('expect.js'),
 			});
 		});
 
-		var currentRev = data.rev0.id;
+		var currentRev = data[0].id;
 		it('clone rev0 to dst without errors', function(done) {
-			scm.clone(repositoryPath, data.rev0.id, done);
+			scm.clone(repositoryPath, data[0].id, done);
 		});
 
 		it('expect scm.cwd equals to dst', function() {
@@ -48,13 +49,21 @@ var expect = require('expect.js'),
 		it('expect current revision equals to rev0', function(done) {
 			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(rev).eql(data.rev0);
+				expect(rev).eql(data[0]);
+				done();
+			});
+		});
+
+		it('expect rev0 info is good', function(done) {
+			scm.getRev(mercurialRevs[0].id, function(err, rev) {
+				if (err) return done(err);
+				expect(rev).eql(mercurialRevs[0]);
 				done();
 			});
 		});
 
 		it('expect none changes from rev0 to default revision', function(done) {
-			scm.getChanges(data.rev0.id, scm.defaultRev, function(err, changes) {
+			scm.getChanges(data[0].id, scm.defaultRev, function(err, changes) {
 				if (err) return done(err);
 				expect(changes).ok();
 				expect(changes).length(0);
@@ -68,11 +77,11 @@ var expect = require('expect.js'),
 
 		it('now (after pull) expect rev1 and rev2 as new changes (in reverse ' +
 			'order) from rev0 to default revision', function(done) {
-			scm.getChanges(data.rev0.id, scm.defaultRev, function(err, changes) {
+			scm.getChanges(data[0].id, scm.defaultRev, function(err, changes) {
 				if (err) return done(err);
 				expect(changes).ok();
 				expect(changes).length(2);
-				expect(changes).eql([data.rev2, data.rev1]);
+				expect(changes).eql([data[2], data[1]]);
 				done();
 			});
 		});
@@ -85,7 +94,7 @@ var expect = require('expect.js'),
 		it('expect current revision equals to rev2', function(done) {
 			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(rev).eql(data.rev2);
+				expect(rev).eql(data[2]);
 				done();
 			});
 		});
@@ -96,11 +105,11 @@ var expect = require('expect.js'),
 
 		it('expect repository log from rev0 to default revision equals to ' +
 			'rev1 and rev2 (in reverse order)', function(done) {
-			scm.getChanges(data.rev0.id, scm.defaultRev, function(err, changes) {
+			scm.getChanges(data[0].id, scm.defaultRev, function(err, changes) {
 				if (err) return done(err);
 				expect(changes).ok();
 				expect(changes).length(2);
-				expect(changes).eql([data.rev2, data.rev1]);
+				expect(changes).eql([data[2], data[1]]);
 				done();
 			});
 		});
@@ -113,28 +122,5 @@ var expect = require('expect.js'),
 
 
 function getTestData(type) {
-	if (type === 'mercurial') return getMercurialData();
-}
-
-function getMercurialData() {
-	return {
-		rev0: {
-			id: 'da2762e71e87',
-			author: 'kotbegemot',
-			date: new Date('Fri May 09 22:36:41 2014 +0400').getTime(),
-			comment: 'zero revision'
-		},
-		rev1: {
-			id: '98e3a18d8193',
-			author: 'kotbegemot',
-			date: new Date('Fri May 09 22:37:19 2014 +0400').getTime(),
-			comment: 'first revision'
-		},
-		rev2: {
-			id: '9d7d08445f4c',
-			author: 'kotbegemot',
-			date: new Date('Sat May 10 03:18:20 2014 +0400').getTime(),
-			comment: 'third revision'
-		}
-	};
+	if (type === 'mercurial') return mercurialRevs;
 }

@@ -4,6 +4,9 @@ scm:
     repository: ./test/repos/mercurial
     rev: default
 
+# catchRev:
+#     comment: !!js/regexp //
+
 notify:
     on:
         # - done
