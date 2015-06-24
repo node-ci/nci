@@ -4,8 +4,8 @@ scm:
     repository: ./test/repos/mercurial
     rev: default
 
-# catchRev:
-#     comment: !!js/regexp //
+catchRev:
+    comment: !!js/regexp //
 
 notify:
     on:
@@ -45,7 +45,7 @@ steps:
     - cmd: cat 1.txt 2.txt
     - shell: /bin/bash
       cmd: >
-        for i in {1..30}; do
+        for i in {1..10}; do
             echo "tick $i";
             sleep 0.3;
         done;
