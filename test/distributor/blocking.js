@@ -173,4 +173,9 @@ describe('Distributor blocking with max 2 executors count', function() {
 			itRunParallelProjects();
 		}
 	);
+
+	after(function() {
+		Distributor.prototype._createNode.restore();
+	});
+
 });

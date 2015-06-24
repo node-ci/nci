@@ -2,30 +2,19 @@
 
 var expect = require('expect.js'),
 	path = require('path'),
-	fs = require('fs'),
 	createExecutor = require('../lib/executor').createExecutor,
-	SpawnCommand = require('../lib/command/spawn').Command,
 	_ = require('underscore'),
-	mercurialRevs = _(require('./helpers').mercurialRevs).clone();
+	helpers = require('./helpers'),
+	mercurialRevs = helpers.mercurialRevs;
 
 
 ['local'].forEach(function(type) {
 	describe(type + ' executor', function() {
 		var workspacePath = path.join(__dirname, 'workspace');
 
-		var removeDir = function (dir, callback) {
-			new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
-		}
-
-		var clearWorkspace = function (done) {
-			if (fs.exists(workspacePath, function(isExists) {
-				if (isExists) {
-					removeDir(workspacePath, done);
-				} else {
-					done();
-				}
-			}));
-		}
+		var clearWorkspace = function(done) {
+			helpers.removeDirIfExists(workspacePath, done);
+		};
 
 		var makeExecutorParams = function(params) {
 			params = params || {};

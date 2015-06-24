@@ -1,5 +1,24 @@
 'use strict';
 
+var SpawnCommand = require('../lib/command/spawn').Command,
+	fs = require('fs');
+
+
+exports.removeDir = function(dir, callback) {
+	new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
+};
+
+exports.removeDirIfExists = function(dir, done) {
+	if (fs.exists(dir, function(isExists) {
+		if (isExists) {
+			exports.removeDir(dir, done);
+		} else {
+			done();
+		}
+	}));
+};
+
+
 
 // revisions for the test mercurial repo
 exports.mercurialRevs = [{
