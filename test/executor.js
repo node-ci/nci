@@ -67,50 +67,104 @@ var expect = require('expect.js'),
 			);
 		});
 
-		describe('with scm rev default and catch rev "first revision"', function() {
-			before(clearWorkspace);
+		_(['first revision', /^first revision$/]).each(function(comment) {
 
-			it('instance should be created without errors', function() {
-				executor = createExecutor(makeExecutorParams({
-					project: {
-						catchRev: {comment: 'first revision'}
+			describe('with scm rev default and catch rev ' + comment, function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					executor = createExecutor(makeExecutorParams({
+						project: {
+							catchRev: {comment: comment}
+						}
+					}));
+				});
+
+				it('should run without errors', function(done) {
+					executor.run({}, function(err) {
+						expect(err).not.ok();
+						done();
+					});
+					executor.on('scmData', function(data) {
+						scmData = data;
+					});
+				});
+
+				it('scm data should be rev: 1, changes: [0, 1], not latest',
+					function() {
+						expect(scmData).eql({
+							rev: mercurialRevs[1],
+							changes: mercurialRevs.slice(0, 2).reverse(),
+							isLatest: false
+						});
+					});
+
+				it('should run it again without errors', function(done) {
+					executor.run({}, done);
+				});
+
+				it(
+					'scm data should be rev: last, changes: [2-last], is latest',
+					function() {
+						expect(scmData).eql({
+							rev: mercurialRevs[mercurialRevs.length - 1],
+							changes: mercurialRevs.slice(2).reverse(),
+							isLatest: true
+						});
 					}
-				}));
+				);
 			});
 
-			it('should run without errors', function(done) {
-				executor.run({}, function(err) {
-					expect(err).not.ok();
-					done();
-				});
-				executor.on('scmData', function(data) {
-					scmData = data;
-				});
-			});
+		});
 
-			it('scm data should be rev: 1, changes: [0, 1], not latest',
-				function() {
-					expect(scmData).eql({
-						rev: mercurialRevs[1],
-						changes: mercurialRevs.slice(0, 2).reverse(),
-						isLatest: false
+		_(['second revision', /^second revision$/]).each(function(tag) {
+
+			describe('with scm rev default and catch tag ' + tag, function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					executor = createExecutor(makeExecutorParams({
+						project: {
+							catchRev: {tag: tag}
+						}
+					}));
+				});
+
+				it('should run without errors', function(done) {
+					executor.run({}, function(err) {
+						expect(err).not.ok();
+						done();
+					});
+					executor.on('scmData', function(data) {
+						scmData = data;
 					});
 				});
 
-			it('should run it again without errors', function(done) {
-				executor.run({}, done);
-			});
-
-			it(
-				'scm data should be rev: last, changes: [2-last], is latest',
-				function() {
-					expect(scmData).eql({
-						rev: mercurialRevs[mercurialRevs.length - 1],
-						changes: mercurialRevs.slice(2).reverse(),
-						isLatest: true
+				it('scm data should be rev: 2, changes: [0, 2], not latest',
+					function() {
+						expect(scmData).eql({
+							rev: mercurialRevs[2],
+							changes: mercurialRevs.slice(0, 3).reverse(),
+							isLatest: false
+						});
 					});
-				}
-			);
+
+				it('should run it again without errors', function(done) {
+					executor.run({}, done);
+				});
+
+				it(
+					'scm data should be rev: last, changes: [3-last], is latest',
+					function() {
+						expect(scmData).eql({
+							rev: mercurialRevs[mercurialRevs.length - 1],
+							changes: mercurialRevs.slice(3).reverse(),
+							isLatest: true
+						});
+					}
+				);
+
+			});
 
 		});
 

@@ -17,7 +17,7 @@ work in progress...
 * Mail and jabber notifications (with commits, current step and error)
 * ~~Rename notification strategies according to statuses~~
 * Work with git
-* Build every commit, commit with tag, etc
+* ~~Build every commit, commit with tag, etc~~
 * Safe id and build numbers generation
 * Scheduler
 * ~~Better tests coverage~~
