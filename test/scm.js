@@ -1,6 +1,7 @@
 'use strict';
 
 var expect = require('expect.js'),
+	_ = require('underscore'),
 	path = require('path'),
 	fs = require('fs'),
 	createScm = require('../lib/scm').createScm,
@@ -49,7 +50,11 @@ var expect = require('expect.js'),
 		it('expect current revision equals to rev0', function(done) {
 			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(rev).eql(data[0]);
+				// there is no tag for mercurial repo coz when you clone with
+				// specified revision no later revision will be cloned
+				// including those one with add tag (it's after rev 0 in our
+				// repo)
+				expect(rev).eql(_(data[0]).omit('tags'));
 				done();
 			});
 		});
@@ -57,7 +62,8 @@ var expect = require('expect.js'),
 		it('expect rev0 info is good', function(done) {
 			scm.getRev(mercurialRevs[0].id, function(err, rev) {
 				if (err) return done(err);
-				expect(rev).eql(mercurialRevs[0]);
+				// no tag here, see note above
+				expect(rev).eql(_(data[0]).omit('tags'));
 				done();
 			});
 		});

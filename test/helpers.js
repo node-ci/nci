@@ -21,6 +21,7 @@ exports.removeDirIfExists = function(dir, done) {
 // revisions for the test mercurial repo
 exports.mercurialRevs = [{
 	id: 'da2762e71e87',
+	tags: ['zero revision'],
 	author: 'kotbegemot',
 	date: new Date('Fri May 09 22:36:41 2014 +0400').getTime(),
 	comment: 'zero revision'
@@ -31,6 +32,7 @@ exports.mercurialRevs = [{
 	comment: 'first revision'
 }, {
 	id: '9d7d08445f4c',
+	tags: ['release 0.1.0', 'second revision'],
 	author: 'kotbegemot',
 	date: new Date('Sat May 10 03:18:20 2014 +0400').getTime(),
 	comment: 'third revision'
