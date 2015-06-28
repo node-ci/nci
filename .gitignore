@@ -1,5 +1,6 @@
 node_modules
 test/workspace
+test/distributor/workspace
 static/css/**/*.css
 static/fonts
 static/js/libs

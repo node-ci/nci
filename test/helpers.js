@@ -18,8 +18,6 @@ exports.removeDirIfExists = function(dir, done) {
 	}));
 };
 
-
-
 // revisions for the test mercurial repo
 exports.mercurialRevs = [{
 	id: 'da2762e71e87',
