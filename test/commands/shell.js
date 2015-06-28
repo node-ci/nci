@@ -8,7 +8,8 @@ describe('Shell command', function() {
 	var shellCommand;
 	it('Should be created without errors', function() {
 		shellCommand = new ShellCommand({
-			emitOut: true
+			emitOut: true,
+			attachStderr: true
 		});
 	});
 
@@ -40,9 +41,12 @@ describe('Shell command', function() {
 		shellCommand.run({cmd: 'echo1 "Hello world"'}, function(err) {
 			expect(err).ok();
 			expect(err).an(Error);
-			// messages are slightly different across the OSes
+			// messages and codes are slightly different across the OSes
 			// e.g. at linux and macos
-			expect(err.message).match(/echo1:.*not found/);
+			expect(err.message).match(
+				/^Spawned command exits with non-zero code: \d+/
+			);
+			expect(err.stderr).match(/echo1:.*not found/);
 			expect(std.err).equal('');
 			expect(std.out).equal('');
 			done();

@@ -13,7 +13,7 @@ work in progress...
 * ~~YAML project and server(executors count, etc) configs~~
 * ~~Persistent build and console output information~~
 * ~~Project relations (blocks, triggers, etc)~~
-* Writes to stderr must not break the build
+* ~~Writes to stderr must not break the build~~
 * Mail and jabber notifications (with commits, current step and error)
 * ~~Rename notification strategies according to statuses~~
 * Work with git

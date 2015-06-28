@@ -15,7 +15,7 @@ describe('Distributor main', function() {
 		expect(distributor.queue).length(conditions.queue.length);
 		expect(build.status).equal(conditions.build.status);
 		if (build.status === 'error') {
-			expect(build.error).eql(conditions.build.error.message);
+			expect(build.error.message).eql(conditions.build.error.message);
 		}
 	};
 
@@ -117,7 +117,7 @@ describe('Distributor main', function() {
 			var changes = updateBuildSpy.getCall(2).args[1];
 			expect(changes.status).equal('error');
 			expect(changes.completed).equal(true);
-			expect(changes.error).equal('Some error');
+			expect(changes.error.message).equal('Some error');
 		});
 
 		it('update build called 3 times in total', function() {

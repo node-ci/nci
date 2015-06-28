@@ -41,7 +41,11 @@ if this.state.build
 	div
 		if this.state.build.error
 			| Error: 
-			span= this.state.build.error
+			span= this.state.build.error.message
+
+		if this.state.build.error.stderr
+			div stderr: 
+			pre= this.state.build.error.stderr
 
 	.row
 		.col-md-8
