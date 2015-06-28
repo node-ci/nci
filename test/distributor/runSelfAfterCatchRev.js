@@ -69,8 +69,9 @@ describe('Distributor run self after catch', function() {
 		itRunWithRev(1, 1);
 		itRunWithRev(2, 2);
 
-		it('should call run 3 times in total', function() {
-			expect(executorRunSpy.callCount).equal(3);
+		var revsCount = helpers.mercurialRevs.length;
+		it('should call run ' + revsCount + ' times in total', function() {
+			expect(executorRunSpy.callCount).equal(revsCount);
 		});
 
 	});

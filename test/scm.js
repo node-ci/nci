@@ -75,26 +75,25 @@ var expect = require('expect.js'),
 			scm.pull(scm.defaultRev, done);
 		});
 
-		it('now (after pull) expect rev1 and rev2 as new changes (in reverse ' +
+		it('now (after pull) expect all after rev 0 as new changes (in reverse ' +
 			'order) from rev0 to default revision', function(done) {
 			scm.getChanges(data[0].id, scm.defaultRev, function(err, changes) {
 				if (err) return done(err);
 				expect(changes).ok();
-				expect(changes).length(2);
-				expect(changes).eql([data[2], data[1]]);
+				expect(changes).eql(data.slice(1).reverse());
 				done();
 			});
 		});
 
-		it('update to default revision (should update to rev2) without error',
+		it('update to default revision (should update to last) without error',
 			function(done) {
 				scm.update(scm.defaultRev, done);
 			});
 
-		it('expect current revision equals to rev2', function(done) {
+		it('expect current revision equals to last', function(done) {
 			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
-				expect(rev).eql(data[2]);
+				expect(rev).eql(data[data.length - 1]);
 				done();
 			});
 		});
@@ -104,12 +103,11 @@ var expect = require('expect.js'),
 		});
 
 		it('expect repository log from rev0 to default revision equals to ' +
-			'rev1 and rev2 (in reverse order)', function(done) {
+			'all revs followed by rev 0 (in reverse order)', function(done) {
 			scm.getChanges(data[0].id, scm.defaultRev, function(err, changes) {
 				if (err) return done(err);
 				expect(changes).ok();
-				expect(changes).length(2);
-				expect(changes).eql([data[2], data[1]]);
+				expect(changes).eql(data.slice(1).reverse());
 				done();
 			});
 		});

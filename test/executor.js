@@ -55,13 +55,16 @@ var expect = require('expect.js'),
 				});
 			});
 
-			it('scm data should be rev: 2, changes: [0-2], latest', function() {
-				expect(scmData).eql({
-					rev: mercurialRevs[2],
-					changes: mercurialRevs.slice().reverse(),
-					isLatest: true
-				});
-			});
+			it(
+				'scm data should be rev: last, changes: [0-last], is latest',
+				function() {
+					expect(scmData).eql({
+						rev: mercurialRevs[mercurialRevs.length - 1],
+						changes: mercurialRevs.slice().reverse(),
+						isLatest: true
+					});
+				}
+			);
 		});
 
 		describe('with scm rev default and catch rev "first revision"', function() {
@@ -98,13 +101,17 @@ var expect = require('expect.js'),
 				executor.run({}, done);
 			});
 
-			it('scm data should be rev: 2, changes: [2], latest', function() {
-				expect(scmData).eql({
-					rev: mercurialRevs[2],
-					changes: mercurialRevs.slice(2, 3).reverse(),
-					isLatest: true
-				});
-			});
+			it(
+				'scm data should be rev: last, changes: [2-last], is latest',
+				function() {
+					expect(scmData).eql({
+						rev: mercurialRevs[mercurialRevs.length - 1],
+						changes: mercurialRevs.slice(2).reverse(),
+						isLatest: true
+					});
+				}
+			);
+
 		});
 
 	});

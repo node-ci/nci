@@ -34,4 +34,9 @@ exports.mercurialRevs = [{
 	author: 'kotbegemot',
 	date: new Date('Sat May 10 03:18:20 2014 +0400').getTime(),
 	comment: 'third revision'
+}, {
+	id: '2ff4bec8b4cc',
+	author: 'okv',
+	date: new Date('Sun Jun 28 10:54:22 2015 +0300').getTime(),
+	comment: 'add tags'
 }];

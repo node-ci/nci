@@ -1,6 +1,7 @@
 node_modules
 test/workspace
 test/distributor/workspace
+test/repos/mercurial/.hg/strip-backup
 static/css/**/*.css
 static/fonts
 static/js/libs
