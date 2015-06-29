@@ -18,7 +18,7 @@ work in progress...
 * ~~Rename notification strategies according to statuses~~
 * Work with git
 * ~~Build every commit, commit with tag, etc~~
-* Safe id and build numbers generation
+* ~~Safe id and build numbers generation~~
 * Scheduler
 * ~~Better tests coverage~~
 * Semantic versioning and plugins

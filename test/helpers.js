@@ -1,7 +1,8 @@
 'use strict';
 
 var SpawnCommand = require('../lib/command/spawn').Command,
-	fs = require('fs');
+	fs = require('fs'),
+	db = require('../db');
 
 
 exports.removeDir = function(dir, callback) {
@@ -42,3 +43,11 @@ exports.mercurialRevs = [{
 	date: new Date('Sun Jun 28 10:54:22 2015 +0300').getTime(),
 	comment: 'add tags'
 }];
+
+exports.initDb = function(callback) {
+	db.init('path/to/db/ignored/for/memdown', {
+		db: require('memdown'),
+		valueEncoding: 'json'
+	}, callback);
+	return db;
+};

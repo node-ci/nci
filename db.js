@@ -32,6 +32,14 @@ exports.init = function(dbPath, params, callback) {
 
 		Steppy(
 			function() {
+				if (self._beforePutInProgress) {
+					return setTimeout(function() {
+						exports.builds._beforePut.call(self, builds, callback);
+					}, 5);
+				}
+
+				self._beforePutInProgress = true;
+
 				if (builds.length > 1) {
 					throw new Error('Build put hooks work only with single build');
 				}
@@ -60,6 +68,8 @@ exports.init = function(dbPath, params, callback) {
 				}
 
 				this.pass(null);
+
+				self._beforePutInProgress = false;
 			},
 			callback
 		);
