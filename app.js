@@ -1,6 +1,7 @@
 'use strict';
 
-var http = require('http'),
+var db = require('./db'),
+	http = require('http'),
 	nodeStatic = require('node-static'),
 	jade = require('jade'),
 	path = require('path'),
@@ -72,6 +73,11 @@ Steppy(
 		console.log('Server config:', JSON.stringify(app.config, null, 4));
 
 		notifier.init(app.config.notify, this.slot());
+
+		db.init('path/to/db/ignored/for/memdown', {
+			db: require('memdown'),
+			valueEncoding: 'json'
+		}, this.slot());
 	},
 	function() {
 		// load all projects for the first time

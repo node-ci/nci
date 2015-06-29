@@ -2,72 +2,74 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	nlevel = require('nlevel'),
-	ldb = nlevel.db('path/to/db/ignored/for/memdown', {
-		db: require('memdown'),
-		valueEncoding: 'json'
+	nlevel = require('nlevel');
+
+
+exports.init = function(dbPath, params, callback) {
+	var ldb = nlevel.db(dbPath, params, callback);
+
+	exports.builds = new nlevel.DocsSection(ldb, 'builds', {
+		projections: [
+			{key: {createDate: 1}, value: pickId},
+			{key: {descCreateDate: descCreateDate, id: 1}},
+			{key: {
+				projectName: pickProjectName,
+				descCreateDate: descCreateDate,
+				id: 1
+			}},
+			// note that's unordered projection (coz number is numeric)
+			{key: {
+				projectName: pickProjectName,
+				number: 1,
+				id: 1
+			}}
+		]
 	});
 
-exports.builds = new nlevel.DocsSection(ldb, 'builds', {
-	projections: [
-		{key: {createDate: 1}, value: pickId},
-		{key: {descCreateDate: descCreateDate, id: 1}},
-		{key: {
-			projectName: pickProjectName,
-			descCreateDate: descCreateDate,
-			id: 1
-		}},
-		// note that's unordered projection (coz number is numeric)
-		{key: {
-			projectName: pickProjectName,
-			number: 1,
-			id: 1
-		}}
-	]
-});
+	exports.builds._beforePut = function(builds, callback) {
+		var self = this,
+			build;
+
+		Steppy(
+			function() {
+				if (builds.length > 1) {
+					throw new Error('Build put hooks work only with single build');
+				}
+				build = builds[0];
+
+				// generate number for build
+				if (!build.number && build.status === 'in-progress') {
+					// find last build with number in the same project
+					self.find({
+						start: {projectName: build.project.name, descCreateDate: ''},
+						filter: function(build) {
+							return 'number' in build;
+						},
+						limit: 1
+					}, this.slot());
+				} else {
+					this.pass([]);
+				}
+
+				generateIds(self, builds, this.slot());
+			},
+			function(err, prevBuilds) {
+				var prevBuild = prevBuilds[0];
+				if (!build.number && build.status === 'in-progress') {
+					build.number = prevBuild ? prevBuild.number + 1 : 1;
+				}
+
+				this.pass(null);
+			},
+			callback
+		);
+	};
+};
 
 function pickProjectName(build) {
 	return build.project.name;
 }
 
-exports.builds._beforePut = function(builds, callback) {
-	var self = this,
-		build;
-
-	Steppy(
-		function() {
-			if (builds.length > 1) {
-				throw new Error('Build put hooks work only with single build');
-			}
-			build = builds[0];
-
-			// generate number for build
-			if (!build.number && build.status === 'in-progress') {
-				// find last build with number in the same project
-				self.find({
-					start: {projectName: build.project.name, descCreateDate: ''},
-					filter: function(build) {
-						return 'number' in build;
-					},
-					limit: 1
-				}, this.slot());
-			} else {
-				this.pass([]);
-			}
-
-			generateIds(self, builds, this.slot());
-		},
-		function(err, prevBuilds) {
-			var prevBuild = prevBuilds[0];
-			if (!build.number && build.status === 'in-progress') {
-				build.number = prevBuild ? prevBuild.number + 1 : 1;
-			}
-
-			this.pass(null);
-		},
-		callback
-	);
-};
 
 function generateIds(section, docs, callback) {
 	Steppy(
