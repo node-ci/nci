@@ -26,20 +26,12 @@ exports.init = function(dbPath, params, callback) {
 		]
 	});
 
-	exports.builds._beforePut = function(builds, callback) {
+	exports.builds.beforePut = function(builds, callback) {
 		var self = this,
 			build;
 
 		Steppy(
 			function() {
-				if (self._beforePutInProgress) {
-					return setTimeout(function() {
-						exports.builds._beforePut.call(self, builds, callback);
-					}, 5);
-				}
-
-				self._beforePutInProgress = true;
-
 				if (builds.length > 1) {
 					throw new Error('Build put hooks work only with single build');
 				}
@@ -68,18 +60,43 @@ exports.init = function(dbPath, params, callback) {
 				}
 
 				this.pass(null);
-
-				self._beforePutInProgress = false;
 			},
 			callback
 		);
 	};
 };
 
+/*
+ * Introduce safe `beforePut` (instead of directly use `_beforePut`) for
+ * id generation etc
+ */
+nlevel.DocsSection.prototype._beforePut = function(docs, callback) {
+	var self = this;
+	Steppy(
+		function() {
+			if (self._beforePutInProgress) {
+				return setTimeout(function() {
+					nlevel.DocsSection.prototype._beforePut.call(
+						self, docs, callback
+					);
+				}, 5);
+			}
+
+			self._beforePutInProgress = true;
+
+			self.beforePut(docs, this.slot());
+		},
+		function() {
+			self._beforePutInProgress = false;
+			this.pass(null);
+		},
+		callback
+	);
+};
+
 function pickProjectName(build) {
 	return build.project.name;
 }
-
 
 function generateIds(section, docs, callback) {
 	Steppy(
