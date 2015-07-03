@@ -37,12 +37,8 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('first build should have id 1', function() {
-			expect(firstBuild.id).equal(1);
-		});
-
-		it('secondBuild build should have id 2', function() {
-			expect(secondBuild.id).equal(2);
+		it('shoud have ids 1, 2', function() {
+			expect(_([firstBuild.id, secondBuild.id]).sortBy()).eql([1, 2]);
 		});
 
 	});
@@ -68,11 +64,10 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		_(builds).each(function(build, index) {
-			var number = (index + 1);
-			it('build ' + number + ' should have number ' + number, function() {
-				expect(build.number).equal(number);
-			});
+		it('shoud have ids 3, 4, 5', function() {
+			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
+				[3, 4, 5]
+			);
 		});
 
 	});
