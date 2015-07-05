@@ -1,9 +1,11 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('underscore'),
+	errorHandler = require('./errorHandler');
 
 module.exports = function(app) {
 	_(['builds', 'projects']).each(function(resource) {
-		require('./' + resource)(app);
+		var resource = require('./' + resource)(app);
+		resource.use(errorHandler);
 	});
 };

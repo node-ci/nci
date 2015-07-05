@@ -6,7 +6,8 @@ var Steppy = require('twostep').Steppy,
 	Distributor = require('../lib/distributor').Distributor,
 	db = require('../db'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	utils = require('../lib/utils');
 
 module.exports = function(app) {
 
@@ -58,9 +59,7 @@ module.exports = function(app) {
 					}
 				})
 				.on('end', callback)
-				.on('error', function(err) {
-					console.log(err.stack || err);
-				});
+				.on('error', utils.logErrorCallback);
 		});
 		buildDataResourcesHash[build.id] = buildDataResource;
 	};
@@ -97,9 +96,7 @@ module.exports = function(app) {
 			writeStreamsHash[filePath] = fs.createWriteStream(
 				getBuildLogPath(build.id), {encoding: 'utf8'}
 			);
-			writeStreamsHash[filePath].on('error', function(err) {
-				console.error(err.stack || err);
-			});
+			writeStreamsHash[filePath].on('error', utils.logErrorCallback);
 		}
 		// TODO: close ended files
 		writeStreamsHash[filePath].write(data);
@@ -117,9 +114,7 @@ module.exports = function(app) {
 		distributor.run({
 			projectName: projectName,
 			initiator: {type: 'user'}
-		}, function(err, build) {
-			console.log('>>> err, build = ', err && err.stack || err, build);
-		});
+		}, utils.logErrorCallback);
 		res.send();
 	});
 

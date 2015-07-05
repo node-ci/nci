@@ -9,7 +9,7 @@ catchRev:
 
 notify:
     on:
-        - done
+        # - done
         # - error
         - change
     to:

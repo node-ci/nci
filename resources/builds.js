@@ -7,7 +7,7 @@ var Steppy = require('twostep').Steppy,
 module.exports = function(app) {
 	var resource = app.dataio.resource('builds');
 
-	resource.use('readAll', function(req, res) {
+	resource.use('readAll', function(req, res, next) {
 		Steppy(
 			function() {
 				var findParams = _(req.data).pick('offset', 'limit');
@@ -19,13 +19,11 @@ module.exports = function(app) {
 			function(err, builds) {
 				res.send(builds);
 			},
-			function(err) {
-				console.log(err.stack || err)
-			}
+			next
 		);
 	});
 
-	resource.use('read', function(req, res) {
+	resource.use('read', function(req, res, next) {
 		Steppy(
 			function() {
 				var findParams = {};
@@ -35,9 +33,7 @@ module.exports = function(app) {
 			function(err, build) {
 				res.send(build[0]);
 			},
-			function(err) {
-				console.log(err.stack || err)
-			}
+			next
 		);
 	});
 
