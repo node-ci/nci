@@ -21,7 +21,13 @@
     "ci",
     "build"
   ],
-  "author": "Oleg Korobenko <oleg.korobenko@gmail.com>",
+  "contributors": [{
+    "name": "Oleg Korobenko",
+    "email": "oleg.korobenko@gmail.com"
+  }, {
+    "name": "Vladimir Polyakov",
+    "email": "nrd11k@gmail.com"
+  }],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/okv/nci/issues"
