@@ -1,0 +1,3 @@
+{
+    "plugins": ["nci-yaml-reader"]
+}

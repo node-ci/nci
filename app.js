@@ -53,20 +53,32 @@ Steppy(
 		app.config.paths.data = path.join(process.cwd(), 'data');
 		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
 		app.config.paths.builds = path.join(app.config.paths.data, 'builds');
-		var stepCallback = this.slot();
+		app.config.paths.preload = path.join(app.config.paths.data, 'preload.json');
+
+		var buildDirExistsCallback = this.slot();
 		fs.exists(app.config.paths.builds, function(isExists) {
-			stepCallback(null, isExists);
+			buildDirExistsCallback(null, isExists);
+		});
+
+		var preloadExistsCallback = this.slot();
+		fs.exists(app.config.paths.preload, function(isExists) {
+			preloadExistsCallback(null, isExists);
 		});
 	},
-	function(err, isBuildsDirExists) {
+	function(err, isBuildsDirExists, isPreloadExists) {
 		if (!isBuildsDirExists) {
 			fs.mkdir(app.config.paths.builds, this.slot());
 		} else {
 			this.pass(null);
 		}
 
-		// register reader plugins
-		require('./lib/reader/yaml').register(app);
+		if (isPreloadExists) {
+			var preload = require(app.config.paths.preload);
+			// register rc plugins
+			_(preload.plugins).each(function(plugin) {
+				require(plugin).register(app);
+			});
+		}
 
 		reader.load(app.config.paths.data, 'config', this.slot());
 	},
