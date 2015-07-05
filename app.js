@@ -11,7 +11,10 @@ var db = require('./db'),
 	reader = require('./lib/reader'),
 	notifier = require('./lib/notifier'),
 	project = require('./lib/project'),
+	libLogger = require('./lib/logger'),
 	chokidar = require('chokidar');
+
+var logger = libLogger('app');
 
 var staticServer = new nodeStatic.Server('./static');
 var server = http.createServer(function(req, res, next) {
@@ -39,6 +42,7 @@ var app = {
 app.lib = {};
 app.lib.reader = reader;
 app.lib.notifier = notifier;
+app.lib.logger = libLogger;
 
 Steppy(
 	function() {
@@ -71,7 +75,7 @@ Steppy(
 	function(err, mkdirResult, config) {
 		_(app.config).defaults(config);
 
-		console.log('Server config:', JSON.stringify(app.config, null, 4));
+		logger.log('Server config:', JSON.stringify(app.config, null, 4));
 
 		notifier.init(app.config.notify, this.slot());
 
@@ -87,7 +91,7 @@ Steppy(
 	function(err, projects) {
 		// note that `app.projects` is live variable
 		app.projects = projects;
-		console.log('Loaded projects: ', _(app.projects).pluck('name'));
+		logger.log('Loaded projects: ', _(app.projects).pluck('name'));
 
 		// start file watcher for reloading projects on change
 		var syncProject = function(filename, fileInfo) {
@@ -102,22 +106,22 @@ Steppy(
 			});
 
 			if (projectIndex !== -1) {
-				console.log('Unload project: "' + projectName + '"');
+				logger.log('Unload project: "' + projectName + '"');
 				app.projects.splice(projectIndex, 1);
 			}
 
 			// on add or change (info is falsy on unlink)
 			if (fileInfo) {
-				console.log('Load project "' + projectName + '" on change');
+				logger.log('Load project "' + projectName + '" on change');
 				project.load(baseDir, projectName, function(err, project) {
 					if (err) {
-						return console.error(
+						return logger.error(
 							'Error during load project "' + projectName + '": ',
 							err.stack || err
 						);
 					}
 					app.projects.push(project);
-					console.log(
+					logger.log(
 						'Project "' + projectName + '" loaded:',
 						JSON.stringify(project, null, 4)
 					);
@@ -137,7 +141,7 @@ Steppy(
 		watcher.on('unlink', syncProject);
 
 		watcher.on('error', function(err) {
-			console.error('File watcher error occurred: ', err.stack || err);
+			logger.error('File watcher error occurred: ', err.stack || err);
 		});
 
 		// init resources

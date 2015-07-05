@@ -10,7 +10,8 @@ var Steppy = require('twostep').Steppy,
 exports.register = function(app) {
 	var config = app.config.httpApi,
 		projects = app.projects,
-		distributor = app.distributor;
+		distributor = app.distributor,
+		logger = app.lib.logger('http api');
 
 	var server = http.createServer(function(req, res) {
 		Steppy(
@@ -38,6 +39,7 @@ exports.register = function(app) {
 
 					if (project) {
 						res.statusCode = 204;
+						logger.log('Run "' + projectName + '"');
 						distributor.run({
 							projectName: projectName,
 							initiator: {type: 'httpApi'}
@@ -48,7 +50,7 @@ exports.register = function(app) {
 				res.end();
 			},
 			function(err) {
-				console.log('Error occurred during request: ', err.stack || err);
+				logger.error('Error occurred during request: ', err.stack || err);
 			}
 		);
 	});

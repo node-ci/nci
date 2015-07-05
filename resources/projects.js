@@ -7,7 +7,7 @@ var Steppy = require('twostep').Steppy,
 	db = require('../db'),
 	path = require('path'),
 	fs = require('fs'),
-	utils = require('../lib/utils');
+	logger = require('../lib/logger')('projects resource');
 
 module.exports = function(app) {
 
@@ -45,11 +45,11 @@ module.exports = function(app) {
 		}
 		var buildDataResource = app.dataio.resource('build' + build.id);
 		buildDataResource.on('connection', function(client) {
-			var callback = this.async();
-			var stream = fs.createReadStream(
-				getBuildLogPath(build.id),
-				{encoding: 'utf8'}
-			);
+			var callback = this.async(),
+				buildLogPath = getBuildLogPath(build.id);
+
+			var stream = fs.createReadStream(buildLogPath, {encoding: 'utf8'});
+
 			stream
 				.on('readable', function() {
 					var data = stream.read();
@@ -59,7 +59,12 @@ module.exports = function(app) {
 					}
 				})
 				.on('end', callback)
-				.on('error', utils.logErrorCallback);
+				.on('error', function(err) {
+					logger.error(
+						'Error during read "' + buildLogPath + '":',
+						err.stack || err
+					);
+				});
 		});
 		buildDataResourcesHash[build.id] = buildDataResource;
 	};
@@ -96,7 +101,12 @@ module.exports = function(app) {
 			writeStreamsHash[filePath] = fs.createWriteStream(
 				getBuildLogPath(build.id), {encoding: 'utf8'}
 			);
-			writeStreamsHash[filePath].on('error', utils.logErrorCallback);
+			writeStreamsHash[filePath].on('error', function(err) {
+				logger.error(
+					'Error during write "' + filePath + '":',
+					err.stack || err
+				);
+			});
 		}
 		// TODO: close ended files
 		writeStreamsHash[filePath].write(data);
@@ -110,11 +120,11 @@ module.exports = function(app) {
 
 	resource.use('run', function(req, res) {
 		var projectName = req.data.projectName;
-		console.log('Run the project: %s', projectName);
+		logger.log('Run the project: "%s"', projectName);
 		distributor.run({
 			projectName: projectName,
 			initiator: {type: 'user'}
-		}, utils.logErrorCallback);
+		});
 		res.send();
 	});
 
