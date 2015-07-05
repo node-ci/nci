@@ -65,10 +65,8 @@ Steppy(
 			this.pass(null);
 		}
 
-		// register plugins
+		// register reader plugins
 		require('./lib/reader/yaml').register(app);
-		require('./lib/notifier/console').register(app);
-		require('./lib/notifier/mail').register(app);
 
 		reader.load(app.config.paths.data, 'config', this.slot());
 	},
@@ -76,8 +74,6 @@ Steppy(
 		_(app.config).defaults(config);
 
 		logger.log('Server config:', JSON.stringify(app.config, null, 4));
-
-		notifier.init(app.config.notify, this.slot());
 
 		db.init('path/to/db/ignored/for/memdown', {
 			db: require('memdown'),
@@ -92,6 +88,18 @@ Steppy(
 		// note that `app.projects` is live variable
 		app.projects = projects;
 		logger.log('Loaded projects: ', _(app.projects).pluck('name'));
+
+		require('./distributor').init(app, this.slot());
+	},
+	function(err, distributor) {
+		app.distributor = distributor;
+
+		// register other plugins
+		require('./lib/notifier/console').register(app);
+		require('./lib/notifier/mail').register(app);
+		require('./httpApi').register(app);
+
+		notifier.init(app.config.notify, this.slot());
 
 		// start file watcher for reloading projects on change
 		var syncProject = function(filename, fileInfo) {
@@ -146,8 +154,6 @@ Steppy(
 
 		// init resources
 		require('./resources')(app);
-
-		require('./httpApi').register(app);
 	},
 	function(err) {
 		if (err) throw err;
