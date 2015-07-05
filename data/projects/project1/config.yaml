@@ -9,13 +9,14 @@ catchRev:
 
 notify:
     on:
-        # - done
+        - done
         # - error
         - change
     to:
         console:
-        # email:
+        # mail:
         #     - oleg.korobenko@gmail.com
+        #     - oleg.poligon@gmail.com
         # jabber:
         #     - oleg.korobenko@gmail.com
 

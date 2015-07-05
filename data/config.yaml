@@ -3,7 +3,13 @@ nodes:
     - type: local
       maxExecutorsCount: 2
 
-notify: {}
+notify:
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        auth:
+            user: bot.nci@gmail.com
+            pass: pass
 
 httpApi:
     host: 127.0.0.1

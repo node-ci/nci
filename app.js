@@ -64,6 +64,7 @@ Steppy(
 		// register plugins
 		require('./lib/reader/yaml').register(app);
 		require('./lib/notifier/console').register(app);
+		require('./lib/notifier/mail').register(app);
 
 		reader.load(app.config.paths.data, 'config', this.slot());
 	},
