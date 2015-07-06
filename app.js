@@ -76,6 +76,7 @@ Steppy(
 			var preload = require(app.config.paths.preload);
 			// register rc plugins
 			_(preload.plugins).each(function(plugin) {
+				logger.log('Preload plugin "%s"', plugin);
 				require(plugin).register(app);
 			});
 		}
@@ -108,7 +109,10 @@ Steppy(
 
 		// register other plugins
 		require('./lib/notifier/console').register(app);
-		require('./lib/notifier/mail').register(app);
+		_(app.config.plugins).each(function(plugin) {
+			logger.log('Load plugin "%s"', plugin);
+			require(plugin).register(app);
+		});
 		require('./httpApi').register(app);
 
 		notifier.init(app.config.notify, this.slot());

@@ -8,7 +8,7 @@ var Steppy = require('twostep').Steppy,
  * Pure rest api on pure nodejs follows below
  */
 exports.register = function(app) {
-	var config = app.config.httpApi,
+	var config = _(app.config.httpApi).defaults({host: '127.0.0.1', port: 3030}),
 		projects = app.projects,
 		distributor = app.distributor,
 		logger = app.lib.logger('http api');
@@ -55,5 +55,6 @@ exports.register = function(app) {
 		);
 	});
 
+	logger.log('Start listenning on %s:%s', config.host, config.port);
 	server.listen(config.port, config.host);
 };
