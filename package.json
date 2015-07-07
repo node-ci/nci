@@ -6,7 +6,7 @@
     "nci": "bin/nci"
   },
   "scripts": {
-    "test": "mocha --bail --reporter=spec test/index",
+    "test": "mocha --bail --reporter=spec test/index --timeout 3000",
     "dev": "gulp",
     "sync": "npm install && npm prune && bower install && bower prune"
   },
