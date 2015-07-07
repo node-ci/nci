@@ -86,12 +86,13 @@ nlevel.DocsSection.prototype._beforePut = function(docs, callback) {
 
 			self.beforePut(docs, this.slot());
 		},
-		function() {
-			self._beforePutInProgress = false;
-			this.pass(null);
-		},
 		callback
 	);
+};
+
+nlevel.DocsSection.prototype._afterPut = function(docs, callback) {
+	this._beforePutInProgress = false;
+	callback();
 };
 
 function pickProjectName(build) {
