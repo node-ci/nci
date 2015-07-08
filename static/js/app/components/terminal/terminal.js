@@ -33,10 +33,17 @@ define([
 			}
 			this.ignoreScrollEvent = false;
 		},
+		prepareOutput: function(output) {
+			var text = output.replace(
+				/(.*)\n/gi,
+				'<span class="terminal_code_newline">$1</span>'
+			);
+			return ansiUp.ansi_to_html(text);
+		},
 		updateItems: function(build) {
 			// listen just our console update
 			if (build.buildId === this.props.build) {
-				this.setState({data: ansiUp.ansi_to_html(build.data)});
+				this.setState({data: this.prepareOutput(build.data)});
 				_.defer(this.ensureScrollPosition);
 				this.ensureScrollPosition();
 			}
