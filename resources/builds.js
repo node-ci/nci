@@ -10,9 +10,19 @@ module.exports = function(app) {
 	resource.use('readAll', function(req, res, next) {
 		Steppy(
 			function() {
-				var findParams = _(req.data).pick('offset', 'limit');
+				var data = req.data || {};
+
+				var start = {};
+				if (data.projectName) {
+					start.projectName = data.projectName;
+				}
+				if (data.descCreateDate) {
+					start.descCreateDate = data.descCreateDate;
+				}
+
+				var findParams = _(data).pick('offset', 'limit');
+				findParams.start = start;
 				findParams.limit = findParams.limit || 20;
-				findParams.start = {descCreateDate: ''};
 
 				db.builds.find(findParams, this.slot());
 			},

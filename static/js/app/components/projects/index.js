@@ -1,9 +1,11 @@
 'use strict';
 
 define([
-	'app/components/projects/selector/index'
-], function(Selector) {
+	'app/components/projects/selector/index',
+	'app/components/projects/view/index'
+], function(Selector, View) {
 	return {
-		Selector: Selector
+		Selector: Selector,
+		View: View
 	};
 });

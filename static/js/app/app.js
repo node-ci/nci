@@ -19,7 +19,11 @@ define([
 	var routes = (
 		Route({name: 'index', path: '/'},
 			Route({name: 'dashboard', path: '/', handler: Components.App}),
-			Route({name: 'projects', path: 'projects', handler: Components.Project.List}),
+			Route({
+				name: 'projects',
+				path: 'projects/:name',
+				handler: Components.Project.View
+			}),
 			Route({name: 'build', path: 'builds/:id', handler: Components.Build.View})
 		)
 	);

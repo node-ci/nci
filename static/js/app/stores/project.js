@@ -1,22 +1,28 @@
 'use strict';
 
 define([
+	'underscore',
 	'reflux', 'app/actions/project', 'app/resources'
-], function(Reflux, ProjectActions, resources) {
+], function(_, Reflux, ProjectActions, resources) {
 	var resource = resources.projects;
 
 	var Store = Reflux.createStore({
 		listenables: ProjectActions,
-		onRun: function(projectName) {
-			resource.sync('run', {projectName: projectName}, function(err, result) {
-				console.log('run project, shoould get queue');
-			});
+		project: null,
+
+		onChange: function(data, action) {
 		},
-		onReadAll: function() {
+
+		init: function() {
+			resource.subscribe('change', this.onChange);
+		},
+
+		onRead: function(params) {
 			var self = this;
-			resource.sync('readAll', function(err, projects) {
+			resource.sync('read', params, function(err, project) {
 				if (err) throw err;
-				self.trigger(projects);
+				self.project = project;
+				self.trigger(self.project);
 			});
 		}
 	});
