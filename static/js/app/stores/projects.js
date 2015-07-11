@@ -17,6 +17,7 @@ define([
 			resource.sync('readAll', function(err, projects) {
 				if (err) throw err;
 				self.trigger(projects);
+				console.log(projects);
 			});
 		}
 	});

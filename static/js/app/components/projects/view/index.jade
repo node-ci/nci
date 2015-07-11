@@ -1,3 +1,21 @@
-div
-	h1= this.state.project.name
-	Builds()
+.row 
+	.col-md-8
+		h1
+			.pull-right
+				span.badge.badge-default= this.state.project.scm ? this.state.project.scm.rev : ''
+
+			Scm(scm=this.state.project.scm ? this.state.project.scm.type : '')
+			span= this.state.project.name
+
+		hr
+		div.text-muted
+			p Last successfully build: ...
+			p Current successfully streak: ...
+			p Last build time: ...
+			p Average build time: ...
+
+		h2
+			i.fa.fa-fw.fa-history
+			span 
+			span Build history
+		Builds()

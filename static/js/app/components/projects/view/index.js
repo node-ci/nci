@@ -6,12 +6,14 @@ define([
 	'app/actions/build',
 	'app/stores/project',
 	'app/components/builds/list',
+	'app/components/common/scm/index',
 	'templates/app/components/projects/view/index'
 ], function(React, Reflux, ProjectActions, BuildActions,
-	projectStore, Builds, template
+	projectStore, Builds, Scm, template
 ) {
 	template = template.locals({
-		Builds: Builds
+		Builds: Builds,
+		Scm: Scm
 	});
 
 	return React.createClass({

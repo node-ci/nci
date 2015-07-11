@@ -13,12 +13,12 @@
 		)
 		ul.projects-selector_items
 			each project in this.state.projects
-				li.projects-selector_item.row(key=project.name)
-					.col-md-8
-						Link.projects-selector_item_link(to="projects", params={name: project.name}, onMouseDown=this.onSelectProject(project.name))
-							span= project.name
-					.col-md-4.text-small.text-right
-						a.projects-selector_item_run(href="javascript:void(0);", onMouseDown=this.onRunProject(project.name))
-							i.fa.fa-fw.fa-play
+				li.projects-selector_item(key=project.name)
+					Link.projects-selector_item_link(to="project", params={name: project.name}, onMouseDown=this.onSelectProject(project.name))
+						Scm(scm=project.scm.type)
+						span 
+						span= project.name
+					a.projects-selector_item_run(href="javascript:void(0);", onMouseDown=this.onRunProject(project.name))
+						i.fa.fa-fw.fa-play
 
 

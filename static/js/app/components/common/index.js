@@ -1,9 +1,11 @@
 'use strict';
 
 define([
-	'./dateTime/index'
-], function(DateTime) {
+	'./dateTime/index',
+	'./scm/index'
+], function(DateTime, Scm) {
 	return {
-		DateTime: DateTime
+		DateTime: DateTime,
+		Scm: Scm
 	};
 });

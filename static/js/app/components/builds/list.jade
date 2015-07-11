@@ -1,5 +1,5 @@
 .builds
 	if !this.state.items.length
-		p Build list is empty
+		p Build history is empty
 	each build, index in this.state.items
 		Item(build=build, key=build.id)

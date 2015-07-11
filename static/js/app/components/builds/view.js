@@ -2,6 +2,7 @@
 
 define([
 	'react',
+	'react-router',
 	'reflux',
 	'app/actions/build',
 	'app/stores/build',
@@ -9,12 +10,14 @@ define([
 	'templates/app/components/builds/view',
 	'app/components/common/index'
 ], function(
-	React, Reflux, BuildActions, buildStore, TerminalComponent, template,
+	React, Router, Reflux, BuildActions, buildStore, TerminalComponent, template,
 	CommonComponents
 ) {
 	template = template.locals({
 		DateTime: CommonComponents.DateTime,
-		Terminal: TerminalComponent
+		Scm: CommonComponents.Scm,
+		Terminal: TerminalComponent,
+		Link: Router.Link
 	});
 
 	var Component = React.createClass({

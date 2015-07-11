@@ -3,10 +3,14 @@
 define([
 	'react', 'react-router', 'reflux', 'app/actions/project',
 	'app/stores/projects',
+	'app/components/common/scm/index',
 	'templates/app/components/projects/selector/index'
-], function(React, Router, Reflux, ProjectActions, projectsStore, template) {
+], function(React, Router, Reflux, ProjectActions, projectsStore, Scm,
+	template
+) {
 	template = template.locals({
-		Link: Router.Link
+		Link: Router.Link,
+		Scm: Scm
 	});
 
 	return React.createClass({
@@ -24,7 +28,7 @@ define([
 			this.setState({showSearch: false});
 		},
 		onSelectProject: function(name) {
-			this.transitionTo('projects', {name: name});
+			this.transitionTo('project', {name: name});
 		},
 		updateItems: function(projects) {
 			this.setState({projects: projects});

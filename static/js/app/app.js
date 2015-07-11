@@ -20,7 +20,7 @@ define([
 		Route({handler: Components.App},
 			Route({name: 'dashboard', path: '/', handler: Components.Dashboard}),
 			Route({
-				name: 'projects',
+				name: 'project',
 				path: 'projects/:name',
 				handler: Components.Project.View
 			}),
@@ -34,5 +34,4 @@ define([
 			document.getElementById('content')
 		);
 	});
-
 });

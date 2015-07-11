@@ -1,52 +1,101 @@
-if this.state.build
-	h2
-		span= this.state.build.project.name
-		span  build #
-		span= this.state.build.number
+mixin statusBadge(build)
+	if build.status === 'in-progress'
+		span.label.label-info in progress
 
-	div
-		| Initiated by 
-		- var initiator = this.state.build.initiator;
-		if initiator.type === 'user'
-			span user
-		else if initiator.type === 'build'
-			span= initiator.project.name
-			span  build #
-			span= initiator.number
-		else
-			span= initiator.type
+	if build.status === 'queued'
+		span.label.label-default queued
 
-	if this.state.build.startDate
-		div
-			| Started at 
-			if this.state.build.startDate
-				DateTime(date=new Date(this.state.build.startDate))
-			else
-				| -
-	else
-		div
-			| Queued at 
-			if this.state.build.createDate
-				DateTime(date=new Date(this.state.build.createDate))
-			else
-				| -
+	if build.status === 'done'
+		span.label.label.sm.label-success done
 
-	div
-		| Built at 
-		if this.state.build.endDate
-			DateTime(date=new Date(this.state.build.endDate))
-		else
-			| -
+	if build.status === 'error'
+		span.label.label-danger error
 
-	div
-		if this.state.build.error
-			| Error: 
-			span= this.state.build.error.message
-
-			if this.state.build.error.stderr
-				div stderr: 
-				pre= this.state.build.error.stderr
-
-	.row
+div.row
+	if this.state.build
 		.col-md-8
-			Terminal(build=this.state.build.id)
+			h1
+				.pull-right(style={fontSize: '22px'})
+					mixin statusBadge(this.state.build)
+				span Build #
+				span= this.state.build.number
+
+			.text-muted(style={marginTop: '-10px'})
+				| Initiated by 
+				- var initiator = this.state.build.initiator;
+				if initiator.type === 'user'
+					span user
+				else if initiator.type === 'build'
+					Link(to="project", params={name: initiator.project.name})
+						span= initiator.project.name
+					| 
+					| during the 
+					| 
+					Link(to="build", params={id: initiator.id})
+						span build #
+						span= initiator.number
+				else
+					span= initiator.type
+
+			hr
+
+			.build-view_info
+				if this.state.build.error && this.state.build.error.message
+					.text-center.alert.alert-danger
+						| Error: 
+						span= this.state.build.error.message
+				.row
+					.col-md-6
+						p 
+							Scm(scm=this.state.build.project.scm.type)
+							| 
+							| Project 
+							Link(to="project", params={name: this.state.build.project.name})
+								span= this.state.build.project.name
+
+						p
+							i.fa.fa-fw.fa-clock-o
+							span 
+							if this.state.build.startDate
+								span Started at 
+								DateTime(date=new Date(this.state.build.startDate))
+							else
+								span Queued at 
+								DateTime(date=new Date(this.state.build.createDate))
+
+						if this.state.build.status !== 'in-progress'
+							p
+								i.fa.fa-fw.fa-circle
+								| 
+								| Finished at 
+								if this.state.build.endDate
+									DateTime(date=new Date(this.state.build.endDate))
+								else
+									| -
+					.col-md-6
+						p
+							i.fa.fa-fw.fa-user
+							| 
+							| Commit author
+							| 
+							span= this.state.build.scm.rev.author
+						p
+							i.fa.fa-fw.fa-code-fork
+							| 
+							| Revision
+							| 
+							span= this.state.build.scm.rev.id
+
+						p
+							i.fa.fa-fw.fa-comment-o
+							| 
+							| Comment
+							| 
+							span= this.state.build.scm.rev.comment
+
+			h2
+				i.fa.fa-fw.fa-terminal
+				| 
+				| Console output
+			.build-view_terminal
+				Terminal(build=this.state.build.id)
