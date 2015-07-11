@@ -53,7 +53,7 @@ mixin statusText(build)
 		if build.endDate
 			span.build_info
 				i.fa.fa-fw.fa-clock-o
-				| builded at 
+				| built at 
 				DateTime(date=new Date(build.endDate))
 		else
 			if build.startDate
