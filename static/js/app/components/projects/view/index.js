@@ -18,10 +18,13 @@ define([
 
 	return React.createClass({
 		mixins: [Reflux.ListenerMixin],
+		statics: {
+			willTransitionTo: function(transition, params, query) {
+				ProjectActions.read({name: params.name});
+				BuildActions.readAll({projectName: params.name});
+			}
+		},
 		componentDidMount: function() {
-			ProjectActions.read({name: this.props.params.name});
-			BuildActions.readAll({projectName: this.props.params.name});
-
 			this.listenTo(projectStore, this.updateItem);
 		},
 		updateItem: function(project) {

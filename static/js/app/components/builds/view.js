@@ -22,9 +22,12 @@ define([
 
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
+		statics: {
+			willTransitionTo: function(transition, params, query) {
+				BuildActions.read(Number(params.id));
+			}
+		},
 		componentDidMount: function() {
-			BuildActions.read(Number(this.props.params.id));
-
 			this.listenTo(buildStore, this.updateBuild);
 		},
 		updateBuild: function(build) {
