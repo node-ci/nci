@@ -4,7 +4,7 @@ define([
 	'react',
 	'react-router',
 	'app/components/projects/selector/index',
-	'templates/app/components/header/template'
+	'templates/app/components/header/index'
 ], function(React, Router, ProjectsSelector, template) {
 	template = template.locals({
 		Link: Router.Link,

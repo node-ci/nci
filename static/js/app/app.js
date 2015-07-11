@@ -17,8 +17,8 @@ define([
 		DefaultRoute = React.createFactory(Router.DefaultRoute);
 
 	var routes = (
-		Route({name: 'index', path: '/'},
-			Route({name: 'dashboard', path: '/', handler: Components.App}),
+		Route({handler: Components.App},
+			Route({name: 'dashboard', path: '/', handler: Components.Dashboard}),
 			Route({
 				name: 'projects',
 				path: 'projects/:name',
@@ -30,7 +30,7 @@ define([
 
 	Router.run(routes, Router.HistoryLocation, function(Handler) {
 		React.render(
-			template({Component: Handler, Header: Components.Header}),
+			React.createElement(Handler),
 			document.getElementById('content')
 		);
 	});

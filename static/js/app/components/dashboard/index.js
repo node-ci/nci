@@ -2,14 +2,15 @@
 
 define([
 	'react',
+	'react-router',
 	'app/actions/project',
 	'app/actions/build',
-	'app/components/projects/index',
-	'app/components/builds/index',
-	'templates/app/components/app/template'
-], function(React, ProjectActions, BuildActions, Projects, Builds, template) {
+	'app/components/builds/list',
+	'templates/app/components/dashboard/index'
+], function(React, Router, ProjectActions, BuildActions, BuildsList, template) {
 	template = template.locals({
-		BuildsList: Builds.List
+		Link: Router.Link,
+		BuildsList: BuildsList
 	});
 
 	var Component = React.createClass({

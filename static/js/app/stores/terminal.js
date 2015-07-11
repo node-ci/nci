@@ -8,8 +8,6 @@ define([
 		listenables: BuildActions,
 
 		init: function() {
-			console.log('init builds console output');
-
 			// the only purpose of this hash to reconnect all the time
 			// except first, see notes at using
 			this.connectedResourcesHash = {};

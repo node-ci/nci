@@ -10,7 +10,7 @@ define([
 	});
 
 	return React.createClass({
-		mixins: [Reflux.ListenerMixin],
+		mixins: [Reflux.ListenerMixin, Router.Navigation],
 		componentDidMount: function() {
 			this.listenTo(projectsStore, this.updateItems);
 		},
@@ -22,6 +22,9 @@ define([
 		onRunProject: function(projectName) {
 			ProjectActions.run(projectName)
 			this.setState({showSearch: false});
+		},
+		onSelectProject: function(name) {
+			this.transitionTo('projects', {name: name});
 		},
 		updateItems: function(projects) {
 			this.setState({projects: projects});
