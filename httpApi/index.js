@@ -42,8 +42,9 @@ exports.register = function(app) {
 						logger.log('Run "' + projectName + '"');
 						distributor.run({
 							projectName: projectName,
+							withScmChangesOnly: body.withScmChangesOnly,
 							initiator: {type: 'httpApi'}
-						}, _.noop);
+						});
 					}
 
 				}

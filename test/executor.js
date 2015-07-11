@@ -46,10 +46,7 @@ var expect = require('expect.js'),
 			});
 
 			it('should run without errors', function(done) {
-				executor.run({}, function(err) {
-					expect(err).not.ok();
-					done();
-				});
+				executor.run({}, done);
 				executor.on('scmData', function(data) {
 					scmData = data;
 				});
@@ -66,6 +63,18 @@ var expect = require('expect.js'),
 				}
 			);
 		});
+
+		var itHasScmChanges = function(value) {
+			it((value ? 'should' : 'should`t') + ' has scm changes',
+				function(done) {
+					executor.hasScmChanges(function(err, hasScmChanges) {
+						if (err) return done(err);
+						expect(hasScmChanges).equal(value);
+						done();
+					});
+				}
+			);
+		};
 
 		_(['first revision', /^first revision$/]).each(function(comment) {
 
@@ -99,6 +108,8 @@ var expect = require('expect.js'),
 						});
 					});
 
+				itHasScmChanges(true);
+
 				it('should run it again without errors', function(done) {
 					executor.run({}, done);
 				});
@@ -113,6 +124,8 @@ var expect = require('expect.js'),
 						});
 					}
 				);
+
+				itHasScmChanges(false);
 			});
 
 		});
@@ -140,6 +153,8 @@ var expect = require('expect.js'),
 					});
 				});
 
+				itHasScmChanges(true);
+
 				it('scm data should be rev: 2, changes: [0, 2], not latest',
 					function() {
 						expect(scmData).eql({
@@ -163,6 +178,8 @@ var expect = require('expect.js'),
 						});
 					}
 				);
+
+				itHasScmChanges(false);
 
 			});
 
