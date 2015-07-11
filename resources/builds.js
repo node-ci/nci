@@ -16,9 +16,8 @@ module.exports = function(app) {
 				if (data.projectName) {
 					start.projectName = data.projectName;
 				}
-				if (data.descCreateDate) {
-					start.descCreateDate = data.descCreateDate;
-				}
+
+				start.descCreateDate = data.descCreateDate || '';
 
 				var findParams = _(data).pick('offset', 'limit');
 				findParams.start = start;

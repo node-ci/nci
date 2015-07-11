@@ -10,6 +10,10 @@ require.config({
 		_dataio: '/data.io',
 		socketio: '/socket.io/socket.io.js',
 		jquery: 'libs/jquery/jquery',
-		ansi_up: 'libs/ansi_up/ansi_up'
+		ansi_up: 'libs/ansi_up/ansi_up',
+		'bootstrap/collapse': 'libs/bootstrap/js/collapse'
+	},
+	shim: {
+		'bootstrap/collapse': ['jquery']
 	}
 });
