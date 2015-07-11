@@ -27,9 +27,9 @@ define([
 			resource.subscribe('change', this.onChange);
 		},
 
-		onReadAll: function() {
+		onReadAll: function(params) {
 			var self = this;
-			resource.sync('readAll', function(err, builds) {
+			resource.sync('readAll', params, function(err, builds) {
 				if (err) throw err;
 				self.builds = builds;
 				self.trigger(self.builds);

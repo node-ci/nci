@@ -7,6 +7,10 @@ define([
 	'app/stores/builds',
 	'templates/app/components/builds/list'
 ], function(React, Reflux, Item, buildsStore, template) {
+	template = template.locals({
+		Item: Item
+	});
+
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
 		componentDidMount: function() {
@@ -15,12 +19,7 @@ define([
 		updateItems: function(items) {
 			this.setState({items: items});
 		},
-		render: function() {
-			return template({
-				Item: Item,
-				items: this.state.items
-			});
-		},
+		render: template,
 		getInitialState: function() {
 			return {
 				items: []

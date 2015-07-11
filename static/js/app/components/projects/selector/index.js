@@ -1,10 +1,14 @@
 'use strict';
 
 define([
-	'react', 'reflux', 'app/actions/project',
-	'app/stores/project',
+	'react', 'react-router', 'reflux', 'app/actions/project',
+	'app/stores/projects',
 	'templates/app/components/projects/selector/index'
-], function(React, Reflux, ProjectActions, projectsStore, template) {
+], function(React, Router, Reflux, ProjectActions, projectsStore, template) {
+	template = template.locals({
+		Link: Router.Link
+	});
+
 	return React.createClass({
 		mixins: [Reflux.ListenerMixin],
 		componentDidMount: function() {

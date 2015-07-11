@@ -1,6 +1,7 @@
 'use strict';
 
 var Steppy = require('twostep').Steppy,
+	_ = require('underscore'),
 	createBuildDataResource = require('../distributor').createBuildDataResource,
 	logger = require('../lib/logger')('projects resource');
 
@@ -16,6 +17,10 @@ module.exports = function(app) {
 
 	resource.use('readAll', function(req, res) {
 		res.send(app.projects);
+	});
+
+	resource.use('read', function(req, res) {
+		res.send(_(app.projects).findWhere(req.data));
 	});
 
 	resource.use('run', function(req, res) {
