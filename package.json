@@ -21,13 +21,16 @@
     "ci",
     "build"
   ],
-  "contributors": [{
-    "name": "Oleg Korobenko",
-    "email": "oleg.korobenko@gmail.com"
-  }, {
-    "name": "Vladimir Polyakov",
-    "email": "nrd11k@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Oleg Korobenko",
+      "email": "oleg.korobenko@gmail.com"
+    },
+    {
+      "name": "Vladimir Polyakov",
+      "email": "nrd11k@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/okv/nci/issues"
@@ -36,6 +39,7 @@
   "dependencies": {
     "chokidar": "1.0.3",
     "colors": "1.1.2",
+    "cron": "1.0.9",
     "data.io": "0.3.0",
     "jade": "1.9.2",
     "nlevel": "1.0.2",

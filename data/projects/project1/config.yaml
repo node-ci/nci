@@ -7,6 +7,10 @@ scm:
 catchRev:
     comment: !!js/regexp //
 
+# buildEvery:
+#     time: "*/5 * * * * *"
+#     withScmChangesOnly: true
+
 notify:
     on:
         # - done

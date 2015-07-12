@@ -19,7 +19,7 @@ work in progress...
 * Work with git
 * ~~Build every commit, commit with tag, etc~~
 * ~~Safe id and build numbers generation~~
-* Scheduler
+* ~~Scheduler~~
 * ~~Better tests coverage~~
 * Semantic versioning and plugins
 

@@ -100,9 +100,6 @@ Steppy(
 	function(err, projects) {
 		// note that `app.projects` is live variable
 		app.projects = projects;
-		_(app.projects).each(function(project) {
-			app.emit('projectLoaded', project);
-		});
 		logger.log('Loaded projects: ', _(app.projects).pluck('name'));
 
 		require('./distributor').init(app, this.slot());
@@ -121,6 +118,13 @@ Steppy(
 		notifier.init(app.config.notify, this.slot());
 
 		require('./projectsWatcher').init(app, this.slot());
+
+		require('./scheduler').init(app, this.slot());
+
+		// notify about first project loading
+		_(app.projects).each(function(project) {
+			app.emit('projectLoaded', project);
+		});
 
 		// init resources
 		require('./resources')(app);
