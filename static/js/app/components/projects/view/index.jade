@@ -9,10 +9,33 @@
 
 		hr
 		div.text-muted
-			p Last successfully build: ...
-			p Current successfully streak: ...
-			p Last build time: ...
-			p Average build time: ...
+			- var lastDoneBuild = this.state.project.lastDoneBuild;
+			p Last successfully build: 
+				if lastDoneBuild
+					| build #
+					span= lastDoneBuild.number
+					|  at 
+					DateTime(date=new Date(lastDoneBuild.endDate))
+				else
+					| -
+
+			p Current successfully streak: 
+				if lastDoneBuild
+					span= this.state.project.doneBuildsStreak
+				else
+					| -
+
+			p Last build duration: 
+				if lastDoneBuild
+					span= lastDoneBuild.endDate - lastDoneBuild.startDate
+				else
+					| -
+
+			p Average build duration: 
+				if this.state.project.avgBuildDuration
+					span= this.state.project.avgBuildDuration
+				else
+					| -
 
 		h2
 			i.fa.fa-fw.fa-history

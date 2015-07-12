@@ -18,10 +18,19 @@ exports.init = function(dbPath, params, callback) {
 				id: 1
 			}},
 			// note that's unordered projection (coz number is numeric)
+			// TODO: pick only id as value for that rare used projection
 			{key: {
 				projectName: pickProjectName,
 				number: 1,
 				id: 1
+			}},
+			{key: {
+				projectName: pickProjectName,
+				status: 1,
+				descCreateDate: descCreateDate,
+				id: 1
+			}, value: function(build) {
+				return _(build).pick('id', 'number', 'startDate', 'endDate');
 			}}
 		]
 	});

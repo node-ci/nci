@@ -7,13 +7,15 @@ define([
 	'app/stores/project',
 	'app/components/builds/list',
 	'app/components/common/scm/index',
-	'templates/app/components/projects/view/index'
+	'templates/app/components/projects/view/index',
+	'app/components/common/index'
 ], function(React, Reflux, ProjectActions, BuildActions,
-	projectStore, Builds, Scm, template
+	projectStore, Builds, Scm, template, CommonComponents
 ) {
 	template = template.locals({
 		Builds: Builds,
-		Scm: Scm
+		Scm: Scm,
+		DateTime: CommonComponents.DateTime
 	});
 
 	return React.createClass({

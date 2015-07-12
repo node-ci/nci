@@ -56,6 +56,7 @@
     "gulp-nodemon": "2.0.3",
     "gulp-react-jade-amd": "git://github.com/vladimir-polyakov/gulp-react-jade-amd",
     "main-bower-files": "2.7.0",
+    "medeadown": "1.1.7",
     "memdown": "1.0.0",
     "mocha": "1.18.2",
     "nci-yaml-reader": "0.1.0",

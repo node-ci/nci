@@ -3,7 +3,8 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	createBuildDataResource = require('../distributor').createBuildDataResource,
-	logger = require('../lib/logger')('projects resource');
+	logger = require('../lib/logger')('projects resource'),
+	db = require('../db');
 
 module.exports = function(app) {
 
@@ -20,7 +21,53 @@ module.exports = function(app) {
 	});
 
 	resource.use('read', function(req, res) {
-		res.send(_(app.projects).findWhere(req.data));
+		var project;
+		Steppy(
+			function() {
+				project = _(app.projects).findWhere(req.data);
+
+				// get last done builds to calc avg build time
+				db.builds.find({
+					start: {
+						projectName: project.name,
+						status: 'done',
+						descCreateDate: ''
+					},
+					limit: 20
+				}, this.slot());
+
+				// get last builds to calc current success streak
+				var isAllPrevDone = true;
+				db.builds.count({
+					start: {
+						projectName: project.name,
+						descCreateDate: ''
+					},
+					// TODO: find should be implemented at nlevel
+					filter: function(build) {
+						if (isAllPrevDone && build.status === 'error') {
+							isAllPrevDone = false;
+						}
+						return isAllPrevDone && build.status === 'done';
+					}
+				}, this.slot());
+			},
+			function(err, doneBuilds, doneBuildsCount) {
+				project.lastDoneBuild = doneBuilds[0];
+
+				var durationsSum = _(doneBuilds).reduce(function(memo, build) {
+					return memo + (build.endDate - build.startDate);
+				}, 0);
+
+				project.avgBuildDuration = Math.round(
+					durationsSum / doneBuilds.length
+				);
+
+				project.doneBuildsStreak = doneBuildsCount
+
+				res.send(project);
+			}
+		);
 	});
 
 	resource.use('run', function(req, res) {

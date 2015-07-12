@@ -11,7 +11,8 @@ http:
     port: 3000
 
 storage:
-    backend: 'memdown'
+    backend: memdown
+    # backend: medeadown
 
 notify:
     mail:
