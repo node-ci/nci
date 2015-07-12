@@ -12,7 +12,7 @@ var db = require('./db'),
 	notifier = require('./lib/notifier'),
 	project = require('./lib/project'),
 	libLogger = require('./lib/logger'),
-	chokidar = require('chokidar');
+	EventEmitter = require('events').EventEmitter;
 
 var logger = libLogger('app');
 
@@ -34,10 +34,10 @@ var server = http.createServer(function(req, res, next) {
 var socketio = require('socket.io')(server);
 var dataio = require('./dataio')(socketio);
 
-var app = {
-	server: server,
-	dataio: dataio
-};
+var app = new EventEmitter();
+
+app.server = server;
+app.dataio = dataio;
 
 app.lib = {};
 app.lib.reader = reader;
@@ -100,6 +100,9 @@ Steppy(
 	function(err, projects) {
 		// note that `app.projects` is live variable
 		app.projects = projects;
+		_(app.projects).each(function(project) {
+			app.emit('projectLoaded', project);
+		});
 		logger.log('Loaded projects: ', _(app.projects).pluck('name'));
 
 		require('./distributor').init(app, this.slot());
@@ -117,56 +120,7 @@ Steppy(
 
 		notifier.init(app.config.notify, this.slot());
 
-		// start file watcher for reloading projects on change
-		var syncProject = function(filename, fileInfo) {
-			var baseDir = app.config.paths.projects,
-				projectName = path.relative(
-					baseDir,
-					path.dirname(filename)
-				);
-
-			var projectIndex = _(app.projects).findIndex(function(project) {
-				return project.name === projectName;
-			});
-
-			if (projectIndex !== -1) {
-				logger.log('Unload project: "' + projectName + '"');
-				app.projects.splice(projectIndex, 1);
-			}
-
-			// on add or change (info is falsy on unlink)
-			if (fileInfo) {
-				logger.log('Load project "' + projectName + '" on change');
-				project.load(baseDir, projectName, function(err, project) {
-					if (err) {
-						return logger.error(
-							'Error during load project "' + projectName + '": ',
-							err.stack || err
-						);
-					}
-					app.projects.push(project);
-					logger.log(
-						'Project "' + projectName + '" loaded:',
-						JSON.stringify(project, null, 4)
-					);
-
-				});
-			}
-		};
-
-		// NOTE: currently after add remove and then add same file events will
-		// not be emitted
-		var watcher = chokidar.watch(
-			path.join(app.config.paths.projects, '*', 'config.*'),
-			{ignoreInitial: true}
-		);
-		watcher.on('add', syncProject);
-		watcher.on('change', syncProject);
-		watcher.on('unlink', syncProject);
-
-		watcher.on('error', function(err) {
-			logger.error('File watcher error occurred: ', err.stack || err);
-		});
+		require('./projectsWatcher').init(app, this.slot());
 
 		// init resources
 		require('./resources')(app);
