@@ -42,8 +42,10 @@ div.row
 			.build-view_info
 				if this.state.build.error && this.state.build.error.message
 					.text-center.alert.alert-danger
-						| Error: 
-						span= this.state.build.error.message
+						| Error:
+						div= this.state.build.error.message
+						if this.state.build.error.stderr
+							div= this.state.build.error.stderr
 				.row
 					.col-md-6
 						p 
