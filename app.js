@@ -14,10 +14,16 @@ var db = require('./db'),
 	libLogger = require('./lib/logger'),
 	EventEmitter = require('events').EventEmitter;
 
-var logger = libLogger('app');
+var app = new EventEmitter(),
+	logger = libLogger('app'),
+	httpApi = require('./httpApi')(app);
 
 var staticServer = new nodeStatic.Server('./static');
-var server = http.createServer(function(req, res, next) {
+var server = http.createServer(function(req, res) {
+	if (req.url.indexOf('/api/') === 0) {
+		return httpApi(req, res);
+	}
+
 	// serve index for all app pages
 	if (req.url.indexOf('/data.io.js') === -1) {
 		if (!req.url.match(/(js|css|fonts)/)) {
@@ -33,8 +39,6 @@ var server = http.createServer(function(req, res, next) {
 
 var socketio = require('socket.io')(server);
 var dataio = require('./dataio')(socketio);
-
-var app = new EventEmitter();
 
 app.server = server;
 app.dataio = dataio;
@@ -113,7 +117,6 @@ Steppy(
 			logger.log('Load plugin "%s"', plugin);
 			require(plugin).register(app);
 		});
-		require('./httpApi').register(app);
 
 		notifier.init(app.config.notify, this.slot());
 
@@ -130,8 +133,13 @@ Steppy(
 		require('./resources')(app);
 	},
 	function(err) {
+		var httpConfig = _(app.config.http).defaults({
+			host: '127.0.0.1', port: 3000
+		});
+		logger.log('Start http server on %s:%s', httpConfig.host, httpConfig.port);
+		app.server.listen(httpConfig.port, httpConfig.host);
+	},
+	function(err) {
 		if (err) throw err;
 	}
 );
-
-app.server.listen(3000);
