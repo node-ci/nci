@@ -57,6 +57,7 @@ Steppy(
 		app.config.paths.data = path.join(process.cwd(), 'data');
 		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
 		app.config.paths.builds = path.join(app.config.paths.data, 'builds');
+		app.config.paths.db = path.join(app.config.paths.data, 'db');
 		app.config.paths.preload = path.join(app.config.paths.data, 'preload.json');
 
 		var buildDirExistsCallback = this.slot();
@@ -92,8 +93,8 @@ Steppy(
 
 		logger.log('Server config:', JSON.stringify(app.config, null, 4));
 
-		db.init('path/to/db/ignored/for/memdown', {
-			db: require('memdown'),
+		db.init(app.config.paths.db, {
+			db: require(app.config.storage.backend),
 			valueEncoding: 'json'
 		}, this.slot());
 	},

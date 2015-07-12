@@ -6,6 +6,13 @@ nodes:
     - type: local
       maxExecutorsCount: 2
 
+http:
+    host: 127.0.0.1
+    port: 3000
+
+storage:
+    backend: 'memdown'
+
 notify:
     mail:
         host: smtp.gmail.com
@@ -13,7 +20,3 @@ notify:
         auth:
             user: bot.nci@gmail.com
             pass: pass
-
-http:
-    host: 127.0.0.1
-    port: 3000
