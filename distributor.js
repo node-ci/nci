@@ -31,14 +31,14 @@ exports.init = function(app, callback) {
 	};
 
 	// create resource for build data
-	var createBuildDataResource = function(build) {
-		if (build.id in buildDataResourcesHash) {
+	var createBuildDataResource = function(buildId) {
+		if (buildId in buildDataResourcesHash) {
 			return;
 		}
-		var buildDataResource = app.dataio.resource('build' + build.id);
+		var buildDataResource = app.dataio.resource('build' + buildId);
 		buildDataResource.on('connection', function(client) {
 			var callback = this.async(),
-				buildLogPath = getBuildLogPath(build.id);
+				buildLogPath = getBuildLogPath(buildId);
 
 			var stream = fs.createReadStream(buildLogPath, {
 				encoding: 'utf8'
@@ -60,7 +60,7 @@ exports.init = function(app, callback) {
 					);
 				});
 		});
-		buildDataResourcesHash[build.id] = buildDataResource;
+		buildDataResourcesHash[buildId] = buildDataResource;
 	};
 
 	exports.createBuildDataResource = createBuildDataResource;
@@ -73,7 +73,7 @@ exports.init = function(app, callback) {
 		if (build.status === 'queued') {
 			// remove prev log if it exists - for development
 			fs.unlink(getBuildLogPath(build.id));
-			createBuildDataResource(build);
+			createBuildDataResource(build.id);
 		}
 
 		buildsResource.clientEmitSync('change', {

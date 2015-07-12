@@ -40,11 +40,14 @@ define([
 
 			// create data resource for completed build
 			if (build.completed) {
-				connect.resource('projects')
-					.sync('createBuildDataResource', function(err) {
+				connect.resource('projects').sync(
+					'createBuildDataResource',
+					{buildId: build.id},
+					function(err) {
 						if (err) throw err;
 						connectToBuildDataResource();
-					});
+					}
+				);
 			} else {
 				connectToBuildDataResource();
 			}

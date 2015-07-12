@@ -11,7 +11,7 @@ module.exports = function(app) {
 		distributor = app.distributor;
 
 	resource.use('createBuildDataResource', function(req, res) {
-		createBuildDataResource({id: req.data.id});
+		createBuildDataResource(req.data.buildId);
 		res.send();
 	});
 
