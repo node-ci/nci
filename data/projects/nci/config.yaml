@@ -11,7 +11,5 @@ notify:
         console:
 
 steps:
-    - cmd: sleep 2
-    - cmd: >
-        cd ../../../../ &&
-        npm test
+    - cmd: npm install && npm prune
+    - cmd: npm test
