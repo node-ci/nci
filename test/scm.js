@@ -6,14 +6,16 @@ var expect = require('expect.js'),
 	fs = require('fs'),
 	createScm = require('../lib/scm').createScm,
 	SpawnCommand = require('../lib/command/spawn').Command,
-	mercurialRevs = require('./helpers').mercurialRevs;
+	mercurialRevs = require('./helpers').mercurialRevs,
+	gitRevs = require('./helpers').gitRevs;
 
 
 var getTestData = function(type) {
 	if (type === 'mercurial') return mercurialRevs;
+	if (type === 'git') return gitRevs;
 };
 
-['mercurial'].forEach(function(type) {
+['mercurial', 'git'].forEach(function(type) {
 	describe(type, function() {
 		var data = getTestData(type),
 			repositoryName = 'test-repository',
@@ -58,7 +60,10 @@ var getTestData = function(type) {
 				// specified revision no later revision will be cloned
 				// including those one with add tag (it's after rev 0 in our
 				// repo)
-				expect(rev).eql(_(data[0]).omit('tags'));
+				var expectedRev = (
+					type === 'mercurial' ? _(data[0]).omit('tags') : data[0]
+				);
+				expect(rev).eql(expectedRev);
 				done();
 			});
 		});
@@ -67,7 +72,10 @@ var getTestData = function(type) {
 			scm.getRev(data[0].id, function(err, rev) {
 				if (err) return done(err);
 				// no tag here, see note above
-				expect(rev).eql(_(data[0]).omit('tags'));
+				var expectedRev = (
+					type === 'mercurial' ? _(data[0]).omit('tags') : data[0]
+				);
+				expect(rev).eql(expectedRev);
 				done();
 			});
 		});
@@ -91,6 +99,15 @@ var getTestData = function(type) {
 				if (err) return done(err);
 				expect(changes).ok();
 				expect(changes).eql(data.slice(1).reverse());
+				done();
+			});
+		});
+
+		var itOrSkip = type === 'git' ? it.skip : it;
+		itOrSkip('expect current revision still equals to rev0', function(done) {
+			scm.getCurrent(function(err, rev) {
+				if (err) return done(err);
+				expect(rev).eql(data[0]);
 				done();
 			});
 		});

@@ -44,6 +44,25 @@ exports.mercurialRevs = [{
 	comment: 'add tags'
 }];
 
+exports.gitRevs = [{
+	id: '4ec4643d2044871177d758b3b0e7962b5c4f40d1',
+	tags: ['zero'],
+	author: 'oleg',
+	date: new Date('Mon Jul 13 22:30:58 2015 +0300').getTime(),
+	comment: 'zero revision'
+}, {
+	id: 'f76bae67efc6fd5a43392517646bb9d685f4266f',
+	author: 'oleg',
+	date: new Date('Mon Jul 13 22:31:58 2015 +0300').getTime(),
+	comment: 'first revision'
+}, {
+	id: '39245d9b93bcd2a0c6708d483b83c98a7bff1d3e',
+	tags: ['release-0.1.0', 'second-revision'],
+	author: 'oleg',
+	date: new Date('Mon Jul 13 22:32:59 2015 +0300').getTime(),
+	comment: 'third revision'
+}];
+
 exports.initDb = function(callback) {
 	db.init('path/to/db/ignored/for/memdown', {
 		db: require('memdown'),
