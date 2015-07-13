@@ -74,26 +74,27 @@ div.row
 									DateTime(date=new Date(this.state.build.endDate))
 								else
 									| -
+					- var rev = this.state.build.scm && this.state.build.scm.rev || {};
 					.col-md-6
 						p
 							i.fa.fa-fw.fa-user
 							| 
 							| Commit author
 							| 
-							span= this.state.build.scm.rev.author
+							span= rev.author || '-'
 						p
 							i.fa.fa-fw.fa-code-fork
 							| 
 							| Revision
 							| 
-							span= this.state.build.scm.rev.id
+							span= rev.id || '-'
 
 						p
 							i.fa.fa-fw.fa-comment-o
 							| 
 							| Comment
 							| 
-							span= this.state.build.scm.rev.comment
+							span= rev.comment || '-'
 
 			h2
 				i.fa.fa-fw.fa-terminal
