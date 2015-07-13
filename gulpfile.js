@@ -28,7 +28,7 @@ gulp.task('develop', function() {
 	gulp.watch('static/css/**/*.less', ['less']);
 
 	return nodemon({
-		ignore: ['static/**/*.js', 'app/**/*.js', 'node_modules/**'],
+		ignore: ['static/**/*.js', 'app/**/*.js', 'node_modules/**', 'data/**'],
 		script: 'app.js',
 		ext: 'js'
 	});
