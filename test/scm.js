@@ -9,6 +9,10 @@ var expect = require('expect.js'),
 	mercurialRevs = require('./helpers').mercurialRevs;
 
 
+var getTestData = function(type) {
+	if (type === 'mercurial') return mercurialRevs;
+};
+
 ['mercurial'].forEach(function(type) {
 	describe(type, function() {
 		var data = getTestData(type),
@@ -60,7 +64,7 @@ var expect = require('expect.js'),
 		});
 
 		it('expect rev0 info is good', function(done) {
-			scm.getRev(mercurialRevs[0].id, function(err, rev) {
+			scm.getRev(data[0].id, function(err, rev) {
 				if (err) return done(err);
 				// no tag here, see note above
 				expect(rev).eql(_(data[0]).omit('tags'));
@@ -123,8 +127,3 @@ var expect = require('expect.js'),
 		});
 	});
 });
-
-
-function getTestData(type) {
-	if (type === 'mercurial') return mercurialRevs;
-}
