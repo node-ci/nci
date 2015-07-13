@@ -1,9 +1,8 @@
 
-# still cloning fake repo, coz no git support
 scm:
-    type: mercurial
-    repository: ./test/repos/mercurial
-    rev: default
+    type: git
+    repository: ./
+    rev: master
 
 notify:
     on:
