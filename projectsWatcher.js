@@ -49,7 +49,7 @@ exports.init = function(app, callback) {
 	// not be emitted
 	var watcher = chokidar.watch(
 		path.join(app.config.paths.projects, '*', 'config.*'),
-		{ignoreInitial: true}
+		{ignoreInitial: true, depth: 1}
 	);
 	watcher.on('add', syncProject);
 	watcher.on('change', syncProject);
