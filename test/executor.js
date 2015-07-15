@@ -5,7 +5,7 @@ var expect = require('expect.js'),
 	createExecutor = require('../lib/executor').createExecutor,
 	_ = require('underscore'),
 	helpers = require('./helpers'),
-	mercurialRevs = helpers.mercurialRevs;
+	repository = require('./helpers').repository;
 
 
 ['local'].forEach(function(type) {
@@ -23,11 +23,7 @@ var expect = require('expect.js'),
 				project: _({
 					dir: __dirname,
 					name: 'test project',
-					scm: {
-						type: 'mercurial',
-						repository: path.join(__dirname, 'repos', 'mercurial'),
-						rev: 'default'
-					},
+					scm: repository.scm,
 					steps: [
 						{type: 'shell', cmd: 'echo 1'},
 						{type: 'shell', cmd: 'echo 2'}
@@ -56,8 +52,8 @@ var expect = require('expect.js'),
 				'scm data should be rev: last, changes: [0-last], is latest',
 				function() {
 					expect(scmData).eql({
-						rev: mercurialRevs[mercurialRevs.length - 1],
-						changes: mercurialRevs.slice().reverse(),
+						rev: repository.revs[repository.revs.length - 1],
+						changes: repository.revs.slice().reverse(),
 						isLatest: true
 					});
 				}
@@ -102,8 +98,8 @@ var expect = require('expect.js'),
 				it('scm data should be rev: 1, changes: [0, 1], not latest',
 					function() {
 						expect(scmData).eql({
-							rev: mercurialRevs[1],
-							changes: mercurialRevs.slice(0, 2).reverse(),
+							rev: repository.revs[1],
+							changes: repository.revs.slice(0, 2).reverse(),
 							isLatest: false
 						});
 					});
@@ -118,8 +114,8 @@ var expect = require('expect.js'),
 					'scm data should be rev: last, changes: [2-last], is latest',
 					function() {
 						expect(scmData).eql({
-							rev: mercurialRevs[mercurialRevs.length - 1],
-							changes: mercurialRevs.slice(2).reverse(),
+							rev: repository.revs[repository.revs.length - 1],
+							changes: repository.revs.slice(2).reverse(),
 							isLatest: true
 						});
 					}
@@ -158,8 +154,8 @@ var expect = require('expect.js'),
 				it('scm data should be rev: 2, changes: [0, 2], not latest',
 					function() {
 						expect(scmData).eql({
-							rev: mercurialRevs[2],
-							changes: mercurialRevs.slice(0, 3).reverse(),
+							rev: repository.revs[2],
+							changes: repository.revs.slice(0, 3).reverse(),
 							isLatest: false
 						});
 					});
@@ -172,8 +168,8 @@ var expect = require('expect.js'),
 					'scm data should be rev: last, changes: [3-last], is latest',
 					function() {
 						expect(scmData).eql({
-							rev: mercurialRevs[mercurialRevs.length - 1],
-							changes: mercurialRevs.slice(3).reverse(),
+							rev: repository.revs[repository.revs.length - 1],
+							changes: repository.revs.slice(3).reverse(),
 							isLatest: true
 						});
 					}

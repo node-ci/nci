@@ -2,6 +2,7 @@
 
 var SpawnCommand = require('../lib/command/spawn').Command,
 	fs = require('fs'),
+	path = require('path'),
 	db = require('../db');
 
 
@@ -19,8 +20,10 @@ exports.removeDirIfExists = function(dir, done) {
 	}));
 };
 
+exports.revs = {};
+
 // revisions for the test mercurial repo
-exports.mercurialRevs = [{
+exports.revs.mercurial = [{
 	id: 'da2762e71e87',
 	tags: ['zero revision'],
 	author: 'kotbegemot',
@@ -44,7 +47,7 @@ exports.mercurialRevs = [{
 	comment: 'add tags'
 }];
 
-exports.gitRevs = [{
+exports.revs.git = [{
 	id: '4ec4643',
 	tags: ['zero'],
 	author: 'oleg',
@@ -62,6 +65,25 @@ exports.gitRevs = [{
 	date: new Date('Mon Jul 13 22:32:59 2015 +0300').getTime(),
 	comment: 'third revision'
 }];
+
+exports.scm = {};
+
+exports.scm.mercurial = {
+	type: 'mercurial',
+	repository: path.join(__dirname, 'repos', 'mercurial'),
+	rev: 'default'
+};
+
+exports.scm.git = {
+	type: 'git',
+	repository: path.join(__dirname, 'repos', 'git'),
+	rev: 'master'
+};
+
+exports.repository = {
+	scm: exports.scm.mercurial,
+	revs: exports.revs.mercurial
+};
 
 exports.initDb = function(callback) {
 	db.init('path/to/db/ignored/for/memdown', {

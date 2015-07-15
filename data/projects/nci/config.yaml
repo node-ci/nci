@@ -4,6 +4,9 @@ scm:
     repository: ./
     rev: master
 
+# catchRev:
+#     comment: !!js/regexp //
+
 notify:
     on:
         - error

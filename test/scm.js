@@ -6,18 +6,13 @@ var expect = require('expect.js'),
 	fs = require('fs'),
 	createScm = require('../lib/scm').createScm,
 	SpawnCommand = require('../lib/command/spawn').Command,
-	mercurialRevs = require('./helpers').mercurialRevs,
+	helpers = require('./helpers'),
 	gitRevs = require('./helpers').gitRevs;
 
 
-var getTestData = function(type) {
-	if (type === 'mercurial') return mercurialRevs;
-	if (type === 'git') return gitRevs;
-};
-
 ['mercurial', 'git'].forEach(function(type) {
 	describe(type, function() {
-		var data = getTestData(type),
+		var data = helpers.revs[type],
 			originalRepositoryPath = path.join(__dirname, 'repos', type),
 			repositoryName = 'test-repository',
 			repositoryPath = path.join(

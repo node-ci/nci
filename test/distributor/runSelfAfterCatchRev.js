@@ -20,11 +20,7 @@ describe('Distributor run self after catch', function() {
 				projects: [{
 					name: 'project1',
 					dir: __dirname,
-					scm: {
-						type: 'mercurial',
-						repository: path.join(__dirname, '..', 'repos', 'mercurial'),
-						rev: 'default'
-					},
+					scm: helpers.repository.scm,
 					steps: [
 						{type: 'shell', cmd: 'echo 1'}
 					],
@@ -50,8 +46,9 @@ describe('Distributor run self after catch', function() {
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run({projectName: 'project1'}, function(err) {
-				expect(err).not.ok();
+			distributor.run({projectName: 'project1'}, function(err, build) {
+				if (err) return done(err);
+				expect(build.error).not.ok();
 				done();
 			});
 		});
@@ -61,7 +58,7 @@ describe('Distributor run self after catch', function() {
 				expect(executorRunSpy.getCall(callIndex).thisValue.project.name)
 					.equal('project1');
 				expect(scmDataSpy.getCall(callIndex).args[0].rev)
-					.eql(helpers.mercurialRevs[revIndex]);
+					.eql(helpers.repository.revs[revIndex]);
 			});
 		};
 
@@ -69,7 +66,7 @@ describe('Distributor run self after catch', function() {
 		itRunWithRev(1, 1);
 		itRunWithRev(2, 2);
 
-		var revsCount = helpers.mercurialRevs.length;
+		var revsCount = helpers.repository.revs.length;
 		it('should call run ' + revsCount + ' times in total', function() {
 			expect(executorRunSpy.callCount).equal(revsCount);
 		});
