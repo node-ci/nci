@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/okv/nci.git"
+    "url": "git://github.com/node-ci/nci.git"
   },
   "keywords": [
     "continuous",
@@ -33,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/okv/nci/issues"
+    "url": "https://github.com/node-ci/nci/issues"
   },
-  "homepage": "https://github.com/okv/nci",
+  "homepage": "https://github.com/node-ci/nci",
   "dependencies": {
     "chokidar": "1.0.3",
     "colors": "1.1.2",
