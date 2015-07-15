@@ -17,13 +17,13 @@ exports.init = function(dbPath, params, callback) {
 				descCreateDate: descCreateDate,
 				id: 1
 			}},
-			// note that's unordered projection (coz number is numeric)
-			// TODO: pick only id as value for that rare used projection
+			// note that's unordered projection (coz number is numeric),
+			// it also contains only id
 			{key: {
 				projectName: pickProjectName,
 				number: 1,
 				id: 1
-			}},
+			}, value: pickId},
 			{key: {
 				projectName: pickProjectName,
 				status: 1,
