@@ -18,31 +18,15 @@ var getTestData = function(type) {
 ['mercurial', 'git'].forEach(function(type) {
 	describe(type, function() {
 		var data = getTestData(type),
+			originalRepositoryPath = path.join(__dirname, 'repos', type),
 			repositoryName = 'test-repository',
 			repositoryPath = path.join(
 				path.join(__dirname, 'repos'), repositoryName
-			),
-			originalRepositoryPath = path.join(__dirname, 'repos', type);
+			);
 
 		function rmdir(dir, callback) {
 			new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
 		}
-
-		it('remove original repository dir if it exists', function(done) {
-			if (fs.exists(originalRepositoryPath, function(isExists) {
-				if (isExists) {
-					rmdir(originalRepositoryPath, done);
-				} else {
-					done();
-				}
-			}));
-		});
-
-		it('unpack original repository', function(done) {
-			new SpawnCommand().run({cmd: 'tar', args: [
-				'-xvf', type + '.tar.gz'
-			], options: {cwd: path.join(__dirname, 'repos')}}, done);
-		});
 
 		it('remove test repository dir if it exists', function(done) {
 			if (fs.exists(repositoryPath, function(isExists) {
