@@ -33,26 +33,34 @@ module.exports = function(app) {
 						status: 'done',
 						descCreateDate: ''
 					},
-					limit: 20
+					limit: 10
 				}, this.slot());
 
-				// get last builds to calc current success streak
-				var isAllPrevDone = true;
-				db.builds.count({
+				// tricky but effective streak counting inside filter goes below
+				var doneBuildsStreakCallback = _(this.slot()).once(),
+					doneBuildsStreak = 0;
+
+				db.builds.find({
 					start: {
 						projectName: project.name,
 						descCreateDate: ''
 					},
-					// TODO: find should be implemented at nlevel
 					filter: function(build) {
-						if (isAllPrevDone && build.status === 'error') {
-							isAllPrevDone = false;
+						// error exits streak
+						if (build.status === 'error') {
+							doneBuildsStreakCallback(null, doneBuildsStreak);
+							return true;
 						}
-						return isAllPrevDone && build.status === 'done';
-					}
-				}, this.slot());
+						if (build.status === 'done') {
+							doneBuildsStreak++;
+						}
+					},
+					limit: 1
+				}, function(err) {
+					doneBuildsStreakCallback(err, doneBuildsStreak);
+				});
 			},
-			function(err, doneBuilds, doneBuildsCount) {
+			function(err, doneBuilds, doneBuildsStreak) {
 				project.lastDoneBuild = doneBuilds[0];
 
 				var durationsSum = _(doneBuilds).reduce(function(memo, build) {
@@ -63,7 +71,7 @@ module.exports = function(app) {
 					durationsSum / doneBuilds.length
 				);
 
-				project.doneBuildsStreak = doneBuildsCount
+				project.doneBuildsStreak = doneBuildsStreak;
 
 				res.send(project);
 			}
