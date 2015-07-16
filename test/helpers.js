@@ -86,8 +86,8 @@ exports.scm.git = {
 };
 
 exports.repository = {
-	scm: exports.scm.mercurial,
-	revs: exports.revs.mercurial
+	scm: exports.scm.git,
+	revs: exports.revs.git
 };
 
 exports.initDb = function(callback) {
