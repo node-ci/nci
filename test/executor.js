@@ -126,7 +126,7 @@ var expect = require('expect.js'),
 
 		});
 
-		_(['second revision', /^second revision$/]).each(function(tag) {
+		_(['second-revision', /^second\-revision$/]).each(function(tag) {
 
 			describe('with scm rev default and catch tag ' + tag, function() {
 				before(clearWorkspace);
