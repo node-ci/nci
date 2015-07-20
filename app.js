@@ -48,6 +48,10 @@ app.lib.reader = reader;
 app.lib.notifier = notifier;
 app.lib.logger = libLogger;
 
+var configDefaults = {
+	notify: {}
+};
+
 Steppy(
 	function() {
 		app.config = {};
@@ -90,6 +94,7 @@ Steppy(
 	},
 	function(err, mkdirResult, config) {
 		_(app.config).defaults(config);
+		_(app.config).defaults(configDefaults);
 
 		logger.log('Server config:', JSON.stringify(app.config, null, 4));
 
