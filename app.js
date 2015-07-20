@@ -49,7 +49,8 @@ app.lib.notifier = notifier;
 app.lib.logger = libLogger;
 
 var configDefaults = {
-	notify: {}
+	notify: {},
+	http: {host: '127.0.0.1', port: 3000}
 };
 
 Steppy(
@@ -139,11 +140,10 @@ Steppy(
 		require('./resources')(app);
 	},
 	function(err) {
-		var httpConfig = _(app.config.http).defaults({
-			host: '127.0.0.1', port: 3000
-		});
-		logger.log('Start http server on %s:%s', httpConfig.host, httpConfig.port);
-		app.server.listen(httpConfig.port, httpConfig.host);
+		var host = app.config.http.host,
+			port = app.config.http.port;
+		logger.log('Start http server on %s:%s', host, port);
+		app.server.listen(port, host);
 	},
 	function(err) {
 		if (err) throw err;
