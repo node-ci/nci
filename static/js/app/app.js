@@ -3,7 +3,7 @@
 define([
 	'react',
 	'react-router',
-	'templates/app/index',
+	'templates/app/components/app/index',
 	'app/components/index',
 	'app/actions/project', 'app/actions/build'
 ], function(
