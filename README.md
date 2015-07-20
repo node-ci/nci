@@ -21,6 +21,7 @@ work in progress...
 * ~~Safe id and build numbers generation~~
 * ~~Scheduler~~
 * ~~Better tests coverage~~
+* Compile client for production
 * Semantic versioning and plugins
 
 ## Roadmap
