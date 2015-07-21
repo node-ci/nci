@@ -8,7 +8,8 @@ define([
 	'app/components/builds/list',
 	'app/components/common/scm/index',
 	'templates/app/components/projects/view/index',
-	'app/components/common/index'
+	'app/components/common/index',
+	'bootstrap/dropdown'
 ], function(React, Reflux, ProjectActions, BuildActions,
 	projectStore, Builds, Scm, template, CommonComponents
 ) {
@@ -24,6 +25,12 @@ define([
 			willTransitionTo: function(transition, params, query) {
 				ProjectActions.read({name: params.name});
 				BuildActions.readAll({projectName: params.name});
+			}
+		},
+		onBuildProject: function() {
+			if (this.state.project.name) {
+				console.log(this.state.project.name);
+				ProjectActions.run(this.state.project.name);
 			}
 		},
 		componentDidMount: function() {

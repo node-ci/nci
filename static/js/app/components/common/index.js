@@ -2,10 +2,12 @@
 
 define([
 	'./dateTime/index',
-	'./scm/index'
-], function(DateTime, Scm) {
+	'./scm/index',
+	'./duration/index'
+], function(DateTime, Scm, Duration) {
 	return {
 		DateTime: DateTime,
-		Scm: Scm
+		Scm: Scm,
+		Duration: Duration
 	};
 });

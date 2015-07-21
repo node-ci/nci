@@ -1,13 +1,26 @@
 .row 
 	.col-md-8
-		h1
+		h1.clearfix
 			.pull-right
-				span.badge.badge-default= this.state.project.scm ? this.state.project.scm.rev : ''
-
-			Scm(scm=this.state.project.scm ? this.state.project.scm.type : '')
-			span= this.state.project.name
+				button.btn.btn-sm.btn-primary.dropdown-toggle(
+					data-toggle="dropdown",
+					aria-expanded="false"
+				)
+					span= this.state.project.scm ? this.state.project.scm.rev : ''
+					| 
+					span.caret
+				| 
+				if this.state.project.name
+					button.btn.btn-sm.btn-success(onClick=this.onBuildProject)
+						i.fa.fa-fw.fa-play
+						| 
+						span Build
+			div
+				Scm(scm=this.state.project.scm ? this.state.project.scm.type : '')
+				span= this.state.project.name
 
 		hr
+
 		div.text-muted
 			- var lastDoneBuild = this.state.project.lastDoneBuild;
 			p Last successfully build: 

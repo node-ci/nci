@@ -6,9 +6,13 @@
 	}
 }
 
+.builds {
+	padding: 0 15px;
+}
+
 .build {
-	.clearfix;
-	padding: 15px;
+	.row();
+	padding: 15px 0;
 	margin-bottom: 3px;
 
 	&__in-progress {
@@ -27,17 +31,21 @@
 	}
 
 	&_controls {
-		margin-top: 3px;
+		.make-md-column(3);
+		.make-xs-column(3);
+		.text-right;
+		margin-top: 8px;
+	}
+	&_content {
+		.make-md-column(9);
+		.make-xs-column(9);
 	}
 
 	&_header {
-		margin-bottom: 2px;
-		font-size: 16px;
+		margin-bottom: 6px;
+		font-size: 18px;
 		a {
 			font-size: inherit;
 		}
-	}
-	&_terminal {
-		margin-top: 10px;
 	}
 }
