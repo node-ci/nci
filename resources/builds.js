@@ -26,6 +26,12 @@ module.exports = function(app) {
 				db.builds.find(findParams, this.slot());
 			},
 			function(err, builds) {
+				// omit big fields not needed for list
+				_(builds).each(function(build) {
+					delete build.stepTimings;
+					build.project = _(build.project).pick('name', 'scm');
+				});
+
 				res.send(builds);
 			},
 			next
