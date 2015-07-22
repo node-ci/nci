@@ -40,12 +40,13 @@ div.row
 			hr
 
 			.build-view_info
-				if this.state.build.error && this.state.build.error.message
-					.text-center.alert.alert-danger
-						| Error:
-						div= this.state.build.error.message
-						if this.state.build.error.stderr
-							div= this.state.build.error.stderr
+				if this.state.build.error
+					if this.state.build.error.message
+						.text-center.alert.alert-danger
+							| Error:
+							div= this.state.build.error.message
+					if this.state.build.error.stderr
+						pre= this.state.build.error.stderr
 				.row
 					.col-md-6
 						p 
