@@ -2,6 +2,8 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
+	getAvgProjectBuildDuration =
+		require('../lib/project').getAvgProjectBuildDuration,
 	createBuildDataResource = require('../distributor').createBuildDataResource,
 	logger = require('../lib/logger')('projects resource'),
 	db = require('../db');
@@ -26,14 +28,16 @@ module.exports = function(app) {
 			function() {
 				project = _(app.projects).findWhere(req.data);
 
-				// get last done builds to calc avg build time
+				getAvgProjectBuildDuration(project.name, this.slot());
+
+				// get last done build
 				db.builds.find({
 					start: {
 						projectName: project.name,
 						status: 'done',
 						descCreateDate: ''
 					},
-					limit: 10
+					limit: 1
 				}, this.slot());
 
 				// tricky but effective streak counting inside filter goes below
@@ -60,17 +64,9 @@ module.exports = function(app) {
 					doneBuildsStreakCallback(err, doneBuildsStreak);
 				});
 			},
-			function(err, doneBuilds, doneBuildsStreak) {
-				project.lastDoneBuild = doneBuilds[0];
-
-				var durationsSum = _(doneBuilds).reduce(function(memo, build) {
-					return memo + (build.endDate - build.startDate);
-				}, 0);
-
-				project.avgBuildDuration = Math.round(
-					durationsSum / doneBuilds.length
-				);
-
+			function(err, avgProjectBuildDuration, lastDoneBuilds, doneBuildsStreak) {
+				project.lastDoneBuild = lastDoneBuilds[0];
+				project.avgBuildDuration = avgProjectBuildDuration;
 				project.doneBuildsStreak = doneBuildsStreak;
 
 				res.send(project);

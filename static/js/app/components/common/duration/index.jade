@@ -1,4 +1,9 @@
 span
-	span= this.props.duration / 1000
+	if this.props.minutes
+		span= this.props.minutes
+		| 
+		span min
+	| 
+	span= this.state.seconds
 	| 
 	span sec

@@ -13,16 +13,27 @@ mixin statusText(build)
 
 - var build = this.props.build;
 
-.build(class="build__#{build.status}")
+.build(class="")
 	.build_content
+		.build_status
+			.status(class="status__#{build.status}")
 		div.build_header
+			if build.project
+				span
+					Scm(scm=build.project.scm.type)
+					| 
+					Link(to="project", params={name: build.project.name})
+						span= build.project.name
+				| 
 			if build.number
+				span(style={fontSize: '15px', color: '#a6a6a6'}) build
+				| 
 				if build.status !== 'queued'
 					Link(to="build", params={id: build.id})
-						span Build #
+						span #
 						span= build.number
 				else
-						span Build #
+						span #
 						span= build.number
 
 			if build.waitReason
@@ -36,12 +47,6 @@ mixin statusText(build)
 				span )
 
 		div
-			if build.project
-				span.build_info
-					Scm(scm=build.project.scm.type)
-					| 
-					Link(to="project", params={name: build.project.name})
-						span= build.project.name
 			if build.endDate
 				span.build_info
 					i.fa.fa-fw.fa-clock-o
@@ -69,11 +74,13 @@ mixin statusText(build)
 
 	.build_controls
 		if build.completed
-			a.btn.btn-sm.btn-default(href="javascript:void(0);", onClick=this.onRebuildProject(build.project.name))
-				i.fa.fa-fw.fa-repeat(title="Rebuild")
-				| 
-				| Build again
-		else
-			//-.progress
-				//-.progress-bar.progress-bar-success(style={width: '60%'})
+			.build_controls_buttons
+				a.btn.btn-sm.btn-default(href="javascript:void(0);", onClick=this.onRebuildProject(build.project.name))
+					i.fa.fa-fw.fa-repeat(title="Rebuild")
+					| 
+					| Build again
+		if build.status === 'in-progress'
+			.build_controls_progress
+				if build.project.avgBuildDuration
+					Progress(build=build)
 

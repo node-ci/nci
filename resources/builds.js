@@ -30,7 +30,9 @@ module.exports = function(app) {
 				_(builds).each(function(build) {
 					delete build.stepTimings;
 					delete build.scm.changes;
-					build.project = _(build.project).pick('name', 'scm');
+					build.project = _(build.project).pick(
+						'name', 'scm', 'avgBuildDuration'
+					);
 				});
 
 				res.send(builds);
