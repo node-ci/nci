@@ -1,9 +1,9 @@
 'use strict';
 
-var db = require('./db'),
+var env = process.env.NODE_ENV || 'development',
+	db = require('./db'),
 	http = require('http'),
 	nodeStatic = require('node-static'),
-	jade = require('jade'),
 	path = require('path'),
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
@@ -24,15 +24,20 @@ var server = http.createServer(function(req, res) {
 		return httpApi(req, res);
 	}
 
-	// serve index for all app pages
 	if (req.url.indexOf('/data.io.js') === -1) {
-		if (!req.url.match(/(js|css|fonts)/)) {
-			// Compile a function
-			var index = jade.compileFile(__dirname + '/views/index.jade');
-			res.write(index());
-			res.end();
-		} else {
+		if (/(js|css|fonts)/.test(req.url)) {
 			staticServer.serve(req, res);
+		} else {
+			// serve index for all app pages
+			if (env === 'development') {
+				var jade = require('jade');
+				// Compile a function
+				var index = jade.compileFile(__dirname + '/views/index.jade');
+				res.write(index({env: env}));
+				res.end();
+			} else {
+				staticServer.serve(req, res);
+			}
 		}
 	}
 });

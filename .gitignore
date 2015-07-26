@@ -9,3 +9,4 @@ static/js/libs
 static/js/templates
 data/projects/**/workspace
 data/builds
+static/index.html

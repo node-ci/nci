@@ -5,7 +5,18 @@ html
 
 		link(href="/css/index.css", rel="stylesheet", type="text/css")
 
-		script(data-main="/js/main" src="/js/libs/requirejs/require.js")
+		script
+			include ../static/js/libs/requirejs/require.js
+
+		if env === 'development'
+			script
+				include ../static/js/requirejs/development.js
+		else
+			script
+				include ../static/js/requirejs/production.js
+			script
+				include ../static/scripts/app.js
+
 		script(type="text/javascript").
 			require(['app/app']);
 
