@@ -3,11 +3,13 @@
 define([
 	'./dateTime/index',
 	'./scm/index',
-	'./duration/index'
-], function(DateTime, Scm, Duration) {
+	'./duration/index',
+	'./progress/index'
+], function(DateTime, Scm, Duration, Progress) {
 	return {
 		DateTime: DateTime,
 		Scm: Scm,
-		Duration: Duration
+		Duration: Duration,
+		Progress: Progress
 	};
 });

@@ -14,15 +14,12 @@
 	.row();
 	padding: 15px 0;
 	margin-bottom: 3px;
+	background: lighten(@well-bg, 3%);
 
-	&__in-progress {
-		background: lighten(@brand-info, 40%);
-	}
-	&__done {
-		background: lighten(@brand-success, 50%);
-	}
-	&__error {
-		background: lighten(@brand-danger, 30%);
+	&_status {
+		float: left;
+		padding-top: 14px;
+		margin-right: 13px;
 	}
 
 	&_info {
@@ -34,8 +31,21 @@
 		.make-md-column(3);
 		.make-xs-column(3);
 		.text-right;
-		margin-top: 8px;
+
+		&_buttons {
+			margin-top: 8px;
+			transition: opacity 0.2s ease;
+			opacity: 0;
+		}
+
+		&_progress {
+			padding-top: 14px;
+			.progress {
+				margin-bottom: 0;
+			}
+		}
 	}
+
 	&_content {
 		.make-md-column(9);
 		.make-xs-column(9);
@@ -48,4 +58,72 @@
 			font-size: inherit;
 		}
 	}
+
+	&:hover {
+		.build_controls_buttons {
+			opacity: 1;
+		}
+	}
 }
+
+@animation-duration: 1.5s;
+
+.status {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+
+	&__in-progress {
+		background: @brand-info;
+
+		-webkit-animation: pulsate @animation-duration ease-out;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation: pulsate @animation-duration ease-out;
+		-moz-animation-iteration-count: infinite;
+		-o-animation: pulsate @animation-duration ease-out;
+		-o-animation-iteration-count: infinite;
+		animation: pulsate @animation-duration ease-out;
+		animation-iteration-count: infinite;
+	}
+	&__done {
+		background: @link-color;
+	}
+	&__error {
+		background: @brand-danger;
+	}
+	&__queued {
+		background: @brand-primary;
+	}
+}
+
+.pulsate-frames() {
+	.transform(@scaleX, @scaleY) {
+		-webkit-transform: scale(@scaleX, @scaleY); opacity: 1;
+		-moz-transform: scale(@scaleX, @scaleY); opacity: 1;
+		-ms-transform: scale(@scaleX, @scaleY); opacity: 1;
+		-o-transform: scale(@scaleX, @scaleY); opacity: 1;
+		transform: scale(@scaleX, @scaleY); opacity: 1;
+	}
+
+	0% {
+		.transform(1.0, 1.0);
+	}
+	25% {
+		opacity: 1.0;
+	}
+	50% {
+		.transform(0.75, 0.75);
+	}
+	50% {
+		opacity: 1.0;
+	}
+	100% {
+		.transform(1.0, 1.0);
+	}
+}
+
+@-webkit-keyframes pulsate {.pulsate-frames}
+@-moz-keyframes pulsate {.pulsate-frames}
+@-ms-keyframes pulsate {.pulsate-frames}
+@-o-keyframes pulsate {.pulsate-frames}
+@keyframes pulsate {.pulsate-frames}
