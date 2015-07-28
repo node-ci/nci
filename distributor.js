@@ -3,6 +3,9 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	Distributor = require('./lib/distributor').Distributor,
+	getAvgProjectBuildDuration = (
+		require('./lib/project').getAvgProjectBuildDuration
+	),
 	db = require('./db'),
 	path = require('path'),
 	fs = require('fs'),
@@ -16,6 +19,15 @@ exports.init = function(app, callback) {
 		saveBuild: function(build, callback) {
 			Steppy(
 				function() {
+					if (!_(build.project).has('avgBuildDuration')) {
+						getAvgProjectBuildDuration(build.project.name, this.slot());
+					} else {
+						this.pass(build.project.avgBuildDuration);
+					}
+				},
+				function(err, avgBuildDuration) {
+					build.project.avgBuildDuration = avgBuildDuration;
+
 					db.builds.put(build, this.slot());
 				},
 				function() {
