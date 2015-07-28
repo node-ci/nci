@@ -3,8 +3,11 @@
 	mainConfigFile: 'development.js',
 	baseUrl: '../',
 	paths: {
-		socketio: 'empty:',
-		_dataio: 'empty:'
+		socketio: (
+			'../../node_modules/socket.io/node_modules/' +
+			'socket.io-client/socket.io'
+		),
+		_dataio: '../../node_modules/data.io/data.io',
 	},
 	name: 'app/app',
 	preserveLicenseComments: false,

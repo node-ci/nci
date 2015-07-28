@@ -11,8 +11,9 @@
     "dev": "gulp",
     "sync": "npm install && npm prune && bower install && bower prune",
     "buildJs": "r.js -o static/js/requirejs/buid.js",
+    "buildClean": "rm static/index.html",
     "buildHtml": "jade views/index.jade --obj '{\"env\": \"production\"}' -o static/",
-    "build": "npm run buildJs && npm run buildHtml"
+    "build": "npm run buildJs && npm run buildHtml && git checkout static/scripts/app.js"
   },
   "repository": {
     "type": "git",

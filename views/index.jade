@@ -5,8 +5,11 @@ html
 
 		link(href="/css/index.css", rel="stylesheet", type="text/css")
 
-		script
-			include ../static/js/libs/requirejs/require.js
+		if env === 'development'
+			script(type="text/javascript", src="/js/libs/requirejs/require.js")
+		else
+			script
+				include ../static/js/libs/almond/almond.js
 
 		if env === 'development'
 			script

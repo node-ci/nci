@@ -13,7 +13,8 @@
     "bootstrap": "3.3.4",
     "font-awesome": "4.3.0",
     "react-router": "0.13.3",
-    "ansi_up": "1.2.1"
+    "ansi_up": "1.2.1",
+    "almond": "0.3.1"
   },
   "moduleType": [
     "amd"
