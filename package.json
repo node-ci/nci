@@ -13,8 +13,7 @@
     "buildJs": "r.js -o static/js/requirejs/buid.js",
     "buildClean": "rm static/index.html",
     "buildHtml": "jade views/index.jade --obj '{\"env\": \"production\"}' -o static/",
-    "build": "npm run buildJs && npm run buildHtml && git checkout static/js/app.build.js",
-    "prepublish": "npm run build"
+    "build": "gulp less && gulp fonts && gulp react-jade && npm run buildJs && npm run buildHtml && git checkout static/js/app.build.js"
   },
   "repository": {
     "type": "git",
