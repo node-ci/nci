@@ -13,5 +13,5 @@
 	preserveLicenseComments: false,
 	optimize: 'uglify2',
 	useStrict: true,
-	out: '../../scripts/app.js'
+	out: '../../js/app.build.js'
 });
