@@ -4,7 +4,7 @@ nci - Continuous integration server written in node.js
 
 work in progress...
 
-## TODO for release 1.0
+## TODO for release 0.9
 
 * Dashboard (builds list, projects autocomlete)
 * Build page (build info(dates, changes, etc), console)
@@ -21,7 +21,7 @@ work in progress...
 * ~~Safe id and build numbers generation~~
 * ~~Scheduler~~
 * ~~Better tests coverage~~
-* Compile client for production
+* ~~Compile client for production~~
 * Semantic versioning and plugins
 
 ## Roadmap
