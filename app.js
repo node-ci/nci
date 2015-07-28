@@ -18,7 +18,7 @@ var app = new EventEmitter(),
 	logger = libLogger('app'),
 	httpApi = require('./httpApi')(app);
 
-var staticServer = new nodeStatic.Server('./static');
+var staticServer = new nodeStatic.Server(path.join(__dirname, 'static'));
 var server = http.createServer(function(req, res) {
 	if (req.url.indexOf('/api/') === 0) {
 		return httpApi(req, res);
