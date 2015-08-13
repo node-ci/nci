@@ -6,9 +6,9 @@ work in progress...
 
 ## TODO for release 0.9
 
-* Dashboard (builds list, projects autocomlete)
-* Build page (build info(dates, changes, etc), console)
-* Awesome build output (very close to terminal)
+* ~~Dashboard (builds list, projects autocomlete)~~
+* ~~Build page (build info(dates, changes, etc), console)~~
+* ~~Awesome build output (very close to terminal)~~
 * ~~Url for trigger build run~~
 * ~~YAML project and server(executors count, etc) configs~~
 * ~~Persistent build and console output information~~
@@ -23,6 +23,24 @@ work in progress...
 * ~~Better tests coverage~~
 * ~~Compile client for production~~
 * Semantic versioning and plugins
+
+Ui fixes
+
+* speed up console output
+* projects autocomplete
+* add time ago at build list
+* show scm changes on build page
+* react says many many time to console:
+	Warning: setState(...): Can only update a mounted or mounting component.
+	This usually means you called setState() on an unmounted component.
+	This is a no-op.
+* show duration details (steps duration) on build page
+* speed up build points animation at ff
+* current successfully streak icons at project page
+* don't appear build from onther project on project page
+* update project info changes (avg duration, etc) on the fly - project page
+* long commit comment breakes build card makeup
+* comment start/duration should be on same place during all steps
 
 ## Roadmap
 
