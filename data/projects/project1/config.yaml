@@ -4,8 +4,8 @@ scm:
     repository: ./test/repos/mercurial
     rev: default
 
-catchRev:
-    comment: !!js/regexp //
+# catchRev:
+#     comment: !!js/regexp //
 
 # buildEvery:
 #     time: "*/5 * * * * *"
@@ -22,7 +22,7 @@ notify:
         #     - oleg.korobenko@gmail.com
         #     - oleg.poligon@gmail.com
         # jabber:
-        #     - oleg.korobenko@gmail.com
+        #     - oleg.poligon@gmail.com
 
 trigger:
     after:

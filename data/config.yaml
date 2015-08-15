@@ -1,6 +1,7 @@
 
 plugins:
     # - nci-mail-notification
+    # - nci-jabber-notification
 
 nodes:
     - type: local
@@ -9,6 +10,7 @@ nodes:
 http:
     host: 127.0.0.1
     port: 3000
+    url: http://127.0.0.1:3000
 
 storage:
     backend: memdown
@@ -21,3 +23,9 @@ notify:
         auth:
             user: bot.nci@gmail.com
             pass: pass
+    jabber:
+        host: talk.google.com
+        port: 5222
+        reconnect: true
+        jid: bot.nci@gmail.com
+        password: password
