@@ -18,7 +18,9 @@ var app = new EventEmitter(),
 	logger = libLogger('app'),
 	httpApi = require('./httpApi')(app);
 
-var staticServer = new nodeStatic.Server(path.join(__dirname, 'static'));
+var staticPath = path.join(__dirname, 'static'),
+	staticServer = new nodeStatic.Server(staticPath);
+
 var server = http.createServer(function(req, res) {
 	if (req.url.indexOf('/api/') === 0) {
 		return httpApi(req, res);
@@ -36,7 +38,9 @@ var server = http.createServer(function(req, res) {
 				res.write(index({env: env}));
 				res.end();
 			} else {
-				staticServer.serve(req, res);
+				// serve index for all other pages (/builds/:id, etc)
+				fs.createReadStream(path.join(staticPath, 'index.html'))
+					.pipe(res);
 			}
 		}
 	}
