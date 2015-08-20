@@ -16,7 +16,7 @@ work in progress...
 * ~~Writes to stderr must not break the build~~
 * Mail and jabber notifications (with commits, current step and error)
 * ~~Rename notification strategies according to statuses~~
-* Work with git
+* ~~Work with git~~
 * ~~Build every commit, commit with tag, etc~~
 * ~~Safe id and build numbers generation~~
 * ~~Scheduler~~
@@ -28,7 +28,7 @@ Ui fixes
 
 * speed up console output
 * projects autocomplete
-* add time ago at build list
+* add time ago to build list
 * show scm changes on build page
 * react says many many time to console:
 	Warning: setState(...): Can only update a mounted or mounting component.
@@ -37,7 +37,7 @@ Ui fixes
 * show duration details (steps duration) on build page
 * speed up build points animation at ff
 * current successfully streak icons at project page
-* don't appear build from onther project on project page
+* don't appear build from other project on project page
 * update project info changes (avg duration, etc) on the fly - project page
 * long commit comment breakes build card makeup
 * comment start/duration should be on same place during all steps
