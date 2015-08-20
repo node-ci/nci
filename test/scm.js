@@ -101,8 +101,7 @@ var expect = require('expect.js'),
 			});
 		});
 
-		var itOrSkip = type === 'git' ? it.skip : it;
-		itOrSkip('expect current revision still equals to rev0', function(done) {
+		it('expect current revision still equals to rev0', function(done) {
 			scm.getCurrent(function(err, rev) {
 				if (err) return done(err);
 				expect(rev).eql(data[0]);
