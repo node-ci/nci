@@ -23,12 +23,13 @@
 
 		div.text-muted
 			- var lastDoneBuild = this.state.project.lastDoneBuild;
-			p Last successfully build: 
+			p Last successfully built: 
 				if lastDoneBuild
-					| build #
-					span= lastDoneBuild.number
-					|  at 
 					DateTime(date=new Date(lastDoneBuild.endDate))
+					| 
+					| (build #
+					span= lastDoneBuild.number
+					| )
 				else
 					| -
 

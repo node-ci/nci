@@ -28,9 +28,9 @@ Ui fixes
 
 * speed up console output
 * projects autocomplete
-* add time ago to build list
+* ~~add time ago to build list~~
 * show scm changes on build page
-* react says many many time to console:
+* react says many many times to console:
 	Warning: setState(...): Can only update a mounted or mounting component.
 	This usually means you called setState() on an unmounted component.
 	This is a no-op.
@@ -40,7 +40,7 @@ Ui fixes
 * don't appear build from other project on project page
 * update project info changes (avg duration, etc) on the fly - project page
 * long commit comment breakes build card makeup
-* comment start/duration should be on same place during all steps
+* ~~comment start/duration should be on same place during all steps~~
 
 ## Roadmap
 

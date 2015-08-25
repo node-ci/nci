@@ -1,1 +1,2 @@
-span= this.props.date.toLocaleDateString() + ' ' + this.props.date.toLocaleTimeString()
+- var date = moment(this.props.date);
+span(title= date.format())= date.fromNow()

@@ -10,6 +10,7 @@ require.config({
 		reflux: 'libs/reflux/dist/reflux',
 		jquery: 'libs/jquery/jquery',
 		ansi_up: 'libs/ansi_up/ansi_up',
+		moment: 'libs/moment/moment',
 		'bootstrap/collapse': 'libs/bootstrap/js/collapse',
 		'bootstrap/dropdown': 'libs/bootstrap/js/dropdown'
 	},

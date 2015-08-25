@@ -1,8 +1,12 @@
 'use strict';
 
 define([
-	'react', 'templates/app/components/common/duration/index'
-], function(React, template) {
+	'react', 'templates/app/components/common/duration/index', 'moment'
+], function(React, template, moment) {
+	template = template.locals({
+		moment: moment
+	});
+
 	return React.createClass({
 		render: template,
 		getInitialState: function() {

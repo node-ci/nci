@@ -1,9 +1,4 @@
-span
-	if this.props.minutes
-		span= this.props.minutes
-		| 
-		span min
-	| 
-	span= this.state.seconds
-	| 
-	span sec
+- var sec = Math.round(this.props.duration / 1000);
+- var min = sec >= 60 ? Math.round(sec / 60) : 0;
+- var suffix = this.props.withSuffix ? 'in ' : '';
+span(title= sec + ' sec')= suffix + (min ? min + ' min' : sec + ' sec')

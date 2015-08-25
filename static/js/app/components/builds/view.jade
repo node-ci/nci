@@ -60,17 +60,17 @@ div.row
 							i.fa.fa-fw.fa-clock-o
 							span 
 							if this.state.build.startDate
-								span Started at 
+								span Started 
 								DateTime(date=new Date(this.state.build.startDate))
 							else
-								span Queued at 
+								span Queued 
 								DateTime(date=new Date(this.state.build.createDate))
 
 						if this.state.build.status !== 'in-progress'
 							p
 								i.fa.fa-fw.fa-circle
 								| 
-								| Finished at 
+								| Finished 
 								if this.state.build.endDate
 									DateTime(date=new Date(this.state.build.endDate))
 								else
