@@ -47,15 +47,17 @@ div.row
 							div= this.state.build.error.message
 					if this.state.build.error.stderr
 						pre= this.state.build.error.stderr
+
 				.row
-					.col-md-6
+					.col-md-12
 						p 
 							Scm(scm=this.state.build.project.scm.type)
 							| 
 							| Project 
 							Link(to="project", params={name: this.state.build.project.name})
 								span= this.state.build.project.name
-
+				.row
+					.col-md-12
 						p
 							i.fa.fa-fw.fa-clock-o
 							span 
@@ -66,36 +68,45 @@ div.row
 								span Queued 
 								DateTime(value=this.state.build.createDate)
 
-						if this.state.build.status !== 'in-progress'
-							p
-								i.fa.fa-fw.fa-circle
+							if this.state.build.endDate
+								| , finished
 								| 
-								| Finished 
-								if this.state.build.endDate
-									DateTime(value=this.state.build.endDate)
-								else
-									| -
-					- var rev = this.state.build.scm && this.state.build.scm.rev || {};
-					.col-md-6
-						p
-							i.fa.fa-fw.fa-user
-							| 
-							| Commit author
-							| 
-							span= rev.author || '-'
+								DateTime(value=this.state.build.endDate)
+								| 
+								Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+
+				mixin rev(rev, prefix)
+					- prefix = prefix || ''; 
+					span(title= 'Revision: ' + rev.id + ' by ' + rev.author)= prefix + rev.comment
+
+				- var scm = this.state.build.scm;
+				- var rev = scm && scm.rev;
+				- var changes = scm.changes;
+				.row
+					.col-md-12
 						p
 							i.fa.fa-fw.fa-code-fork
-							| 
-							| Revision
-							| 
-							span= rev.id || '-'
+							if changes
+								if changes.length
+									| Scm changes:
+								else
+									| No scm changes, current revision:
+									| 
+							else
+								| -
 
-						p
-							i.fa.fa-fw.fa-comment-o
-							| 
-							| Comment
-							| 
-							span= rev.comment || '-'
+				if changes.length
+					each change, index in changes
+						- var number = index + 1; 
+						.row(key= 'scm-change-' + number)
+							.col-md-offset-4.col-md-8
+								p
+									mixin rev(change, String(number) + '. ')
+				else
+					.row
+						.col-md-offset-4.col-md-8
+							p
+								mixin rev(rev)
 
 			h2
 				i.fa.fa-fw.fa-terminal

@@ -15,6 +15,7 @@ define([
 ) {
 	template = template.locals({
 		DateTime: CommonComponents.DateTime,
+		Duration: CommonComponents.Duration,
 		Scm: CommonComponents.Scm,
 		Terminal: TerminalComponent,
 		Link: Router.Link

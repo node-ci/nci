@@ -29,7 +29,7 @@ Ui fixes
 * speed up console output
 * projects autocomplete
 * ~~add time ago to build list~~
-* show scm changes on build page
+* ~~show scm changes on build page~~
 * react says many many times to console:
 	Warning: setState(...): Can only update a mounted or mounting component.
 	This usually means you called setState() on an unmounted component.
