@@ -41,13 +41,13 @@
 
 			p Last build duration: 
 				if lastDoneBuild
-					span= lastDoneBuild.endDate - lastDoneBuild.startDate
+					Duration(value=(lastDoneBuild.endDate - lastDoneBuild.startDate))
 				else
 					| -
 
 			p Average build duration: 
 				if this.state.project.avgBuildDuration
-					span= this.state.project.avgBuildDuration
+					Duration(value=this.state.project.avgBuildDuration)
 				else
 					| -
 

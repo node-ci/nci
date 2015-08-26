@@ -16,7 +16,8 @@ define([
 	template = template.locals({
 		Builds: Builds,
 		Scm: Scm,
-		DateTime: CommonComponents.DateTime
+		DateTime: CommonComponents.DateTime,
+		Duration: CommonComponents.Duration
 	});
 
 	return React.createClass({
