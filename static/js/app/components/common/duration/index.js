@@ -7,15 +7,9 @@ define([
 		moment: moment
 	});
 
-	return React.createClass({
-		render: template,
-		getInitialState: function() {
-			var seconds = Math.round(this.props.duration / 1000);
-
-			return {
-				minutes: null,
-				seconds: seconds
-			}
-		}
+	var Component = React.createClass({
+		render: template
 	});
+
+	return Component;
 });

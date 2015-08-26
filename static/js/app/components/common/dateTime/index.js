@@ -10,9 +10,6 @@ define([
 	});
 
 	var Component = React.createClass({
-		propTypes: {
-			date: React.PropTypes.instanceOf(Date)
-		},
 		render: template
 	});
 

@@ -25,7 +25,7 @@
 			- var lastDoneBuild = this.state.project.lastDoneBuild;
 			p Last successfully built: 
 				if lastDoneBuild
-					DateTime(date=new Date(lastDoneBuild.endDate))
+					DateTime(value=lastDoneBuild.endDate)
 					| 
 					| (build #
 					span= lastDoneBuild.number

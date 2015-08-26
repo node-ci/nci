@@ -51,21 +51,21 @@ mixin statusText(build)
 				span.build_info
 					i.fa.fa-fw.fa-clock-o
 					| finished 
-					DateTime(date=new Date(build.endDate))
+					DateTime(value=build.endDate)
 					| ,
 					| 
-					Duration(duration=(build.endDate - build.startDate), withSuffix=true)
+					Duration(value=(build.endDate - build.startDate), withSuffix=true)
 			else
 				if build.startDate
 					span.build_info
 						i.fa.fa-fw.fa-clock-o
 						| started 
-						DateTime(date=new Date(build.startDate))
+						DateTime(value=build.startDate)
 				else
 					span.build_info
 						i.fa.fa-fw.fa-clock-o
 						| queued 
-						DateTime(date=new Date(build.createDate))
+						DateTime(value=build.createDate)
 			| 
 			if build.scm
 				span.build_info
