@@ -90,8 +90,13 @@ div.row
 								if changes.length
 									| Scm changes:
 								else
-									| No scm changes, current revision:
+									| No scm changes, current revision is
 									| 
+									| "
+									mixin rev(rev)
+									| " by
+									| 
+									= rev.author
 							else
 								| -
 
@@ -102,11 +107,6 @@ div.row
 							.col-md-offset-4.col-md-8
 								p
 									mixin rev(change, String(number) + '. ')
-				else
-					.row
-						.col-md-offset-4.col-md-8
-							p
-								mixin rev(rev)
 
 			h2
 				i.fa.fa-fw.fa-terminal
