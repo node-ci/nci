@@ -4,11 +4,11 @@
 			.pull-right
 				button.btn.btn-sm.btn-primary.dropdown-toggle(
 					data-toggle="dropdown",
-					aria-expanded="false"
+					aria-expanded="false",
+					disabled="true"
 				)
+					| target revision: 
 					span= this.state.project.scm ? this.state.project.scm.rev : ''
-					| 
-					span.caret
 				| 
 				if this.state.project.name
 					button.btn.btn-sm.btn-success(onClick=this.onBuildProject)
