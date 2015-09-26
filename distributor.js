@@ -88,6 +88,13 @@ exports.init = function(app, callback) {
 			createBuildDataResource(build.id);
 		}
 
+		// notify about build's project change, coz building affects project
+		// related stat (last build date, avg build time, etc) 
+		if (changes.completed) {
+			var projectsResource = app.dataio.resource('projects');
+			projectsResource.clientEmitSyncChange({name: build.project.name});
+		}
+
 		buildsResource.clientEmitSync('change', {
 			buildId: build.id, changes: changes
 		});
