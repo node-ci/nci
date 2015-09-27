@@ -10,6 +10,10 @@ define([
 		listenables: BuildActions,
 		builds: [],
 
+		getInitialState: function() {
+			return this.builds;
+		},
+
 		onChange: function(data, action) {
 			var oldBuild = _(this.builds).findWhere({id: data.buildId});
 			if (oldBuild) {

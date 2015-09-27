@@ -37,7 +37,7 @@ Ui fixes
 * show duration details (steps duration) on build page
 * speed up build points animation at ff
 * current successfully streak icons at project page
-* don't appear build from other project on project page
+* ~~don't appear build from other project on project page~~
 * ~~update project info changes (avg duration, etc) on the fly - project page~~
 * long commit comment breakes build card makeup
 * ~~comment start/duration should be on same place during all steps~~

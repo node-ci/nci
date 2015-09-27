@@ -8,7 +8,11 @@ define([
 
 	var Store = Reflux.createStore({
 		listenables: ProjectActions,
-		project: null,
+		project: {},
+
+		getInitialState: function() {
+			return this.project;
+		},
 
 		onChange: function(data, action) {
 			this.trigger(data.project);

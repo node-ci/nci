@@ -21,7 +21,14 @@ define([
 	});
 
 	return React.createClass({
-		mixins: [Reflux.ListenerMixin],
+		mixins: [Reflux.connectFilter(projectStore, 'project', function(project) {
+			if (project.name === this.props.params.name) {
+				return project;
+			} else {
+				var state = this.state;
+				return state ? state.project : projectStore.getInitialState();
+			}
+		})],
 		statics: {
 			willTransitionTo: function(transition, params, query) {
 				ProjectActions.read({name: params.name});
@@ -34,17 +41,6 @@ define([
 				ProjectActions.run(this.state.project.name);
 			}
 		},
-		componentDidMount: function() {
-			this.listenTo(projectStore, this.updateItem);
-		},
-		updateItem: function(project) {
-			this.setState({project: project});
-		},
-		getInitialState: function() {
-			return {
-				project: {}
-			}
-		},
-		render: template,
+		render: template
 	});
 });
