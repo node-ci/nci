@@ -21,14 +21,19 @@ define([
 	});
 
 	return React.createClass({
-		mixins: [Reflux.connectFilter(projectStore, 'project', function(project) {
-			if (project.name === this.props.params.name) {
-				return project;
-			} else {
-				var state = this.state;
-				return state ? state.project : projectStore.getInitialState();
-			}
-		})],
+		mixins: [
+			Reflux.connectFilter(projectStore, 'project', function(project) {
+				if (project.name === this.props.params.name) {
+					return project;
+				} else {
+					if (this.state) {
+						return this.state.project;
+					} else {
+						return projectStore.getInitialState();
+					}
+				}
+			})
+		],
 		statics: {
 			willTransitionTo: function(transition, params, query) {
 				ProjectActions.read({name: params.name});
