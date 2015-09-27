@@ -83,7 +83,7 @@ module.exports = function(app) {
 				getProject({condition: condition}, this.slot());
 			},
 			function(err, project) {
-				resource.clientEmitSync('change', project);
+				resource.clientEmitSync('change', {project: project});
 			},
 			function(err) {
 				console.error(

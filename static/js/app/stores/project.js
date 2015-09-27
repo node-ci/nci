@@ -10,8 +10,8 @@ define([
 		listenables: ProjectActions,
 		project: null,
 
-		onChange: function(project, action) {
-			this.trigger(project);
+		onChange: function(data, action) {
+			this.trigger(data.project);
 		},
 
 		init: function() {
