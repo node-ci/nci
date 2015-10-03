@@ -2,7 +2,8 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	db = require('../db');
+	db = require('../db'),
+	utils = require('../lib/utils');
 
 module.exports = function(app) {
 	var resource = app.dataio.resource('builds');
@@ -50,6 +51,48 @@ module.exports = function(app) {
 			},
 			function(err, build) {
 				res.send(build[0]);
+			},
+			next
+		);
+	});
+
+	resource.use('getBuildLogTail', function(req, res, next) {
+		Steppy(
+			function() {
+				var findParams = {
+					reverse: true,
+					start: {buildId: req.data.buildId, numberStr: ''},
+					limit: req.data.length
+				};
+
+				db.logLines.find(findParams, this.slot());
+			},
+			function(err, logLines) {
+				var lines = _(logLines).pluck('text').reverse(),
+					total = logLines.length ? logLines[0].number : 0;
+
+				res.send({lines: lines, total: total});
+			},
+			next
+		);
+	});
+
+	resource.use('getBuildLogLines', function(req, res, next) {
+		Steppy(
+			function() {
+				var buildId = req.data.buildId,
+					from = req.data.from,
+					to = req.data.to;
+
+				db.logLines.find({
+					start: {buildId: buildId, numberStr: utils.toNumberStr(from)},
+					end: {buildId: buildId, numberStr: utils.toNumberStr(to)}
+				}, this.slot());
+			},
+			function(err, logLines) {
+				res.send({
+					lines: _(logLines).pluck('text')
+				});
 			},
 			next
 		);

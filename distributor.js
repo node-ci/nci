@@ -9,7 +9,8 @@ var Steppy = require('twostep').Steppy,
 	db = require('./db'),
 	path = require('path'),
 	fs = require('fs'),
-	logger = require('./lib/logger')('distributor');
+	logger = require('./lib/logger')('distributor'),
+	utils = require('./lib/utils');
 
 
 exports.init = function(app, callback) {
@@ -102,6 +103,8 @@ exports.init = function(app, callback) {
 
 	var writeStreamsHash = {};
 
+	var buildLogLineNumbersHash = {};
+
 	distributor.on('buildData', function(build, data) {
 		if (!/\n$/.test(data)) {
 			data += '\n';
@@ -126,6 +129,31 @@ exports.init = function(app, callback) {
 		app.dataio.resource('build' + build.id).clientEmitSync(
 			'data', data
 		);
+
+		// write build logs to db
+		if (buildLogLineNumbersHash[build.id]) {
+			buildLogLineNumbersHash[build.id]++;
+		} else {
+			buildLogLineNumbersHash[build.id] = 1;
+		}
+
+		var logLineNumber = buildLogLineNumbersHash[build.id],
+			logLineId = build.id + '-' + logLineNumber;
+
+		db.logLines.put({
+			id: logLineId,
+			buildId: build.id,
+			numberStr: utils.toNumberStr(logLineNumber),
+			number: logLineNumber,
+			text: data
+		}, function(err) {
+			if (err) {
+				logger.error(
+					'Error during write log line "' + logLineId + '":',
+					err.stack || err
+				);
+			}
+		});
 	});
 
 	callback(null, distributor);

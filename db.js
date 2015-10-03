@@ -2,13 +2,17 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	nlevel = require('nlevel');
+	nlevel = require('nlevel'),
+	path = require('path');
 
 
 exports.init = function(dbPath, params, callback) {
-	var ldb = nlevel.db(dbPath, params, callback);
+	callback = _.after(2, callback);
 
-	exports.builds = new nlevel.DocsSection(ldb, 'builds', {
+	var maindbPath = path.join(dbPath, 'main'),
+		mainDb = nlevel.db(maindbPath, params, callback);
+
+	exports.builds = new nlevel.DocsSection(mainDb, 'builds', {
 		projections: [
 			{key: {createDate: 1}, value: pickId},
 			{key: {descCreateDate: descCreateDate, id: 1}},
@@ -73,6 +77,17 @@ exports.init = function(dbPath, params, callback) {
 			callback
 		);
 	};
+
+	var buildLogsDbPath = path.join(dbPath, 'main'),
+		buildLogsDb = nlevel.db(buildLogsDbPath, params, callback);
+
+	exports.logLines = new nlevel.DocsSection(buildLogsDb, 'logLines', {
+		projections: [
+			{key: {buildId: 1, numberStr: 1}, value: function(logLine) {
+				return _(logLine).pick('number', 'text');
+			}}
+		]
+	});
 };
 
 /*
@@ -81,6 +96,12 @@ exports.init = function(dbPath, params, callback) {
  */
 nlevel.DocsSection.prototype._beforePut = function(docs, callback) {
 	var self = this;
+
+	// Quit early if beforePut is not set
+	if (!self.beforePut) {
+		return callback();
+	}
+
 	Steppy(
 		function() {
 			if (self._beforePutInProgress) {

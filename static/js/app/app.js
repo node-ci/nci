@@ -24,7 +24,12 @@ define([
 				path: 'projects/:name',
 				handler: Components.Project.View
 			}),
-			Route({name: 'build', path: 'builds/:id', handler: Components.Build.View})
+			Route({name: 'build', path: 'builds/:id', handler: Components.Build.View}),
+			Route({
+				name: 'buildLog',
+				path: 'builds/:buildId/log',
+				handler: Components.BuildLog
+			})
 		)
 	);
 
