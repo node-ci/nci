@@ -78,7 +78,7 @@ exports.init = function(dbPath, params, callback) {
 		);
 	};
 
-	var buildLogsDbPath = path.join(dbPath, 'main'),
+	var buildLogsDbPath = path.join(dbPath, 'buildLogs'),
 		buildLogsDb = nlevel.db(buildLogsDbPath, params, callback);
 
 	exports.logLines = new nlevel.DocsSection(buildLogsDb, 'logLines', {
