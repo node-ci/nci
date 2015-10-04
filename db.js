@@ -3,7 +3,8 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	nlevel = require('nlevel'),
-	path = require('path');
+	path = require('path'),
+	utils = require('./lib/utils');
 
 
 exports.init = function(dbPath, params, callback) {
@@ -83,9 +84,17 @@ exports.init = function(dbPath, params, callback) {
 
 	exports.logLines = new nlevel.DocsSection(buildLogsDb, 'logLines', {
 		projections: [
-			{key: {buildId: 1, numberStr: 1}, value: function(logLine) {
-				return _(logLine).pick('number', 'text');
-			}}
+			{
+				key: {
+					buildId: 1,
+					numberStr: function(logLine) {
+						return utils.toNumberStr(logLine.number);
+					}
+				},
+				value: function(logLine) {
+					return _(logLine).pick('number', 'text');
+				}
+			}
 		]
 	});
 };

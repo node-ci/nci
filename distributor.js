@@ -9,8 +9,7 @@ var Steppy = require('twostep').Steppy,
 	db = require('./db'),
 	path = require('path'),
 	fs = require('fs'),
-	logger = require('./lib/logger')('distributor'),
-	utils = require('./lib/utils');
+	logger = require('./lib/logger')('distributor');
 
 
 exports.init = function(app, callback) {
@@ -143,7 +142,6 @@ exports.init = function(app, callback) {
 		db.logLines.put({
 			id: logLineId,
 			buildId: build.id,
-			numberStr: utils.toNumberStr(logLineNumber),
 			number: logLineNumber,
 			text: data
 		}, function(err) {
