@@ -81,7 +81,7 @@ div.row
 
 				- var scm = this.state.build.scm;
 				- var rev = scm && scm.rev;
-				- var changes = scm.changes;
+				- var changes = scm && scm.changes;
 				.row
 					.col-md-12
 						p
@@ -100,7 +100,7 @@ div.row
 							else
 								| -
 
-				if changes.length
+				if changes && changes.length
 					each change, index in changes
 						- var number = index + 1; 
 						.row(key= 'scm-change-' + number)
