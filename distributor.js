@@ -136,18 +136,17 @@ exports.init = function(app, callback) {
 			buildLogLineNumbersHash[build.id] = 1;
 		}
 
-		var logLineNumber = buildLogLineNumbersHash[build.id],
-			logLineId = build.id + '-' + logLineNumber;
+		var logLineNumber = buildLogLineNumbersHash[build.id];
 
 		db.logLines.put({
-			id: logLineId,
 			buildId: build.id,
 			number: logLineNumber,
 			text: data
 		}, function(err) {
 			if (err) {
 				logger.error(
-					'Error during write log line "' + logLineId + '":',
+					'Error during write log line "' + logLineNumber +
+					'" for build "' + build.id + '":',
 					err.stack || err
 				);
 			}

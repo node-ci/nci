@@ -95,7 +95,8 @@ exports.init = function(dbPath, params, callback) {
 					return _(logLine).pick('number', 'text');
 				}
 			}
-		]
+		],
+		withUniqueId: false
 	});
 };
 
