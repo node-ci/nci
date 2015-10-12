@@ -30,7 +30,9 @@ module.exports = function(app) {
 				// omit big fields not needed for list
 				_(builds).each(function(build) {
 					delete build.stepTimings;
-					delete build.scm.changes;
+					if (build.scm) {
+						delete build.scm.changes;
+					}
 					build.project = _(build.project).pick(
 						'name', 'scm', 'avgBuildDuration'
 					);
