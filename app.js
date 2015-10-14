@@ -67,13 +67,14 @@ var completeUncompletedBuilds = function(callback) {
 		function() {
 			db.builds.find({
 				start: {descCreateDate: ''},
-				filter: function(build) {
-					return !build.completed;
-				},
 				limit: 100
 			}, this.slot());
 		},
-		function(err, uncompletedBuilds) {
+		function(err, lastBuilds) {
+			var uncompletedBuilds = _(lastBuilds).filter(function(lastBuild) {
+				return !lastBuild.completed;
+			});
+
 			var completeGroup = this.makeGroup();
 
 			if (uncompletedBuilds.length) {
