@@ -23,7 +23,7 @@ work in progress...
 * ~~Better tests coverage~~
 * ~~Compile client for production~~
 * Semantic versioning and plugins
-* Complete uncompleted builds on server start
+* ~~Complete uncompleted builds on server start~~
 
 Ui fixes
 
