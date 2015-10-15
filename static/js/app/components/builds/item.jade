@@ -70,7 +70,7 @@ mixin statusText(build)
 				span.build_info
 					i.fa.fa-fw.fa-comment-o
 					| 
-					span= build.scm.rev.comment
+					span= utils.prune(build.scm.rev.comment, 40)
 			| 
 
 	.build_controls
