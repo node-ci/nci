@@ -28,7 +28,7 @@ work in progress...
 Ui fixes
 
 * speed up console output
-* projects autocomplete
+* ~~projects autocomplete~~
 * ~~add time ago to build list~~
 * ~~show scm changes on build page~~
 * react says many many times to console:

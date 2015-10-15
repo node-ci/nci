@@ -8,16 +8,15 @@ define([
 	var Store = Reflux.createStore({
 		listenables: ProjectActions,
 		onRun: function(projectName) {
-			resource.sync('run', {projectName: projectName}, function(err, result) {
-				console.log('run project, shoould get queue');
+			resource.sync('run', {projectName: projectName}, function(err) {
+				if (err) throw err;
 			});
 		},
-		onReadAll: function() {
+		onReadAll: function(params) {
 			var self = this;
-			resource.sync('readAll', function(err, projects) {
+			resource.sync('readAll', params, function(err, projects) {
 				if (err) throw err;
 				self.trigger(projects);
-				console.log(projects);
 			});
 		}
 	});

@@ -19,7 +19,16 @@ module.exports = function(app) {
 	});
 
 	resource.use('readAll', function(req, res) {
-		res.send(app.projects);
+		var filteredProjects = app.projects,
+			nameQuery = req.data && req.data.nameQuery;
+
+		if (nameQuery) {
+			filteredProjects = _(filteredProjects).filter(function(project) {
+				return project.name.indexOf(nameQuery) !== -1;
+			});
+		}
+
+		res.send(filteredProjects);
 	});
 
 	var getProject = function(params, callback) {
