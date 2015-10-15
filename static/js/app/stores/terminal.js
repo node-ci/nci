@@ -1,9 +1,10 @@
 'use strict';
 
 define([
-	'underscore',
-	'reflux', 'app/actions/build', 'app/connect'
-], function(_, Reflux, BuildActions, connect) {
+	'underscore', 'reflux', 'app/actions/build', 'app/connect'
+], function(
+	_, Reflux, BuildActions, connect
+) {
 	var Store = Reflux.createStore({
 		listenables: BuildActions,
 
@@ -28,7 +29,7 @@ define([
 				}
 
 				connect.resource(resourceName).subscribe('data', function(data) {
-					output += data;
+					output += _(data.lines).pluck('text').join('');
 
 					self.trigger({
 						buildId: build.id,

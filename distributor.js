@@ -60,7 +60,7 @@ exports.init = function(app, callback) {
 				.on('readable', function() {
 					var data = stream.read();
 					while (data) {
-						client.emit('sync', 'data', data);
+						client.emit('sync', 'data', {lines: [{text: data}]});
 						data = stream.read();
 					}
 				})
@@ -109,6 +109,13 @@ exports.init = function(app, callback) {
 			data += '\n';
 		}
 
+		if (buildLogLineNumbersHash[build.id]) {
+			buildLogLineNumbersHash[build.id]++;
+		} else {
+			buildLogLineNumbersHash[build.id] = 1;
+		}
+		var logLineNumber = buildLogLineNumbersHash[build.id];
+
 		var filePath = getBuildLogPath(build.id);
 
 		if (!writeStreamsHash[filePath]) {
@@ -126,17 +133,11 @@ exports.init = function(app, callback) {
 		writeStreamsHash[filePath].write(data);
 
 		app.dataio.resource('build' + build.id).clientEmitSync(
-			'data', data
+			'data',
+			{lines: [{number: logLineNumber, text: data}]}
 		);
 
 		// write build logs to db
-		if (buildLogLineNumbersHash[build.id]) {
-			buildLogLineNumbersHash[build.id]++;
-		} else {
-			buildLogLineNumbersHash[build.id] = 1;
-		}
-
-		var logLineNumber = buildLogLineNumbersHash[build.id];
 
 		db.logLines.put({
 			buildId: build.id,
