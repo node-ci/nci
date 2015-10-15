@@ -14,6 +14,17 @@ div
 div
 	| from: 
 	input(type="text", value=this.state.from, onChange=this.onFromChange)
+
 br
-.terminal
+.terminal(style="width: 900px; float: left;")
 	.terminal_code(ref="code")!= output
+
+div.terminal-virtual-scroll(
+	style="width: 15px; height: 320px; overflow: scroll; float: clear;",
+	onScroll=this.onVirtualScroll
+)
+	- var height = total * 15;
+	div(style="height: #{height}px;")
+div
+	| virtual scroll top:
+	span= this.state.virtualScrollTop

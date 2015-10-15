@@ -70,7 +70,7 @@ module.exports = function(app) {
 				db.logLines.find(findParams, this.slot());
 			},
 			function(err, logLines) {
-				var lines = _(logLines).pluck('text').reverse(),
+				var lines = logLines.reverse(),
 					total = logLines.length ? logLines[0].number : 0;
 
 				res.send({lines: lines, total: total});
@@ -84,16 +84,20 @@ module.exports = function(app) {
 			function() {
 				var buildId = req.data.buildId,
 					from = req.data.from,
-					to = req.data.to;
+					to = req.data.to,
+					count = to - from;
 
 				db.logLines.find({
 					start: {buildId: buildId, numberStr: utils.toNumberStr(from)},
 					end: {buildId: buildId, numberStr: utils.toNumberStr(to)}
 				}, this.slot());
+
+				this.pass(count);
 			},
-			function(err, logLines) {
+			function(err, logLines, count) {
 				res.send({
-					lines: _(logLines).pluck('text')
+					lines: logLines,
+					isLast: logLines.length < count
 				});
 			},
 			next
