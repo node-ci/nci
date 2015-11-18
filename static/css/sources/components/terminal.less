@@ -1,25 +1,63 @@
 .terminal {
 	box-sizing: border-box;
+	position: relative;
+
+	&_header {
+
+	}
 
 	&_code {
-		height: 420px;
-		padding: 8px 12px;
-		box-sizing: border-box;
+		clear: left;
+		height: 500px;
+		min-height: 42px;
+		padding: 15px 0;
+		color: #F1F1F1;
+		font-family: monospace;
+		font-size: 12px;
+		line-height: 19px;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		background-color: #2a2a2a;
+		counter-reset: line-numbering;
+		margin-top: 0;
 		overflow-y: scroll;
-		border: none;
-		color: white;
-		background-color: black;
-		line-height: 0.8;
-		font-size: 13px;
-		font-family: 'Ubuntu', sans-serif;
+	}
 
-		&_newline {
-			display: block;
-			margin: 0.8em 0;
-			white-space: pre;
-			&:first-child {
-				margin-top: 0;
-			}
+	&_footer {
+
+	}
+}
+
+.code-line {
+	position: relative;
+	padding: 0 15px 0 55px;
+	margin: 0;
+	min-height: 16px;
+
+	&_counter {
+		display: inline-block;
+		text-align: right;
+		min-width: 40px;
+		margin-left: -33px;
+		cursor: pointer;
+		text-decoration: none;
+		color: darken(@gray-lighter, 15%);
+		&:before {
+			content: counter(line-numbering);
+			counter-increment: line-numbering;
+			padding-right: 1em;
 		}
+		&:hover {
+			text-decoration: none;
+			color: @gray-lighter;
+		}
+	}
+
+	&_body {
+		display: inline-block;
+	}
+
+	&:hover {
+		background-color: #444;
 	}
 }

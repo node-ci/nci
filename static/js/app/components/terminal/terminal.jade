@@ -1,2 +1,6 @@
 .terminal
-	.terminal_code(ref="code", onScroll=this.onScroll)!= this.state.data
+	pre.terminal_code(ref="code")
+		each row, index in this.state.data
+			.code-line(key=index)
+				span.code-line_counter
+				.code-line_body!= row

@@ -49,28 +49,27 @@ exports.init = function(app, callback) {
 		}
 		var buildDataResource = app.dataio.resource('build' + buildId);
 		buildDataResource.on('connection', function(client) {
-			var callback = this.async(),
-				buildLogPath = getBuildLogPath(buildId);
-
-			var stream = fs.createReadStream(buildLogPath, {
-				encoding: 'utf8'
-			});
-
-			stream
-				.on('readable', function() {
-					var data = stream.read();
-					while (data) {
-						client.emit('sync', 'data', {lines: [{text: data}]});
-						data = stream.read();
+			var callback = this.async();
+			Steppy(
+				function() {
+					db.logLines.find({
+						start: {buildId: buildId, numberStr: 0},
+					}, this.slot());
+				},
+				function(err, lines) {
+					client.emit('sync', 'data', {lines: lines});
+					this.pass(true);
+				},
+				function(err) {
+					if (err) {
+						logger.error(
+							'error during read log for "' + buildId + '":',
+							err.stack || err
+						);
 					}
-				})
-				.on('end', callback)
-				.on('error', function(err) {
-					logger.error(
-						'Error during read "' + buildLogPath + '":',
-						err.stack || err
-					);
-				});
+					callback();
+				}
+			);
 		});
 		buildDataResourcesHash[buildId] = buildDataResource;
 	};
@@ -105,16 +104,16 @@ exports.init = function(app, callback) {
 	var buildLogLineNumbersHash = {};
 
 	distributor.on('buildData', function(build, data) {
-		if (!/\n$/.test(data)) {
-			data += '\n';
-		}
+		var lines = data.trim().split('\n'),
+			logLineNumber = buildLogLineNumbersHash[build.id] || 0;
 
-		if (buildLogLineNumbersHash[build.id]) {
-			buildLogLineNumbersHash[build.id]++;
-		} else {
-			buildLogLineNumbersHash[build.id] = 1;
-		}
-		var logLineNumber = buildLogLineNumbersHash[build.id];
+		lines = _(lines).map(function(line, index) {
+			return {
+				number: logLineNumber + index,
+				text: line
+			};
+		});
+		buildLogLineNumbersHash[build.id] = logLineNumber + lines.length;
 
 		var filePath = getBuildLogPath(build.id);
 
@@ -134,24 +133,23 @@ exports.init = function(app, callback) {
 
 		app.dataio.resource('build' + build.id).clientEmitSync(
 			'data',
-			{lines: [{number: logLineNumber, text: data}]}
+			{lines: lines}
 		);
 
 		// write build logs to db
-
-		db.logLines.put({
-			buildId: build.id,
-			number: logLineNumber,
-			text: data
-		}, function(err) {
-			if (err) {
-				logger.error(
-					'Error during write log line "' + logLineNumber +
-					'" for build "' + build.id + '":',
-					err.stack || err
-				);
-			}
-		});
+		_(lines).each(function(line) {
+			db.logLines.put(_({
+				buildId: build.id,
+			}).extend(line), function(err) {
+				if (err) {
+					logger.error(
+						'Error during write log line "' + logLineNumber +
+						'" for build "' + build.id + '":',
+						err.stack || err
+					);
+				}
+			});
+		})
 	});
 
 	callback(null, distributor);

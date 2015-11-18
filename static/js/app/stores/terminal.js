@@ -16,7 +16,7 @@ define([
 
 		onReadTerminalOutput: function(build) {
 			var self = this,
-				output = '',
+				output = [],
 				resourceName = 'build' + build.id;
 
 			var connectToBuildDataResource = function() {
@@ -29,7 +29,7 @@ define([
 				}
 
 				connect.resource(resourceName).subscribe('data', function(data) {
-					output += _(data.lines).pluck('text').join('');
+					output = output.concat(data.lines);
 
 					self.trigger({
 						buildId: build.id,

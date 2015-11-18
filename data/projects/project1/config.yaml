@@ -50,7 +50,7 @@ steps:
     - cmd: cat 1.txt 2.txt
     - shell: /bin/bash
       cmd: >
-        for i in {1..10}; do
+        for i in {1..1000}; do
             echo "tick $i";
             sleep 0.3;
         done;
