@@ -136,20 +136,19 @@ exports.init = function(app, callback) {
 			{lines: lines}
 		);
 
-		// write build logs to db
 		_(lines).each(function(line) {
-			db.logLines.put(_({
-				buildId: build.id,
-			}).extend(line), function(err) {
-				if (err) {
-					logger.error(
-						'Error during write log line "' + logLineNumber +
-						'" for build "' + build.id + '":',
-						err.stack || err
-					);
-				}
-			});
-		})
+			line.buildId = build.id;
+		});
+		// write build logs to db
+		db.logLines.put(lines, function(err) {
+			if (err) {
+				logger.error(
+					'Error during write log line "' + logLineNumber +
+					'" for build "' + build.id + '":',
+					err.stack || err
+				);
+			}
+		});
 	});
 
 	callback(null, distributor);
