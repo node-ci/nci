@@ -18,7 +18,7 @@ define([
 				var projectName = this.props.projectName;
 				if (projectName) {
 					return _(items).filter(function(item) {
-						return item.project.name === projectName;
+						return item.project && item.project.name === projectName;
 					});
 				} else {
 					return items;
