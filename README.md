@@ -31,10 +31,10 @@ Ui fixes
 * ~~projects autocomplete~~
 * ~~add time ago to build list~~
 * ~~show scm changes on build page~~
-* react says many many times to console:
-	Warning: setState(...): Can only update a mounted or mounting component.
-	This usually means you called setState() on an unmounted component.
-	This is a no-op.
+* ~~react says many many times to console:~~
+	~~Warning: setState(...): Can only update a mounted or mounting component.~~
+	~~This usually means you called setState() on an unmounted component.~~
+	~~This is a no-op.~~
 * show duration details (steps duration) on build page
 * speed up build points animation at ff
 * current successfully streak icons at project page

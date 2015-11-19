@@ -13,13 +13,16 @@ define([
 											build.project.avgBuildDuration * 100);
 		},
 		componentDidMount: function() {
-			var self = this,
-				updateCallback = function() {
+			var self = this;
+			var updateCallback = function() {
 				if (self.props.build.status === 'in-progress') {
-					self.setState({percent: self._computePercent()});
-					_.delay(updateCallback, 100);
+					if (self.isMounted()) {
+						self.setState({percent: self._computePercent()});
+						_.delay(updateCallback, 100);
+					}
 				}
-			}
+			};
+
 			updateCallback();
 		},
 		getInitialState: function() {
