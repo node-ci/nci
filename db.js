@@ -94,14 +94,6 @@ exports.init = function(dbPath, params, callback) {
 				value: function(logLine) {
 					return _(logLine).pick('number', 'text');
 				}
-			},
-			{
-				key: {
-					buildId: 1
-				},
-				value: function(logLine) {
-					return _(logLine).pick('number', 'text');
-				}
 			}
 		],
 		withUniqueId: false
