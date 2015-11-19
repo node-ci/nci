@@ -7,8 +7,6 @@ var Steppy = require('twostep').Steppy,
 		require('./lib/project').getAvgProjectBuildDuration
 	),
 	db = require('./db'),
-	path = require('path'),
-	fs = require('fs'),
 	logger = require('./lib/logger')('distributor');
 
 
@@ -19,10 +17,10 @@ exports.init = function(app, callback) {
 		saveBuild: function(build, callback) {
 			Steppy(
 				function() {
-					if (!_(build.project).has('avgBuildDuration')) {
-						getAvgProjectBuildDuration(build.project.name, this.slot());
-					} else {
+					if (_(build.project).has('avgBuildDuration')) {
 						this.pass(build.project.avgBuildDuration);
+					} else {
+						getAvgProjectBuildDuration(build.project.name, this.slot());
 					}
 				},
 				function(err, avgBuildDuration) {
@@ -38,9 +36,7 @@ exports.init = function(app, callback) {
 		}
 	});
 
-	var getBuildLogPath = function(buildId) {
-		return path.join(app.config.paths.builds, buildId + '.log');
-	};
+	var buildDataResourcesHash = {};
 
 	// create resource for build data
 	var createBuildDataResource = function(buildId) {
@@ -76,14 +72,10 @@ exports.init = function(app, callback) {
 
 	exports.createBuildDataResource = createBuildDataResource;
 
-	var buildDataResourcesHash = {};
-
 	distributor.on('buildUpdate', function(build, changes) {
 		var buildsResource = app.dataio.resource('builds');
 
 		if (build.status === 'queued') {
-			// remove prev log if it exists - for development
-			fs.unlink(getBuildLogPath(build.id));
 			createBuildDataResource(build.id);
 		}
 
@@ -99,8 +91,6 @@ exports.init = function(app, callback) {
 		});
 	});
 
-	var writeStreamsHash = {};
-
 	var buildLogLineNumbersHash = {};
 
 	distributor.on('buildData', function(build, data) {
@@ -114,22 +104,6 @@ exports.init = function(app, callback) {
 			};
 		});
 		buildLogLineNumbersHash[build.id] = logLineNumber + lines.length;
-
-		var filePath = getBuildLogPath(build.id);
-
-		if (!writeStreamsHash[filePath]) {
-			writeStreamsHash[filePath] = fs.createWriteStream(
-				getBuildLogPath(build.id), {encoding: 'utf8'}
-			);
-			writeStreamsHash[filePath].on('error', function(err) {
-				logger.error(
-					'Error during write "' + filePath + '":',
-					err.stack || err
-				);
-			});
-		}
-		// TODO: close ended files
-		writeStreamsHash[filePath].write(data);
 
 		app.dataio.resource('build' + build.id).clientEmitSync(
 			'data',
