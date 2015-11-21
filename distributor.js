@@ -94,7 +94,7 @@ exports.init = function(app, callback) {
 	var buildLogLineNumbersHash = {};
 
 	distributor.on('buildData', function(build, data) {
-		var lines = data.trim().split('\n'),
+		var lines = _(data.split('\n')).chain().invoke('trim').compact().value(),
 			logLineNumber = buildLogLineNumbersHash[build.id] || 0;
 
 		lines = _(lines).map(function(line, index) {
@@ -114,15 +114,17 @@ exports.init = function(app, callback) {
 			line.buildId = build.id;
 		});
 		// write build logs to db
-		db.logLines.put(lines, function(err) {
-			if (err) {
-				logger.error(
-					'Error during write log line "' + logLineNumber +
-					'" for build "' + build.id + '":',
-					err.stack || err
-				);
-			}
-		});
+		if (lines.length) {
+			db.logLines.put(lines, function(err) {
+				if (err) {
+					logger.error(
+						'Error during write log line "' + logLineNumber +
+						'" for build "' + build.id + '":',
+						err.stack || err
+					);
+				}
+			});
+		}
 	});
 
 	callback(null, distributor);
