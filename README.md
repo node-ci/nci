@@ -24,6 +24,7 @@ work in progress...
 * ~~Compile client for production~~
 * Semantic versioning and plugins
 * ~~Complete uncompleted builds on server start~~
+* ~~Throw away workspace changes on repository update~~
 
 Ui fixes
 
