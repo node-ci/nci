@@ -94,7 +94,9 @@ exports.init = function(app, callback) {
 	var buildLogLineNumbersHash = {};
 
 	distributor.on('buildData', function(build, data) {
-		var lines = _(data.split('\n')).chain().invoke('trim').compact().value(),
+		var lines = _(data.split('\n')).chain().map(function(line) {
+				return line.replace('\r', '');
+			}).compact().value(),
 			logLineNumber = buildLogLineNumbersHash[build.id] || 0;
 
 		lines = _(lines).map(function(line, index) {
