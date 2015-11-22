@@ -143,13 +143,12 @@ Steppy(
 		// path to root dir (with projects, builds etc)
 		app.config.paths.data = path.join(process.cwd(), 'data');
 		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
-		app.config.paths.builds = path.join(app.config.paths.data, 'builds');
 		app.config.paths.db = path.join(app.config.paths.data, 'db');
 		app.config.paths.preload = path.join(app.config.paths.data, 'preload.json');
 
-		var buildDirExistsCallback = this.slot();
-		fs.exists(app.config.paths.builds, function(isExists) {
-			buildDirExistsCallback(null, isExists);
+		var dbDirExistsCallback = this.slot();
+		fs.exists(app.config.paths.db, function(isExists) {
+			dbDirExistsCallback(null, isExists);
 		});
 
 		var preloadExistsCallback = this.slot();
@@ -157,11 +156,11 @@ Steppy(
 			preloadExistsCallback(null, isExists);
 		});
 	},
-	function(err, isBuildsDirExists, isPreloadExists) {
-		if (!isBuildsDirExists) {
-			fs.mkdir(app.config.paths.builds, this.slot());
-		} else {
+	function(err, isDbDirExists, isPreloadExists) {
+		if (isDbDirExists) {
 			this.pass(null);
+		} else {
+			fs.mkdir(app.config.paths.db, this.slot());
 		}
 
 		if (isPreloadExists) {
