@@ -14,20 +14,25 @@ define([
 		ignoreScrollEvent: false,
 		componentDidMount: function() {
 			this.listenTo(terminalStore, this.updateItems);
+			var node = this.refs.code.getDOMNode();
+			this.initialScrollPosition = node.getBoundingClientRect().top;
 		},
 		prepareOutput: function(output) {
 			return output.map(function(row) {
-				return ansiUp.ansi_to_html(row.text);
+				return ansiUp.ansi_to_html(row.replace('\r', ''));
 			});
 		},
 		componentWillUpdate: function() {
-			var node = this.refs.code.getDOMNode();
-			this.shouldScrollBottom = node.scrollTop + node.offsetHeight >= node.scrollHeight;
+			var node = this.refs.code.getDOMNode(),
+				body = document.getElementsByTagName('body')[0];
+			this.shouldScrollBottom = window.innerHeight + body.scrollTop >=
+				node.offsetHeight + this.initialScrollPosition;
 		},
 		componentDidUpdate: function() {
 			if (this.shouldScrollBottom) {
-				var node = this.refs.code.getDOMNode();
-				node.scrollTop = node.scrollHeight;
+				var node = this.refs.code.getDOMNode(),
+					body = document.getElementsByTagName('body')[0];
+				body.scrollTop = this.initialScrollPosition + node.offsetHeight;
 			}
 		},
 		updateItems: function(build) {

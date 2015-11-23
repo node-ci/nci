@@ -61,7 +61,11 @@ exports.init = function(app, callback) {
 					}, this.slot());
 				},
 				function(err, lines) {
-					client.emit('sync', 'data', {lines: lines});
+					var fullText = _(lines).reduce(function(memo, line) {
+						return memo + line.text;
+					}, '')
+
+					client.emit('sync', 'data', {text: fullText});
 					this.pass(true);
 				},
 				function(err) {
@@ -106,39 +110,28 @@ exports.init = function(app, callback) {
 	var buildLogLineNumbersHash = {};
 
 	distributor.on('buildData', function(build, data) {
-		var lines = _(data.split('\n')).chain().map(function(line) {
-				return line.replace('\r', '');
-			}).compact().value(),
-			logLineNumber = buildLogLineNumbersHash[build.id] || 0;
+		var logLineNumber = buildLogLineNumbersHash[build.id] || 0;
 
-		lines = _(lines).map(function(line, index) {
-			return {
-				number: logLineNumber + index,
-				text: line
-			};
-		});
-		buildLogLineNumbersHash[build.id] = logLineNumber + lines.length;
-
+		buildLogLineNumbersHash[build.id] = ++logLineNumber
 		app.dataio.resource('build' + build.id).clientEmitSync(
 			'data',
-			{lines: lines}
+			{text: data}
 		);
 
-		_(lines).each(function(line) {
-			line.buildId = build.id;
-		});
 		// write build logs to db
-		if (lines.length) {
-			db.logLines.put(lines, function(err) {
-				if (err) {
-					logger.error(
-						'Error during write log line "' + logLineNumber +
-						'" for build "' + build.id + '":',
-						err.stack || err
-					);
-				}
-			});
-		}
+		db.logLines.put({
+			text: data,
+			number: logLineNumber,
+			buildId: build.id
+		}, function(err) {
+			if (err) {
+				logger.error(
+					'Error during write log line "' + logLineNumber +
+					'" for build "' + build.id + '":',
+					err.stack || err
+				);
+			}
+		});
 	});
 
 	callback(null, distributor);
