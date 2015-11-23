@@ -20,7 +20,8 @@ exports.init = function(app, callback) {
 					logger.log('Run project "%s"', project.name);
 					distributor.run({
 						projectName: project.name,
-						withScmChangesOnly: project.buildEvery.withScmChangesOnly
+						withScmChangesOnly: project.buildEvery.withScmChangesOnly,
+						initiator: {type: 'scheduler'}
 					});
 				},
 				start: true

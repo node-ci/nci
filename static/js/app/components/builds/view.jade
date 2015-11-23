@@ -23,9 +23,7 @@ div.row
 			.text-muted(style={marginTop: '-10px'})
 				| Initiated by 
 				- var initiator = this.state.build.initiator;
-				if initiator.type === 'user'
-					span user
-				else if initiator.type === 'build'
+				if initiator.type === 'build'
 					Link(to="project", params={name: initiator.project.name})
 						span= initiator.project.name
 					| 
