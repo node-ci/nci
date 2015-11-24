@@ -30,6 +30,9 @@ define([
 		onRebuildProject: function(projectName) {
 			ProjectActions.run(projectName)
 		},
+		onCancelBuild: function(buildId) {
+			BuildActions.cancel(buildId);
+		},
 		onShowTerminal: function(build) {
 			this.setState({showTerminal: !this.state.showTerminal});
 			BuildActions.readTerminalOutput(this.props.build);

@@ -3,10 +3,12 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	db = require('../db'),
-	utils = require('../lib/utils');
+	utils = require('../lib/utils'),
+	logger = require('../lib/logger')('builds resource');
 
 module.exports = function(app) {
-	var resource = app.dataio.resource('builds');
+	var resource = app.dataio.resource('builds'),
+		distributor = app.distributor;
 
 	resource.use('readAll', function(req, res, next) {
 		Steppy(
@@ -99,6 +101,20 @@ module.exports = function(app) {
 					lines: logLines,
 					isLast: logLines.length < count
 				});
+			},
+			next
+		);
+	});
+
+	resource.use('cancel', function(req, res, next) {
+		Steppy(
+			function() {
+				var buildId = req.data.buildId;
+				logger.log('Cancel build: "%s"', buildId);
+				distributor.cancel({buildId: buildId}, this.slot());
+			},
+			function() {
+				res.send();
 			},
 			next
 		);

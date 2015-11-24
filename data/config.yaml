@@ -14,7 +14,7 @@ http:
 
 storage:
     backend: memdown
-    # backend: medeadown
+    # backend: leveldown
 
 notify:
     mail:

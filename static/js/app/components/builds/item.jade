@@ -84,4 +84,10 @@ mixin statusText(build)
 			.build_controls_progress
 				if build.project.avgBuildDuration
 					Progress(build=build)
+		if build.status === 'queued'
+			.build_controls_buttons
+				a.btn.btn-sm.btn-default(href="javascript:void(0);", onClick=this.onCancelBuild(build.id))
+					i.fa.fa-fw.fa-times(title="Cancel build")
+					| 
+					| Cancel build
 

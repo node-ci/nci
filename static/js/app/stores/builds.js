@@ -14,7 +14,7 @@ define([
 			return this.builds;
 		},
 
-		onChange: function(data, action) {
+		onChanged: function(data) {
 			var oldBuild = _(this.builds).findWhere({id: data.buildId});
 			if (oldBuild) {
 				_(oldBuild).extend(data.changes);
@@ -27,8 +27,23 @@ define([
 			this.trigger(this.builds);
 		},
 
+		onCancelled: function(data) {
+			// WORKAROUND: client that trigger `onCancel` gets one `onCancelled`
+			// call other clients get 2 calls (second with empty data)
+			if (!data) {
+				return;
+			}
+			var index = _(this.builds).findIndex({id: data.buildId});
+			if (index !== -1) {
+				this.builds.splice(index, 1);
+			}
+
+			this.trigger(this.builds);
+		},
+
 		init: function() {
-			resource.subscribe('change', this.onChange);
+			resource.subscribe('change', this.onChanged);
+			resource.subscribe('cancel', this.onCancelled);
 		},
 
 		onReadAll: function(params) {
@@ -39,6 +54,12 @@ define([
 				self.trigger(self.builds);
 			});
 		},
+
+		onCancel: function(buildId) {
+			resource.sync('cancel', {buildId: buildId}, function(err) {
+				if (err) throw err;
+			});
+		}
 	});
 
 	return Store;

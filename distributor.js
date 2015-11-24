@@ -33,6 +33,14 @@ exports.init = function(app, callback) {
 				},
 				callback
 			);
+		},
+		removeBuild: function(build, callback) {
+			Steppy(
+				function() {
+					db.builds.del([build.id], this.slot());
+				},
+				callback
+			);
 		}
 	});
 
@@ -72,9 +80,9 @@ exports.init = function(app, callback) {
 
 	exports.createBuildDataResource = createBuildDataResource;
 
-	distributor.on('buildUpdate', function(build, changes) {
-		var buildsResource = app.dataio.resource('builds');
+	var buildsResource = app.dataio.resource('builds');
 
+	distributor.on('buildUpdate', function(build, changes) {
 		if (build.status === 'queued') {
 			createBuildDataResource(build.id);
 		}
@@ -89,6 +97,10 @@ exports.init = function(app, callback) {
 		buildsResource.clientEmitSync('change', {
 			buildId: build.id, changes: changes
 		});
+	});
+
+	distributor.on('buildCancel', function(build) {
+		buildsResource.clientEmitSync('cancel', {buildId: build.id});
 	});
 
 	var buildLogLineNumbersHash = {};

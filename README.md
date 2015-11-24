@@ -67,4 +67,4 @@ problems detected by regexp) then step will be rerun without error
 * Ability to change build parameters from ui (at least target branch)
 * ~~Embedded database (apparently level db)~~
 * ~~Lightweight (minimal dependencies)~~
-* Cancel build
+* ~~Cancel build~~
