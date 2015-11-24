@@ -3,4 +3,5 @@
 - var min = sec >= 60 ? Math.round(sec / 60) : 0;
 - var suffix = this.props.withSuffix ? 'in ' : '';
 - var ending = min === 1 ? '' : 's';
-span(title= sec + ' second' + ending)= suffix + (min ? min + ' minunte' : sec + ' second') + ending
+- var title = this.props.title || sec + ' second' + ending;
+span(title= title)= suffix + (min ? min + ' minunte' : sec + ' second') + ending

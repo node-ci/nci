@@ -36,7 +36,7 @@ Ui fixes
 	~~Warning: setState(...): Can only update a mounted or mounting component.~~
 	~~This usually means you called setState() on an unmounted component.~~
 	~~This is a no-op.~~
-* show duration details (steps duration) on build page
+* ~~show duration details (steps duration) on build page~~
 * speed up build points animation at ff (maybe borrow something from animate.css?)
 * current successfully streak icons at project page
 * ~~don't appear build from other project on project page~~

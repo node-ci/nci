@@ -67,11 +67,14 @@ div.row
 								DateTime(value=this.state.build.createDate)
 
 							if this.state.build.endDate
+								- var durationTitle = _(this.state.build.stepTimings).map(function(stepTiming) {
+								-	return stepTiming.name + ': ' + (stepTiming.duration / 1000).toFixed(1) + ' sec';
+								- }).join('\n');
 								| , finished
 								| 
 								DateTime(value=this.state.build.endDate)
 								| 
-								Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+								Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true, title=durationTitle)
 
 				mixin rev(rev, prefix)
 					- prefix = prefix || ''; 
