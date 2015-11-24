@@ -7,7 +7,7 @@
   },
   "scripts": {
     "makeTestRepos": "rm -rf test/repos/{mercurial,git}; cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
-    "test": "npm run makeTestRepos && mocha --bail --reporter=spec test/index --timeout 4000",
+    "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 4000",
     "dev": "gulp",
     "sync": "npm install && npm prune && bower install && bower prune",
     "buildJs": "r.js -o static/js/requirejs/buid.js",
