@@ -6,8 +6,20 @@ define([
 	'reflux',
 	'app/stores/terminal',
 	'ansi_up',
-	'templates/app/components/terminal/terminal'
-], function(_, React, Reflux, terminalStore, ansiUp, template) {
+	'templates/app/components/terminal/terminal',
+	'templates/app/components/terminal/row'
+], function(_, React, Reflux, terminalStore, ansiUp, template, rowTemplate) {
+	var TerminalRow = React.createClass({
+		render: rowTemplate,
+		shouldComponentUpdate: function(nextProps) {
+			return nextProps.row !== this.props.row;
+		}
+	});
+
+	template = template.locals({
+		Row: TerminalRow
+	});
+
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
 		shouldScrollBottom: true,
