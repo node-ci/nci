@@ -57,7 +57,7 @@ exports.init = function(app, callback) {
 			Steppy(
 				function() {
 					db.logLines.find({
-						start: {buildId: buildId, numberStr: ''},
+						start: {buildId: buildId},
 					}, this.slot());
 				},
 				function(err, lines) {

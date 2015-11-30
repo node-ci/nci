@@ -65,7 +65,7 @@ module.exports = function(app) {
 			function() {
 				var findParams = {
 					reverse: true,
-					start: {buildId: req.data.buildId, numberStr: ''},
+					start: {buildId: req.data.buildId},
 					limit: req.data.length
 				};
 
@@ -90,8 +90,8 @@ module.exports = function(app) {
 					count = to - from;
 
 				db.logLines.find({
-					start: {buildId: buildId, numberStr: utils.toNumberStr(from)},
-					end: {buildId: buildId, numberStr: utils.toNumberStr(to)}
+					start: {buildId: buildId, number: from},
+					end: {buildId: buildId, number: to}
 				}, this.slot());
 
 				this.pass(count);

@@ -14,11 +14,12 @@ define([
 	return React.createClass({
 		mixins: [
 			Reflux.connectFilter(buildLogStore, 'data', function(data) {
-				data.output = _(data.lines).pluck('text').join('');
+				data.output = _(data.lines).pluck('text').join('<br>');
 				data.output = data.output.replace(
 					/(.*)\n/gi,
 					'<span class="terminal_code_newline">$1</span>'
 				);
+
 				data.output = ansiUp.ansi_to_html(data.output);
 				return data;
 			})

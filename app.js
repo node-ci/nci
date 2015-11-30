@@ -181,8 +181,7 @@ Steppy(
 		logger.log('Server config:', JSON.stringify(app.config, null, 4));
 
 		db.init(app.config.paths.db, {
-			db: require(app.config.storage.backend),
-			valueEncoding: 'json'
+			db: require(app.config.storage.backend)
 		}, this.slot());
 	},
 	function() {

@@ -4,14 +4,17 @@ var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	nlevel = require('nlevel'),
 	path = require('path'),
-	utils = require('./lib/utils');
+	utils = require('./lib/utils'),
+	through = require('through');
 
 
 exports.init = function(dbPath, params, callback) {
 	callback = _.after(2, callback);
 
 	var maindbPath = path.join(dbPath, 'main'),
-		mainDb = nlevel.db(maindbPath, params, callback);
+		mainDb = nlevel.db(maindbPath, _({
+			valueEncoding: 'json'
+		}).defaults(params), callback);
 
 	exports.builds = new nlevel.DocsSection(mainDb, 'builds', {
 		projections: [
@@ -82,22 +85,98 @@ exports.init = function(dbPath, params, callback) {
 	var buildLogsDbPath = path.join(dbPath, 'buildLogs'),
 		buildLogsDb = nlevel.db(buildLogsDbPath, params, callback);
 
-	exports.logLines = new nlevel.DocsSection(buildLogsDb, 'logLines', {
-		projections: [
-			{
-				key: {
-					buildId: 1,
-					numberStr: function(logLine) {
-						return utils.toNumberStr(logLine.number);
-					}
-				},
-				value: function(logLine) {
-					return _(logLine).pick('number', 'text');
-				}
-			}
-		],
-		withUniqueId: false
-	});
+	// custom optimized emplementation for storing log lines
+	exports.logLines = {};
+
+	exports.logLines.separator = '~';
+	exports.logLines.end = '\xff';
+
+	exports.logLines._getStrKey = function(line) {
+		return line.buildId + this.separator + (
+			_(line).has('number') ? utils.toNumberStr(line.number) : ''
+		);
+	};
+
+	exports.logLines._parseData = function(data) {
+		var keyParts = data.key.split(this.separator),
+			buildId = Number(keyParts[0]),
+			number = Number(keyParts[1]);
+
+		return {buildId: buildId, number: number, text: data.value};
+	};
+
+	exports.logLines.put = function(lines, callback) {
+		var self = this;
+		lines = _(lines).isArray() ? lines : [lines];
+
+		var operations = _(lines).map(function(line) {
+			return {
+				type: 'put',
+				key: self._getStrKey(line),
+				value: line.text
+			};
+		});
+
+		buildLogsDb.batch(operations, callback);
+	};
+
+	exports.logLines.createReadStream = function(params) {
+		var self = this;
+		if (!params.start && params.end) {
+			new Error('`end` selected without `start`');
+		}
+
+		params.start = self._getStrKey(params.start);
+		params.end = params.end ? self._getStrKey(params.end) : params.start;
+		// add end character
+		params.end += self.end;
+		// swap `start` `end` conditions when reverse is set
+		if (params.reverse) {
+			var prevStart = params.start;
+			params.start = params.end;
+			params.end = prevStart;
+		}
+
+		var resultStream = through(function(data) {
+			this.emit('data', _(data).isObject() ? self._parseData(data) : data);
+		});
+
+		return buildLogsDb.createReadStream(params)
+			.on('error', function(err) {
+				resultStream.emit('error', err);
+			})
+			.pipe(resultStream)
+	};
+
+	exports.logLines.find = function(params, callback) {
+		var self = this;
+		callback = _(callback).once();
+
+		var lines = [];
+		self.createReadStream(params)
+			.on('error', callback)
+			.on('data', function(line) {
+				lines.push(line);
+			})
+			.on('end', function() {
+				callback(null, lines);
+			})
+	};
+
+	exports.logLines.remove = function(params, callback) {
+		var self = this;
+		callback = _(callback).once();
+
+		var operations = [];
+		self.createReadStream(_({values: false}).extend(params))
+			.on('error', callback)
+			.on('data', function(key) {
+				operations.push({type: 'del', key: key});
+			})
+			.on('end', function() {
+				buildLogsDb.batch(operations, callback);
+			});
+	};
 };
 
 /*
