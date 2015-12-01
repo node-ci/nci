@@ -7,11 +7,44 @@ var Steppy = require('twostep').Steppy,
 /*
  * Pure rest api on pure nodejs follows below
  */
-module.exports = function(app) {
-	return function(req, res) {
 
-		var projects = app.projects,
-			distributor = app.distributor;
+var router = {};
+router.routes = {};
+
+_(['get', 'post', 'patch', 'del']).each(function(method) {
+	router[method] = function(url, handler) {
+		router.routes[method + ' ' + url] = handler;
+	};
+});
+
+module.exports = function(app) {
+
+	// run building of a project
+	router.post('/api/builds', function(req, res, next) {
+		Steppy(
+			function() {
+				var projectName = req.body.project,
+					project = _(app.projects).findWhere({name: projectName});
+
+				if (project) {
+					res.statusCode = 204;
+					logger.log('Run project "%s"', projectName);
+					app.distributor.run({
+						projectName: projectName,
+						withScmChangesOnly: req.body.withScmChangesOnly,
+						initiator: {type: 'httpApi'}
+					});
+				} else {
+					res.statusCode = 404;
+				}
+
+				res.end();
+			},
+			next
+		);
+	});
+
+	return function(req, res) {
 
 		Steppy(
 			function() {
@@ -29,28 +62,22 @@ module.exports = function(app) {
 				req.on('error', stepCallback);
 			},
 			function(err, body) {
-				res.statusCode = 404;
+				req.body = body;
 
-				// run building of a project
-				if (req.url === '/api/builds' && req.method === 'POST') {
-					var projectName = body.project,
-						project = _(projects).findWhere({name: projectName});
+				var key = req.method.toLowerCase() + ' ' + req.url,
+					handler = router.routes[key];
 
-					if (project) {
-						res.statusCode = 204;
-						logger.log('Run project "%s"', projectName);
-						distributor.run({
-							projectName: projectName,
-							withScmChangesOnly: body.withScmChangesOnly,
-							initiator: {type: 'httpApi'}
-						});
-					}
-
+				if (handler) {
+					handler(req, res, this.slot());
+				} else {
+					res.statusCode = 404;
+					res.end();
 				}
-				res.end();
 			},
 			function(err) {
 				logger.error('Error occurred during request: ', err.stack || err);
+				res.statusCode = 500;
+				res.end();
 			}
 		);
 	};
