@@ -26,10 +26,11 @@ define([
 		ignoreScrollEvent: false,
 		linesCount: 0,
 		componentDidMount: function() {
-			console.log('did mount');
 			this.listenTo(terminalStore, this.updateItems);
 			var node = this.refs.code.getDOMNode();
 			this.initialScrollPosition = node.getBoundingClientRect().top;
+
+			$(window).scroll(this.onScroll);
 		},
 		prepareRow: function(row) {
 			return ansiUp.ansi_to_html(row.replace('\r', ''));
@@ -40,13 +41,13 @@ define([
 				return self.prepareRow(row);
 			});
 		},
-		componentWillUpdate: function() {
+		onScroll: function() {
 			var node = this.refs.code.getDOMNode(),
 				body = document.getElementsByTagName('body')[0];
 			this.shouldScrollBottom = window.innerHeight + body.scrollTop >=
 				node.offsetHeight + this.initialScrollPosition;
 		},
-		componentDidUpdate: function() {
+		ensureScrollPosition: function() {
 			if (this.shouldScrollBottom) {
 				var node = this.refs.code.getDOMNode(),
 					body = document.getElementsByTagName('body')[0];
@@ -61,27 +62,34 @@ define([
 			return '<div class="code-line" data-number="' + index + '">' +
 				this.makeCodeLineContent(line) + '</div>';
 		},
+		renderBuffer: _.throttle(function() {
+			var data = this.data,
+				currentLinesCount = data.length,
+				terminal = $('.terminal_code'),
+				rows = terminal.children();
+
+			if (rows.length) {
+				// replace our last node
+				var index = this.linesCount - 1;
+				$(rows[index]).html(this.makeCodeLineContent(data[index]));
+			}
+
+			var self = this;
+			terminal.append(
+				_(data.slice(this.linesCount)).map(function(line, index) {
+					return self.makeCodeLine(line, self.linesCount + index);
+				}).join('')
+			);
+
+			this.linesCount = currentLinesCount;
+			this.ensureScrollPosition();
+		}, 100),
+		data: [],
 		updateItems: function(build) {
 			// listen just our console update
 			if (build.buildId === this.props.build) {
-				var currentLinesCount = build.data.length,
-					terminal = $('.terminal_code'),
-					rows = terminal.children();
-
-				if (rows.length) {
-					// replace our last node
-					var index = this.linesCount - 1;
-					$(rows[index]).html(this.makeCodeLineContent(build.data[index]));
-				}
-
-				var self = this;
-				terminal.append(
-					_(build.data.slice(this.linesCount)).map(function(line, index) {
-						return self.makeCodeLine(line, self.linesCount + index);
-					})
-				);
-
-				this.linesCount = currentLinesCount;
+				this.data = build.data;
+				this.renderBuffer();
 			}
 		},
 		shouldComponentUpdate: function() {
