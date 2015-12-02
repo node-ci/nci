@@ -14,30 +14,6 @@ define([
 			this.connectedResourcesHash = {};
 		},
 
-		transformData: function(data) {
-			var splittedData  = data.text.split('\n');
-
-			if (this.currentLine) {
-				this.lines.pop();
-			}
-
-			this.currentLine += _(splittedData).first();
-			this.lines.push(this.currentLine);
-
-			if (splittedData.length > 1) {
-				if (_(splittedData).last() === '') {
-					this.currentLine = '';
-					splittedData = _(splittedData.slice(1)).initial();
-				} else {
-					this.currentLine = _(splittedData).last();
-					splittedData = _(splittedData).tail();
-				}
-				this.lines = this.lines.concat(splittedData);
-			}
-
-			return this.lines;
-		},
-
 		onReadTerminalOutput: function(build) {
 			var self = this,
 				output = [],
@@ -53,10 +29,15 @@ define([
 				}
 
 				connect.resource(resourceName).subscribe('data', function(data) {
+					var lastLine = _(self.lines).last();
+					if (lastLine && (_(data.lines).first().number === lastLine.number)) {
+						self.lines = _(self.lines).initial();
+					}
+					self.lines = self.lines.concat(data.lines);
 					self.trigger({
 						buildId: build.id,
 						name: 'Console for build #' + build.id,
-						data: self.transformData(data)
+						data: _(self.lines).pluck('text')
 					});
 				});
 			};

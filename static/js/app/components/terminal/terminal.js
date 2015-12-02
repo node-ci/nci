@@ -22,15 +22,20 @@ define([
 
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
+
 		shouldScrollBottom: true,
-		ignoreScrollEvent: false,
+		data: [],
 		linesCount: 0,
+
 		componentDidMount: function() {
 			this.listenTo(terminalStore, this.updateItems);
-			var node = this.refs.code.getDOMNode();
+			var node = document.getElementsByClassName('terminal')[0];
 			this.initialScrollPosition = node.getBoundingClientRect().top;
 
-			$(window).scroll(this.onScroll);
+			$(window).on('scroll', this.onScroll);
+		},
+		componentWillUnmount: function() {
+			$(window).off('scroll', this.onScroll);
 		},
 		prepareRow: function(row) {
 			return ansiUp.ansi_to_html(row.replace('\r', ''));
@@ -42,14 +47,14 @@ define([
 			});
 		},
 		onScroll: function() {
-			var node = this.refs.code.getDOMNode(),
+			var node = document.getElementsByClassName('terminal')[0],
 				body = document.getElementsByTagName('body')[0];
 			this.shouldScrollBottom = window.innerHeight + body.scrollTop >=
 				node.offsetHeight + this.initialScrollPosition;
 		},
 		ensureScrollPosition: function() {
 			if (this.shouldScrollBottom) {
-				var node = this.refs.code.getDOMNode(),
+				var node = document.getElementsByClassName('terminal')[0],
 					body = document.getElementsByTagName('body')[0];
 				body.scrollTop = this.initialScrollPosition + node.offsetHeight;
 			}
@@ -84,7 +89,6 @@ define([
 			this.linesCount = currentLinesCount;
 			this.ensureScrollPosition();
 		}, 100),
-		data: [],
 		updateItems: function(build) {
 			// listen just our console update
 			if (build.buildId === this.props.build) {
