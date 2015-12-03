@@ -43,6 +43,9 @@ Ui fixes
 * ~~update project info changes (avg duration, etc) on the fly - project page~~
 * ~~long commit comment breakes build card makeup~~
 * ~~comment start/duration should be on same place during all steps~~
+* slow move out from build page (with lot of output) to main page - several sec
+* when go on completed build page you scroll down to the output which could be
+very long
 
 ## Roadmap
 
