@@ -180,9 +180,16 @@ Steppy(
 
 		logger.log('Server config:', JSON.stringify(app.config, null, 4));
 
-		db.init(app.config.paths.db, {
-			db: require(app.config.storage.backend)
-		}, this.slot());
+		var dbBackend = require(app.config.storage.backend);
+
+		// monkey patch memdown to allow save empty strings which is correct
+		// at general but occasionally not allowed at _checkKey
+		// https://github.com/Level/abstract-leveldown/issues/74
+		if (app.config.storage.backend === 'memdown') {
+			dbBackend.prototype._checkKey = _.noop;
+		}
+
+		db.init(app.config.paths.db, {db: dbBackend}, this.slot());
 	},
 	function() {
 		// load all projects for the first time
