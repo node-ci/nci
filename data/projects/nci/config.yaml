@@ -1,7 +1,7 @@
 
 scm:
     type: git
-    repository: ./
+    repository: ../../nci
     rev: master
 
 # catchRev:

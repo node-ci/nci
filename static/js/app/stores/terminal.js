@@ -29,15 +29,21 @@ define([
 				}
 
 				connect.resource(resourceName).subscribe('data', function(data) {
-					output = output.concat(data.lines);
-
+					var lastLine = _(self.lines).last();
+					if (lastLine && (_(data.lines).first().number === lastLine.number)) {
+						self.lines = _(self.lines).initial();
+					}
+					self.lines = self.lines.concat(data.lines);
 					self.trigger({
 						buildId: build.id,
 						name: 'Console for build #' + build.id,
-						data: output
+						data: _(self.lines).pluck('text')
 					});
 				});
 			};
+
+			this.lines = [];
+			this.currentLine = '';
 
 			// create data resource for completed build
 			if (build.completed) {
