@@ -7,19 +7,7 @@ define([
 	'app/stores/terminal',
 	'ansi_up',
 	'templates/app/components/terminal/terminal',
-	'templates/app/components/terminal/row'
-], function(_, React, Reflux, terminalStore, ansiUp, template, rowTemplate) {
-	var TerminalRow = React.createClass({
-		render: rowTemplate,
-		shouldComponentUpdate: function(nextProps) {
-			return nextProps.row !== this.props.row;
-		}
-	});
-
-	template = template.locals({
-		Row: TerminalRow
-	});
-
+], function(_, React, Reflux, terminalStore, ansiUp, template) {
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
 
@@ -32,10 +20,10 @@ define([
 			var node = document.getElementsByClassName('terminal')[0];
 			this.initialScrollPosition = node.getBoundingClientRect().top;
 
-			$(window).on('scroll', this.onScroll);
+			window.onscroll = this.onScroll;
 		},
 		componentWillUnmount: function() {
-			$(window).off('scroll', this.onScroll);
+			window.onscroll = null;
 		},
 		prepareRow: function(row) {
 			return ansiUp.ansi_to_html(row.replace('\r', ''));
@@ -46,16 +34,24 @@ define([
 				return self.prepareRow(row);
 			});
 		},
+		getTerminal: function() {
+			return document.getElementsByClassName('terminal')[0];
+		},
+		getBody: function() {
+			return document.getElementsByTagName('body')[0];
+		},
 		onScroll: function() {
-			var node = document.getElementsByClassName('terminal')[0],
-				body = document.getElementsByTagName('body')[0];
+			var node = this.getTerminal(),
+				body = this.getBody();
+
 			this.shouldScrollBottom = window.innerHeight + body.scrollTop >=
 				node.offsetHeight + this.initialScrollPosition;
 		},
 		ensureScrollPosition: function() {
 			if (this.shouldScrollBottom) {
-				var node = document.getElementsByClassName('terminal')[0],
-					body = document.getElementsByTagName('body')[0];
+				var node = this.getTerminal(),
+					body = this.getBody();
+
 				body.scrollTop = this.initialScrollPosition + node.offsetHeight;
 			}
 		},
@@ -70,17 +66,17 @@ define([
 		renderBuffer: _.throttle(function() {
 			var data = this.data,
 				currentLinesCount = data.length,
-				terminal = $('.terminal_code'),
-				rows = terminal.children();
+				terminal = document.getElementsByClassName('terminal_code')[0],
+				rows = terminal.childNodes;
 
 			if (rows.length) {
 				// replace our last node
 				var index = this.linesCount - 1;
-				$(rows[index]).html(this.makeCodeLineContent(data[index]));
+				rows[index].innerHTML = this.makeCodeLineContent(data[index]);
 			}
 
 			var self = this;
-			terminal.append(
+			terminal.insertAdjacentHTML('beforeend', 
 				_(data.slice(this.linesCount)).map(function(line, index) {
 					return self.makeCodeLine(line, self.linesCount + index);
 				}).join('')
@@ -99,12 +95,7 @@ define([
 		shouldComponentUpdate: function() {
 			return false;
 		},
-		render: template,
-		getInitialState: function() {
-			return {
-				data: []
-			};
-		}
+		render: template
 	});
 
 	return Component;

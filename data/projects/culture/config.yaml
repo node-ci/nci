@@ -1,0 +1,9 @@
+scm:
+    type: git
+    repository: /Users/vladimir/projects/fit/culture/frontend_node
+    rev: master
+
+steps:
+    sync: npm run sync
+    test: nrun test -R dot
+    pack: nrun packSafe
