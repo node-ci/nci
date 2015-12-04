@@ -49,6 +49,13 @@ exports.init = function(dbPath, params, callback) {
 
 		Steppy(
 			function() {
+				// quit if we already have ids and numbers
+				if (_(builds).all(function(build) {
+					return build.id && build.number;
+				})) {
+					return callback();
+				}
+
 				if (builds.length > 1) {
 					throw new Error('Build put hooks work only with single build');
 				}

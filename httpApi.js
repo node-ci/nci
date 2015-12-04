@@ -97,6 +97,47 @@ module.exports = function(app) {
 		);
 	});
 
+	router.patch('/api/projects/:name', function(req, res, next) {
+		var projectName = req.params.name,
+			newProjectName = req.body.name;
+
+		Steppy(
+			function() {
+				logger.log(
+					'Rename project "%s" to "%s"', projectName, newProjectName
+				);
+
+				if (!newProjectName) throw new Error('new project name is not set');
+
+				var curProject = _(app.projects).findWhere({name: projectName});
+				if (!curProject) {
+					throw new Error('Project "' + projectName + '" not found');
+				}
+				this.pass(curProject);
+
+				var newProject = _(app.projects).findWhere({name: newProjectName});
+				if (newProject) {
+					throw new Error(
+						'Project name "' + newProjectName + '" already used'
+					);
+				}
+
+				project.rename({
+					baseDir: app.config.paths.projects,
+					name: projectName,
+					newName: newProjectName
+				}, this.slot());
+			},
+			function(err, curProject) {
+				curProject.name = newProjectName;
+
+				res.statusCode = 204;
+				res.end();
+			},
+			next
+		);
+	});
+
 	return function(req, res) {
 
 		Steppy(
@@ -113,7 +154,7 @@ module.exports = function(app) {
 					bodyString += data;
 				});
 				req.on('end', function() {
-					var body = bodyString ? JSON.parse(bodyString) : null;
+					var body = bodyString ? JSON.parse(bodyString) : {};
 					stepCallback(null, body);
 				});
 				req.on('error', stepCallback);
