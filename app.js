@@ -16,7 +16,7 @@ var env = process.env.NODE_ENV || 'development',
 
 var app = new EventEmitter(),
 	logger = libLogger('app'),
-	httpApi = require('./httpApi')(app);
+	httpApi;
 
 var staticPath = path.join(__dirname, 'static'),
 	staticServer = new nodeStatic.Server(staticPath);
@@ -56,6 +56,7 @@ app.lib = {};
 app.lib.reader = reader;
 app.lib.notifier = notifier;
 app.lib.logger = libLogger;
+app.lib.project = project;
 
 var configDefaults = {
 	notify: {},
@@ -213,6 +214,8 @@ Steppy(
 			logger.log('Load plugin "%s"', plugin);
 			require(plugin).register(app);
 		});
+
+		httpApi = require('./httpApi')(app);
 
 		notifier.init(app.config.notify, this.slot());
 

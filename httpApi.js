@@ -2,10 +2,7 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	querystring = require('querystring'),
-	logger = require('./lib/logger')('http api'),
-	project = require('./lib/project');
-
+	querystring = require('querystring');
 /*
  * Pure rest api on pure nodejs follows below
  */
@@ -51,6 +48,7 @@ router.getRoute = function(req) {
 };
 
 module.exports = function(app) {
+	var logger = app.lib.logger('http api');
 
 	// run building of a project
 	router.post('/api/1.0/builds', function(req, res, next) {
@@ -83,7 +81,7 @@ module.exports = function(app) {
 		Steppy(
 			function() {
 				logger.log('Cleaning up project "%s"', projectName);
-				project.remove({
+				app.lib.project.remove({
 					baseDir: app.config.paths.projects,
 					name: projectName
 				}, this.slot());
@@ -122,7 +120,7 @@ module.exports = function(app) {
 					);
 				}
 
-				project.rename({
+				app.lib.project.rename({
 					baseDir: app.config.paths.projects,
 					name: projectName,
 					newName: newProjectName
