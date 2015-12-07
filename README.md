@@ -46,8 +46,9 @@ Ui fixes
 * slow move out from build page (with lot of output) to main page - several sec
 * when go on completed build page you scroll down to the output which could be
 very long
-* whene long line appear console output row numbers not on the same line with
+* when long line appear console output row numbers not on the same line with
 content
+* some "undefined" comments in scm changes
 
 ## Roadmap
 
