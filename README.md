@@ -50,6 +50,8 @@ very long
 content
 * some "undefined" comments in scm changes
 * should write at the end of build console out that build is done (or error)
+* do not log "[scheduler] Run project" if "skipped coz no scm changes"
+* show more builds button (or infinity scroll) on start page
 
 ## Roadmap
 
