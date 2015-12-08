@@ -51,7 +51,7 @@ module.exports = function(app) {
 	var logger = app.lib.logger('http api');
 
 	// run building of a project
-	router.post('/api/1.0/builds', function(req, res, next) {
+	router.post('/api/0.1/builds', function(req, res, next) {
 		Steppy(
 			function() {
 				var projectName = req.body.project,
@@ -76,7 +76,7 @@ module.exports = function(app) {
 	});
 
 	// TODO: restrict access with some sort of token
-	router.del('/api/1.0/projects/:name', function(req, res, next) {
+	router.del('/api/0.1/projects/:name', function(req, res, next) {
 		var projectName = req.params.name;
 		Steppy(
 			function() {
@@ -95,7 +95,7 @@ module.exports = function(app) {
 		);
 	});
 
-	router.patch('/api/1.0/projects/:name', function(req, res, next) {
+	router.patch('/api/0.1/projects/:name', function(req, res, next) {
 		var projectName = req.params.name,
 			newProjectName = req.body.name;
 
