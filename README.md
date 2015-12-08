@@ -40,7 +40,7 @@ content
 ## Feature requests
 
 * should write at the end of build console out that build is done (or error)
-* share workspace files at static
+* ~~share workspace files at static~~
 * "clear workspace" button
 * show more builds button (or infinity scroll) on start page
 * hide console output by default (when go on completed build page you scroll

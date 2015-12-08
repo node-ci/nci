@@ -19,11 +19,16 @@ var app = new EventEmitter(),
 	httpApi;
 
 var staticPath = path.join(__dirname, 'static'),
-	staticServer = new nodeStatic.Server(staticPath);
+	staticServer = new nodeStatic.Server(staticPath),
+	staticDataServer;
 
 var server = http.createServer(function(req, res) {
 	if (req.url.indexOf('/api/') === 0) {
 		return httpApi(req, res);
+	}
+
+	if (new RegExp('^/projects/(\\w|-)+/workspace').test(req.url)) {
+		return staticDataServer.serve(req, res);
 	}
 
 	if (req.url.indexOf('/data.io.js') === -1) {
@@ -143,6 +148,8 @@ Steppy(
 
 		// path to root dir (with projects, builds etc)
 		app.config.paths.data = path.join(process.cwd(), 'data');
+		staticDataServer = new nodeStatic.Server(app.config.paths.data);
+
 		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
 		app.config.paths.db = path.join(app.config.paths.data, 'db');
 		app.config.paths.preload = path.join(app.config.paths.data, 'preload.json');
