@@ -115,3 +115,13 @@ div.row
 				| Console output
 			.build-view_terminal
 				Terminal(build=this.state.build.id)
+
+			if this.state.build.completed
+				if this.state.build.error
+					.text-center.alert.alert-danger
+						| Build ended with error 
+						Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+				else
+					.text-center.alert.alert-success
+						| Build successfully completed  
+						Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
