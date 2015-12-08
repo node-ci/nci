@@ -7,18 +7,20 @@ define([
 	'app/actions/build',
 	'app/stores/build',
 	'app/components/terminal/terminal',
+	'app/components/buildSidebar/index',
 	'templates/app/components/builds/view',
 	'app/components/common/index'
 ], function(
-	React, Router, Reflux, BuildActions, buildStore, TerminalComponent, template,
-	CommonComponents
+	React, Router, Reflux, BuildActions, buildStore, TerminalComponent,
+	BuildSidebar, template, CommonComponents
 ) {
 	template = template.locals({
 		DateTime: CommonComponents.DateTime,
 		Duration: CommonComponents.Duration,
 		Scm: CommonComponents.Scm,
 		Terminal: TerminalComponent,
-		Link: Router.Link
+		Link: Router.Link,
+		BuildSidebar: BuildSidebar
 	});
 
 	var Component = React.createClass({
@@ -32,16 +34,24 @@ define([
 			this.listenTo(buildStore, this.updateBuild);
 		},
 		updateBuild: function(build) {
-			if (!this.state.build && build) {
-				BuildActions.readTerminalOutput(build);
+			if (build) {
+				BuildActions.readAll({projectName: build.project.name});
 			}
 			this.setState({build: build});
 		},
 		render: template,
 		getInitialState: function() {
 			return {
-				build: null
+				build: null,
+				showConsole: false
 			};
+		},
+		toggleConsole: function() {
+			var consoleState = !this.state.showConsole;
+			if (consoleState) {
+				BuildActions.readTerminalOutput(this.state.build);
+			}
+			this.setState({showConsole: consoleState});
 		}
 	});
 

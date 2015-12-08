@@ -14,7 +14,7 @@
 	.row();
 	padding: 15px 0;
 	margin-bottom: 3px;
-	background: lighten(@well-bg, 3%);
+	background: @well-bg;
 
 	&_status {
 		float: left;
@@ -41,6 +41,7 @@
 		&_progress {
 			padding-top: 14px;
 			.progress {
+				height: 18px;
 				margin-bottom: 0;
 			}
 		}
@@ -62,6 +63,28 @@
 	&:hover {
 		.build_controls_buttons {
 			opacity: 1;
+		}
+	}
+
+	&__small {
+		.build_status {
+			padding-top: 5px;
+		}
+		.build_header {
+			font-size: 14px;
+		}
+		.build_content {
+			.make-xs-column(7);
+		}
+		.build_controls {
+			.make-xs-column(5);
+			font-size: 12px;
+			&_progress {
+				padding-top: 4px;
+				.progress {
+					height: 12px;
+				}
+			}
 		}
 	}
 }
@@ -93,6 +116,11 @@
 	}
 	&__queued {
 		background: @brand-primary;
+	}
+
+	&__small {
+		width: 10px;
+		height: 10px;
 	}
 }
 

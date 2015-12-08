@@ -1,0 +1,17 @@
+.builds(style={paddingTop: '20px'})
+	each item in this.state.items
+		.build.build__small(key=item.id)
+			.build_content
+				.build_status
+					.status.status__small(class="status__#{item.status}")
+				.build_header
+					Link(to="build", params={id: item.id})
+						span build #
+						span= item.number
+			.build_controls
+				if item.status === 'in-progress'
+					.build_controls_progress
+						if item.project.avgBuildDuration
+							Progress(build=item)
+				if item.endDate
+					DateTime(value=item.endDate)

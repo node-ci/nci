@@ -11,9 +11,11 @@ mixin statusBadge(build)
 	if build.status === 'error'
 		span.label.label-danger error
 
-div.row
+.row
 	if this.state.build
-		.col-md-8
+		.col-sm-3.hidden-xs
+			BuildSidebar(projectName=this.state.build.project.name)
+		.col-sm-9
 			h1
 				.pull-right(style={fontSize: '22px'})
 					mixin statusBadge(this.state.build)
@@ -114,14 +116,22 @@ div.row
 				| 
 				| Console output
 			.build-view_terminal
-				Terminal(build=this.state.build.id)
+				if this.state.showConsole
+					Terminal(build=this.state.build.id, showPreloader=true)
 
-			if this.state.build.completed
-				if this.state.build.error
-					.text-center.alert.alert-danger
-						| Build ended with error 
-						Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+					if this.state.build.completed
+						if this.state.build.error
+							.text-center.alert.alert-danger
+								| Build ended with error 
+								Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+						else
+							.text-center.alert.alert-success
+								| Build successfully completed  
+								Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
 				else
-					.text-center.alert.alert-success
-						| Build successfully completed  
-						Duration(value=(this.state.build.endDate - this.state.build.startDate), withSuffix=true)
+					.well.text-center
+						button.btn.btn-primary(onClick=this.toggleConsole)
+							i.fa.fa-fw.fa-refresh
+							| 
+							| Load console output...
+
