@@ -26,32 +26,28 @@ work in progress...
 * ~~Complete uncompleted builds on server start~~
 * ~~Throw away workspace changes on repository update~~
 
-Ui fixes
 
-* speed up console output
-* ~~projects autocomplete~~
-* ~~add time ago to build list~~
-* ~~show scm changes on build page~~
-* ~~react says many many times to console:~~
-	~~Warning: setState(...): Can only update a mounted or mounting component.~~
-	~~This usually means you called setState() on an unmounted component.~~
-	~~This is a no-op.~~
-* ~~show duration details (steps duration) on build page~~
-* speed up build points animation at ff (maybe borrow something from animate.css?)
-* current successfully streak icons at project page
-* ~~don't appear build from other project on project page~~
-* ~~update project info changes (avg duration, etc) on the fly - project page~~
-* ~~long commit comment breakes build card makeup~~
-* ~~comment start/duration should be on same place during all steps~~
+## Bugs/upcoming fixes
+
+* git checkout before reset
 * slow move out from build page (with lot of output) to main page - several sec
-* when go on completed build page you scroll down to the output which could be
-very long
 * when long line appear console output row numbers not on the same line with
 content
 * some "undefined" comments in scm changes
+* projects list scroll
+
+
+## Feature requests
+
 * should write at the end of build console out that build is done (or error)
-* do not log "[scheduler] Run project" if "skipped coz no scm changes"
+* share workspace files at static
+* "clear workspace" button
 * show more builds button (or infinity scroll) on start page
+* hide console output by default (when go on completed build page you scroll
+down to the output which could be very long)
+* speed up build points animation at ff (maybe borrow something from animate.css?)
+* current successfully streak icons at project page
+
 
 ## Roadmap
 
