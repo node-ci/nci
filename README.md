@@ -49,6 +49,7 @@ very long
 * when long line appear console output row numbers not on the same line with
 content
 * some "undefined" comments in scm changes
+* should write at the end of build console out that build is done (or error)
 
 ## Roadmap
 
