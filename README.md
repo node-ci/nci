@@ -43,8 +43,8 @@ content
 * ~~share workspace files at static~~
 * "clear workspace" button
 * show more builds button (or infinity scroll) on start page
-* hide console output by default (when go on completed build page you scroll
-down to the output which could be very long)
+* ~~hide console output by default (when go on completed build page you scroll
+down to the output which could be very long)~~
 * speed up build points animation at ff (maybe borrow something from animate.css?)
 * current successfully streak icons at project page
 
