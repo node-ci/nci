@@ -29,7 +29,7 @@ work in progress...
 
 ## Bugs/upcoming fixes
 
-* git checkout before reset
+* ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
 * when long line appear console output row numbers not on the same line with
 content
