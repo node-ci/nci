@@ -8,7 +8,7 @@
 
 	&_code {
 		display: table;
-		min-height: 42px;
+		width: 100%;
 		padding: 10px 0;
 		color: #f1f1f1;
 		font-family: monospace;
@@ -30,14 +30,15 @@
 
 	&_counter {
 		display: table-cell;
-		vertical-align: top;
 		width: 1px;
+		vertical-align: middle;
 		text-align: right;
 		cursor: pointer;
 		text-decoration: none;
 		color: darken(@gray-lighter, 15%);
 		padding: 0 10px;
 		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		white-space: nowrap;
 
 		&:before {
 			content: counter(line-numbering);
