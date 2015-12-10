@@ -4,6 +4,8 @@ nci - Continuous integration server written in node.js
 
 work in progress...
 
+[![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
+
 ## TODO for release 0.9
 
 * ~~Dashboard (builds list, projects autocomlete)~~
@@ -29,7 +31,7 @@ work in progress...
 
 ## Bugs/upcoming fixes
 
-* git checkout before reset
+* ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
 * when long line appear console output row numbers not on the same line with
 content
