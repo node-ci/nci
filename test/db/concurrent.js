@@ -19,13 +19,28 @@ describe('Db concurrency', function() {
 	};
 
 	before(function(done) {
-		db = helpers.initDb(done);
+		Steppy(
+			function() {
+				db = helpers.initDb(this.slot());
+			},
+			function() {
+				db.builds.find({}, this.slot());
+			},
+			function(err, builds) {
+				if (builds.length) {
+					db.builds.del(builds, this.slot());
+				} else {
+					this.pass(null);
+				}
+			},
+			done
+		);
 	});
 
 	describe('prallel builds put should produce different ids', function() {
 
 		var expectedIds = [];
-		var builds = _(2).chain().range().map(function(number) {
+		var builds = _(100).chain().range().map(function(number) {
 			expectedIds.push(number + 1);
 			return makeBuild({project: {name: 'project' + number}});
 		}).value();
@@ -42,7 +57,7 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('shoud have ids ' + expectedIds.join(', '), function() {
+		it('shoud have all ' + expectedIds.length +' ids ', function() {
 			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
 				expectedIds
 			);
@@ -56,7 +71,7 @@ describe('Db concurrency', function() {
 	describe('prallel builds put should produce different numbers', function() {
 
 		var expectedIds = [];
-		var builds = _(3).chain().range().map(function(number) {
+		var builds = _(100).chain().range().map(function(number) {
 			expectedIds.push(number + 1);
 			return makeBuild({
 				project: {name: 'project1'},
@@ -76,7 +91,7 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('shoud have ids ' + expectedIds.join(', '), function() {
+		it('shoud have all ' + expectedIds.length +' ids ', function() {
 			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
 				expectedIds
 			);

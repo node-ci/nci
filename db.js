@@ -198,22 +198,23 @@ nlevel.DocsSection.prototype._beforePut = function(docs, callback) {
 		return callback();
 	}
 
-	Steppy(
-		function() {
-			if (self._beforePutInProgress) {
-				return setTimeout(function() {
-					nlevel.DocsSection.prototype._beforePut.call(
-						self, docs, callback
-					);
-				}, 5);
-			}
+	if (self._beforePutInProgress) {
+		setTimeout(function() {
+			nlevel.DocsSection.prototype._beforePut.call(
+				self, docs, callback
+			);
+		}, 1);
+	} else {
+		self._beforePutInProgress = true;
 
-			self._beforePutInProgress = true;
+		// update createDate before put to provide latest date for last id
+		// it's rquired for correct generateIds function
+		_(docs).each(function(doc) {
+			doc.createDate = Date.now();
+		});
 
-			self.beforePut(docs, this.slot());
-		},
-		callback
-	);
+		self.beforePut(docs, callback);
+	}
 };
 
 nlevel.DocsSection.prototype._afterPut = function(docs, callback) {
