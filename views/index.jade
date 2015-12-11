@@ -5,23 +5,27 @@ html
 
 		link(href="/css/index.css", rel="stylesheet", type="text/css")
 
-		if env === 'development'
-			script(type="text/javascript", src="/js/libs/requirejs/require.js")
-		else
-			script
-				include ../static/js/libs/almond/almond.js
 
-		if env === 'development'
-			script
-				include ../static/js/requirejs/development.js
-		else
-			script
-				include ../static/js/requirejs/production.js
-			script
-				include ../static/js/app.build.js
+		//-if env === 'development'
+			//-script(type="text/javascript", src="/js/libs/requirejs/require.js")
+		//-else
+			//-script
+				//-include ../static/js/libs/almond/almond.js
 
-		script(type="text/javascript").
-			require(['app/app']);
+		//-if env === 'development'
+			//-script
+				//-include ../static/js/requirejs/development.js
+		//-else
+			//-script
+				//-include ../static/js/requirejs/production.js
+			//-script
+				//-include ../static/js/app.build.js
+
+		//-script(type="text/javascript").
+			//-require(['app/app']);
 
 	body
 		#content
+
+		script
+			include ../static/js/app.build.js
