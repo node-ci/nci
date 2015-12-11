@@ -5,8 +5,7 @@ test/repos/mercurial/
 test/repos/git/
 static/css/**/*.css
 static/fonts
-static/js/libs
-static/js/templates
+static/js/*
 data/projects/**/workspace
 data/builds
 static/index.html
