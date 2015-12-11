@@ -1,17 +1,22 @@
-.builds(style={paddingTop: '20px'})
+.builds.builds__timeline.builds__timeline-small
 	each item in this.state.items
-		.build.build__small(key=item.id)
-			.build_content
-				.build_status
-					.status.status__small(class="status__#{item.status}")
-				.build_header
-					Link(to="build", params={id: item.id})
-						span build #
-						span= item.number
-			.build_controls
-				if item.status === 'in-progress'
-					.build_controls_progress
-						if item.project.avgBuildDuration
-							Progress(build=item)
-				if item.endDate
-					DateTime(value=item.endDate)
+		.builds_item(key=item.id, class="builds_item__#{item.status}")
+			.builds_inner
+				.row
+					//- .builds_content
+						//- .builds_status
+						//- 	.status.status__small(class="status__#{item.status}")
+
+					.builds_header
+						Link(to="build", params={id: item.id})
+							span build #
+							span= item.number
+
+					.builds_controls
+						if item.status === 'in-progress'
+							.builds_progress
+								if item.project.avgBuildDuration
+									Progress(build=item)
+
+						if !item.endDate
+							DateTime(value=item.endDate)

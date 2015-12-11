@@ -1,6 +1,8 @@
-.builds
-	if !this.state.items.length
+- var itemsCount = this.state.items.length;
+
+.builds.builds__timeline(class="builds__timeline-#{itemsCount % 2 ? 'left' : 'right'}")
+	if itemsCount
+		each build, index in this.state.items
+			Item(build=build, key=build.id)
+	else
 		p Build history is empty
-	- console.log('>>>> builds = ', JSON.stringify(this.state.items).length, this.state.items)
-	each build, index in this.state.items
-		Item(build=build, key=build.id)
