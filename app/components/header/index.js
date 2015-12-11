@@ -2,7 +2,7 @@
 
 var React = require('react'),
 	Router = require('react-router'),
-	ProjectsSelector = require('../projects-selector'),
+	ProjectsSelector = require('../projects/selector'),
 	template = require('./index.jade');
 
 var Component = React.createClass({

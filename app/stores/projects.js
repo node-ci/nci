@@ -4,6 +4,7 @@ var Reflux = require('reflux'),
 	ProjectActions = require('../actions/project'),
 	resource = require('../resources').projects;
 
+console.log('resource', resource);
 var Store = Reflux.createStore({
 	listenables: ProjectActions,
 	onRun: function(projectName) {
@@ -12,6 +13,7 @@ var Store = Reflux.createStore({
 		});
 	},
 	onReadAll: function(params) {
+		console.log('on read all in store');
 		var self = this;
 		resource.sync('readAll', params, function(err, projects) {
 			if (err) throw err;

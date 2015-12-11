@@ -4,6 +4,8 @@ var React = require('react'),
 	ReactDOM = require('react-dom'),
 	App = require('./components/app'),
 	Dashboard = require('./components/dashboard'),
+	ProjectView = require('./components/projects/view'),
+	BuildView = require('./components/builds/view'),
 	connect = require('./connect'),
 	resources = require('./resources'),
 	Router = require('react-router');
@@ -17,18 +19,13 @@ var routes = (
 			name: 'dashboard',
 			path: '/',
 			handler: Dashboard
-		})
-		//Route({
-			//name: 'project',
-			//path: 'projects/:name',
-			//handler: Components.Project.View
-		//}),
-		//Route({name: 'build', path: 'builds/:id', handler: Components.Build.View}),
-		//Route({
-			//name: 'buildLog',
-			//path: 'builds/:buildId/log',
-			//handler: Components.BuildLog
-		//})
+		}),
+		Route({
+			name: 'project',
+			path: 'projects/:name',
+			handler: ProjectView
+		}),
+		Route({name: 'build', path: 'builds/:id', handler: BuildView})
 	)
 );
 

@@ -1,6 +1,0 @@
-.builds
-	if !this.state.items.length
-		p Build history is empty
-	- console.log('>>>> builds = ', JSON.stringify(this.state.items).length, this.state.items)
-	each build, index in this.state.items
-		Item(build=build, key=build.id)

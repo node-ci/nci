@@ -4,10 +4,10 @@ var React = require('react'),
 	ReactDOM = require('react-dom'),
 	Router = require('react-router'),
 	Reflux = require('reflux'),
-	ProjectActions = require('../../actions/project'),
-	projectsStore = require('../../stores/project'),
+	ProjectActions = require('../../../actions/project'),
+	projectsStore = require('../../../stores/projects'),
 	template = require('./index.jade'),
-	Scm = require('../common/scm');
+	Scm = require('../../common/scm');
 
 module.exports = React.createClass({
 	mixins: [Reflux.ListenerMixin, Router.Navigation],

@@ -3,7 +3,7 @@
 var _ = require('underscore'),
 	Reflux = require('reflux'),
 	BuildActions = require('../actions/build'),
-	connect = require('app/connect');
+	connect = require('../connect').data;
 
 var Store = Reflux.createStore({
 	listenables: BuildActions,
