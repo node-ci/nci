@@ -17,9 +17,6 @@ mixin statusText(build)
 	.builds_inner
 		.row
 			.builds_header
-				//- .builds_status
-				//- 	.status(class="status__#{build.status}")
-
 				if build.project
 					span
 						Scm(scm=build.project.scm.type)

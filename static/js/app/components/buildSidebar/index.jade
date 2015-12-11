@@ -3,10 +3,6 @@
 		.builds_item(key=item.id, class="builds_item__#{item.status}")
 			.builds_inner
 				.row
-					//- .builds_content
-						//- .builds_status
-						//- 	.status.status__small(class="status__#{item.status}")
-
 					.builds_header
 						Link(to="build", params={id: item.id})
 							span build #
