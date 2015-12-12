@@ -8,8 +8,6 @@ var React = require('react'),
 
 var Component = React.createClass({
 	componentDidMount: function() {
-		console.log('read all projects in component');
-		console.log(ProjectActions);
 		ProjectActions.readAll();
 	},
 	render: function() { 

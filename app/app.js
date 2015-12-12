@@ -30,7 +30,6 @@ var routes = (
 );
 
 connect.io.on('connect', function() {
-	console.log('on connect');
 	Router.run(routes, Router.HistoryLocation, function(Handler) {
 		ReactDOM.render(
 			React.createElement(Handler),

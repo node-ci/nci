@@ -27,7 +27,8 @@
     "globals": {
         "describe": false,
         "it": false,
-		"before": false,
-		"after": false
+        "document": false,
+        "before": false,
+        "after": false
     }
 }
