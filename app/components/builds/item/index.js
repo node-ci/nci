@@ -6,7 +6,7 @@ var _ = require('underscore'),
 	ProjectActions = require('../../../actions/project'),
 	BuildActions = require('../../../actions/build'),
 	CommonComponents = require('../../common'),
-	utils = require('../../../utils'),
+	utils = require('../../../../lib/utils'),
 	template = require('./index.jade');
 
 var Component = React.createClass({

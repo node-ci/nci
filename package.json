@@ -10,7 +10,7 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 4000",
     "build-less": "lessc app/styles/index.less > static/css/index.css",
     "build-js": "browserify  app/app.js -t ./transforms/jade.js | uglifyjs -mc > static/js/app.build.js",
-    "watch-less": "nodemon --ext less --watch app/styles --exec 'npm run less'",
+    "watch-less": "nodemon --ext less --watch app/styles --exec 'npm run build-less'",
     "watch-js": "watchify app/app.js -t ./transforms/jade.js -o static/js/app.build.js -dv",
     "watch-server": "nodemon --ignore app --ignore static --ignore node_modules --ignore data app.js",
     "dev": "npm run build-fonts && npm run watch-less & npm run watch-js & npm run watch-server",
