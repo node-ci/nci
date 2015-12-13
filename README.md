@@ -16,7 +16,7 @@ work in progress...
 * ~~Persistent build and console output information~~
 * ~~Project relations (blocks, triggers, etc)~~
 * ~~Writes to stderr must not break the build~~
-* Mail and jabber notifications (with commits, current step and error)
+* ~~Mail and jabber notifications~~
 * ~~Rename notification strategies according to statuses~~
 * ~~Work with git~~
 * ~~Build every commit, commit with tag, etc~~
@@ -33,11 +33,11 @@ work in progress...
 
 * ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
-* when long line appear console output row numbers not on the same line with
-content
+* ~~when long line appear console output row numbers not on the same line with
+content~~
 * some "undefined" comments in scm changes
 * projects list scroll
-* Error during send: TypeError: Cannot read property 'changes' of undefined
+* ~~Error during send: TypeError: Cannot read property 'changes' of undefined~~
 * Builds loss
 
 
