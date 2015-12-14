@@ -39,6 +39,8 @@ content~~
 * projects list scroll
 * ~~Error during send: TypeError: Cannot read property 'changes' of undefined~~
 * Builds loss
+* ~~error on git after change branch: fatal: ambiguous argument '18a8ea4..branch':
+unknown revision or path not in the working tree.~~
 
 
 ## Feature requests
