@@ -33,6 +33,13 @@ define([
 		componentDidMount: function() {
 			this.listenTo(buildStore, this.updateBuild);
 		},
+		componentWillReceiveProps: function(nextProps) {
+			// reset console status when go from build page to another build
+			// page (did mount and mount not called in this case)
+			if (Number(nextProps.params.id) !== this.state.build.id) {
+				this.setState({showConsole: this.getInitialState().showConsole});
+			}
+		},
 		updateBuild: function(build) {
 			if (build) {
 				BuildActions.readAll({projectName: build.project.name});
