@@ -15,29 +15,30 @@ mixin statusBadge(build)
 	if this.state.build
 		.col-sm-3.hidden-xs
 			BuildSidebar(projectName=this.state.build.project.name)
+
 		.col-sm-9
-			h1
+			h1.page-header
 				.pull-right(style={fontSize: '22px'})
 					mixin statusBadge(this.state.build)
 				span Build #
 				span= this.state.build.number
 
-			.text-muted(style={marginTop: '-10px'})
-				| Initiated by 
-				- var initiator = this.state.build.initiator;
-				if initiator.type === 'build'
-					Link(to="project", params={name: initiator.project.name})
-						span= initiator.project.name
-					| 
-					| during the 
-					| 
-					Link(to="build", params={id: initiator.id})
-						span build #
-						span= initiator.number
-				else
-					span= initiator.type
+				.small.text-muted
+					| Initiated by 
+					- var initiator = this.state.build.initiator;
+					if initiator.type === 'build'
+						Link(to="project", params={name: initiator.project.name})
+							span= initiator.project.name
+						| 
+						| during the 
+						| 
+						Link(to="build", params={id: initiator.id})
+							span build #
+							span= initiator.number
+					else
+						span= initiator.type
 
-			hr
+			//- hr
 
 			.build-view_info
 				if this.state.build.error
