@@ -5,9 +5,10 @@ define([
 	'reflux',
 	'underscore',
 	'./item',
+	'app/actions/build',
 	'app/stores/builds',
 	'templates/app/components/builds/list'
-], function(React, Reflux, _, Item, buildsStore, template) {
+], function(React, Reflux, _, Item, BuildActions, buildsStore, template) {
 	template = template.locals({
 		Item: Item
 	});
@@ -25,6 +26,12 @@ define([
 				}
 			})
 		],
+		onShowMoreBuilds: function(projectName) {
+			BuildActions.readAll({
+				projectName: projectName,
+				limit: this.state.items.length + 20
+			});
+		},
 		render: template
 	});
 
