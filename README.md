@@ -41,6 +41,7 @@ content~~
 * ~~Builds loss~~
 * ~~error on git after change branch: fatal: ambiguous argument '18a8ea4..branch':
 unknown revision or path not in the working tree.~~
+* "Uncaught TypeError: Cannot read property 'name' of undefined" at item.js (jade)
 
 
 ## Feature requests
