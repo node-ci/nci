@@ -5,9 +5,18 @@ define([
 	'react',
 	'reflux',
 	'app/stores/terminal',
+	'app/stores/build',
 	'ansi_up',
-	'templates/app/components/terminal/terminal',
-], function(_, React, Reflux, terminalStore, ansiUp, template) {
+	'templates/app/components/terminal/terminal'
+], function(
+	_,
+	React,
+	Reflux,
+	terminalStore,
+	buildStore,
+	ansiUp,
+	template
+) {
 	var Component = React.createClass({
 		mixins: [Reflux.ListenerMixin],
 
@@ -19,8 +28,25 @@ define([
 			this.listenTo(terminalStore, this.updateItems);
 			var node = document.getElementsByClassName('terminal')[0];
 			this.initialScrollPosition = node.getBoundingClientRect().top;
+			if (this.props.showPreloader) {
+				this.getTerminal().insertAdjacentHTML('afterend',
+					'<img src="/images/preloader.gif" class="terminal_preloader"/>'
+				);
+
+				this.listenTo(buildStore, function(build) {
+					if (build.completed) {
+						this.removePreloader();
+					}
+				});
+			}
 
 			window.onscroll = this.onScroll;
+		},
+		removePreloader: function() {
+			var preloader = document.getElementsByClassName(
+				'terminal_preloader'
+			)[0];
+			preloader.parentNode.removeChild(preloader);
 		},
 		componentWillUnmount: function() {
 			window.onscroll = null;
@@ -90,6 +116,9 @@ define([
 			if (build.buildId === this.props.build) {
 				this.data = build.data;
 				this.renderBuffer();
+			}
+			if (this.props.showPreloader && build.buildCompleted) {
+				this.removePreloader();
 			}
 		},
 		shouldComponentUpdate: function() {

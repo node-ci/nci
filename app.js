@@ -32,7 +32,7 @@ var server = http.createServer(function(req, res) {
 	}
 
 	if (req.url.indexOf('/data.io.js') === -1) {
-		if (/(js|css|fonts)/.test(req.url)) {
+		if (/(js|css|fonts|images)/.test(req.url)) {
 			staticServer.serve(req, res);
 		} else {
 			// serve index for all app pages

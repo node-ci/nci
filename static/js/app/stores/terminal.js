@@ -36,6 +36,7 @@ define([
 					self.lines = self.lines.concat(data.lines);
 					self.trigger({
 						buildId: build.id,
+						buildCompleted: build.completed,
 						name: 'Console for build #' + build.id,
 						data: _(self.lines).pluck('text')
 					});
