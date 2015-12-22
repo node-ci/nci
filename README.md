@@ -35,13 +35,17 @@ work in progress...
 * slow move out from build page (with lot of output) to main page - several sec
 * ~~when long line appear console output row numbers not on the same line with
 content~~
-* some "undefined" comments in scm changes
+* ~~some "undefined" comments in scm changes~~
 * projects list scroll
 * ~~Error during send: TypeError: Cannot read property 'changes' of undefined~~
 * ~~Builds loss~~
 * ~~error on git after change branch: fatal: ambiguous argument '18a8ea4..branch':
 unknown revision or path not in the working tree.~~
 * "Uncaught TypeError: Cannot read property 'name' of undefined" at item.js (jade)
+* strange git with merge commits changes detection, e.g. whem update from
+"0.3.7" commit to master "new build timeline style, sime layout fixes" and
+"add some responsive styles to build timeline, revert in-progress pulsate
+animation" appear but should not.
 
 
 ## Feature requests
