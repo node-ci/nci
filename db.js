@@ -210,7 +210,9 @@ nlevel.DocsSection.prototype._beforePut = function(docs, callback) {
 		// update createDate before put to provide latest date for last id
 		// it's rquired for correct generateIds function
 		_(docs).each(function(doc) {
-			doc.createDate = Date.now();
+			if (!doc.id) {
+				doc.createDate = Date.now();
+			}
 		});
 
 		self.beforePut(docs, callback);

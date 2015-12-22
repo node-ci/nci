@@ -16,7 +16,7 @@ work in progress...
 * ~~Persistent build and console output information~~
 * ~~Project relations (blocks, triggers, etc)~~
 * ~~Writes to stderr must not break the build~~
-* Mail and jabber notifications (with commits, current step and error)
+* ~~Mail and jabber notifications~~
 * ~~Rename notification strategies according to statuses~~
 * ~~Work with git~~
 * ~~Build every commit, commit with tag, etc~~
@@ -33,12 +33,15 @@ work in progress...
 
 * ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
-* when long line appear console output row numbers not on the same line with
-content
+* ~~when long line appear console output row numbers not on the same line with
+content~~
 * some "undefined" comments in scm changes
 * projects list scroll
-* Error during send: TypeError: Cannot read property 'changes' of undefined
-* Builds loss
+* ~~Error during send: TypeError: Cannot read property 'changes' of undefined~~
+* ~~Builds loss~~
+* ~~error on git after change branch: fatal: ambiguous argument '18a8ea4..branch':
+unknown revision or path not in the working tree.~~
+* "Uncaught TypeError: Cannot read property 'name' of undefined" at item.js (jade)
 
 
 ## Feature requests
@@ -46,7 +49,7 @@ content
 * ~~should write at the end of build console out that build is done (or error)~~
 * ~~share workspace files at static~~
 * "clear workspace" button
-* show more builds button (or infinity scroll) on start page
+* ~~show more builds button (or infinity scroll) on start page~~
 * ~~hide console output by default (when go on completed build page you scroll
 down to the output which could be very long)~~
 * speed up build points animation at ff (maybe borrow something from animate.css?)
