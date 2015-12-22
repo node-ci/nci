@@ -10,10 +10,10 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 4000",
     "build-less": "lessc app/styles/index.less > static/css/index.css",
     "build-js": "browserify  app/app.js -t ./transforms/jade.js | uglifyjs -mc > static/js/app.build.js",
-    "watch-less": "nodemon --ext less --watch app/styles --exec 'npm run build-less'",
+    "watch-less": "chokidar --initial --silent app/styles/**/*.less app/styles/index.less -c 'npm run build-less'",
     "watch-js": "watchify app/app.js -t ./transforms/jade.js -o static/js/app.build.js -dv",
     "watch-server": "nodemon --ignore app --ignore static --ignore node_modules --ignore data app.js",
-    "dev": "npm run build-fonts && npm run watch-less & npm run watch-js & npm run watch-server",
+    "dev": "parallelshell 'npm run build-fonts' 'npm run watch-less' 'npm run watch-js' 'npm run watch-server'",
     "sync": "npm install && npm prune",
     "build-fonts": "cp ./node_modules/bootstrap/fonts/* ./static/fonts/ & cp ./node_modules/font-awesome/fonts/* ./static/fonts/",
     "build-clean": "rm static/index.html",
@@ -70,6 +70,7 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "chokidar-cli": "^1.2.0",
     "expect.js": "0.3.1",
     "jade": "1.11.0",
     "jshint": "^2.9.1-rc1",
@@ -79,6 +80,7 @@
     "nci-yaml-reader": "0.1.0",
     "nodemon": "1.3.7",
     "nrun": "0.1.4",
+    "parallelshell": "^2.0.0",
     "sinon": "1.14.1",
     "uglifyjs": "^2.4.10",
     "watchify": "^3.6.1"

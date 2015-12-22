@@ -69,7 +69,7 @@ mixin statusBadge(build)
 								DateTime(value=this.state.build.createDate)
 
 							if this.state.build.endDate
-								- var durationTitle = _(this.state.build.stepTimings).map(function(stepTiming) {
+								- var durationTitle = this.state.build.stepTimings.map(function(stepTiming) {
 								-	return stepTiming.name + ': ' + (stepTiming.duration / 1000).toFixed(1) + ' sec';
 								- }).join('\n');
 								| , finished
