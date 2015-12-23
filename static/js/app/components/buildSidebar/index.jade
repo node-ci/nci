@@ -1,6 +1,8 @@
 .builds.builds__timeline.builds__timeline-small
 	each item in this.state.items
-		.builds_item(key=item.id, class="builds_item__#{item.status}")
+		- var buildItemClasses = ['builds_item__' + item.status];
+		- if (item.id === this.props.currentBuild.id) buildItemClasses.push('builds_item__current');
+		.builds_item(key=item.id, class=buildItemClasses)
 			.builds_inner
 				.row
 					.builds_header
