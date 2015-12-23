@@ -61,7 +61,6 @@ app.lib = {};
 app.lib.reader = reader;
 app.lib.notifier = notifier;
 app.lib.logger = libLogger;
-app.lib.project = project;
 
 var configDefaults = {
 	notify: {},
