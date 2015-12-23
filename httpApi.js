@@ -49,7 +49,10 @@ router.getRoute = function(req) {
 };
 
 module.exports = function(app) {
-	var logger = app.lib.logger('http api');
+	var logger = app.lib.logger('http api'),
+		accessToken = (Math.random() * Math.random()).toString(36).substring(2);
+
+	logger.log('access token is: %s', accessToken);
 
 	// run building of a project
 	router.post('/api/0.1/builds', function(req, res, next) {
@@ -77,12 +80,18 @@ module.exports = function(app) {
 		);
 	});
 
-	// TODO: restrict access with some sort of token
 	router.del('/api/0.1/projects/:name', function(req, res, next) {
-		var projectName = req.params.name;
+		var token = req.body.token,
+			projectName = req.params.name;
+
 		Steppy(
 			function() {
 				logger.log('Cleaning up project "%s"', projectName);
+
+				if (token !== accessToken) {
+					throw new Error('Access token doesn`t match');
+				}
+
 				libProject.remove({
 					baseDir: app.config.paths.projects,
 					name: projectName
@@ -98,7 +107,8 @@ module.exports = function(app) {
 	});
 
 	router.patch('/api/0.1/projects/:name', function(req, res, next) {
-		var projectName = req.params.name,
+		var token = req.body.token,
+			projectName = req.params.name,
 			newProjectName = req.body.name;
 
 		Steppy(
@@ -106,6 +116,10 @@ module.exports = function(app) {
 				logger.log(
 					'Rename project "%s" to "%s"', projectName, newProjectName
 				);
+
+				if (token !== accessToken) {
+					throw new Error('Access token doesn`t match');
+				}
 
 				if (!newProjectName) throw new Error('new project name is not set');
 
