@@ -6,7 +6,7 @@ work in progress...
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
-## TODO for release 0.9
+## TODO for release 0.5
 
 * ~~Dashboard (builds list, projects autocomlete)~~
 * ~~Build page (build info(dates, changes, etc), console)~~
@@ -46,6 +46,7 @@ unknown revision or path not in the working tree.~~
 "0.3.7" commit to master "new build timeline style, sime layout fixes" and
 "add some responsive styles to build timeline, revert in-progress pulsate
 animation" appear but should not.
+* include fonts and other external static (if any)
 
 
 ## Feature requests
