@@ -67,7 +67,7 @@ module.exports = function(app) {
 					app.distributor.run({
 						projectName: projectName,
 						withScmChangesOnly: req.body.withScmChangesOnly,
-						skipQueued: req.body.skipQueued,
+						queueTwice: req.body.queueTwice,
 						initiator: {type: 'httpApi'}
 					});
 				} else {

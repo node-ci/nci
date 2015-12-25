@@ -119,7 +119,8 @@ module.exports = function(app) {
 		logger.log('Run the project: "%s"', projectName);
 		distributor.run({
 			projectName: projectName,
-			initiator: {type: 'user'}
+			initiator: {type: 'user'},
+			queueTwice: true
 		});
 		res.send();
 	});
