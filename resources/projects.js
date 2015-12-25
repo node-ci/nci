@@ -120,7 +120,7 @@ module.exports = function(app) {
 		distributor.run({
 			projectName: projectName,
 			initiator: {type: 'user'},
-			queueTwice: true
+			queueQueued: true
 		});
 		res.send();
 	});
