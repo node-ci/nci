@@ -33,6 +33,7 @@ work in progress...
 
 * ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
+at ff (ff very slow on remove/replace terminal element)
 * ~~when long line appear console output row numbers not on the same line with
 content~~
 * ~~some "undefined" comments in scm changes~~
@@ -47,6 +48,7 @@ unknown revision or path not in the working tree.~~
 "add some responsive styles to build timeline, revert in-progress pulsate
 animation" appear but should not.
 * include fonts and other external static (if any)
+* build console doesn't stick to the bottom at ff
 
 
 ## Feature requests
