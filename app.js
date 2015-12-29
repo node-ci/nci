@@ -12,7 +12,8 @@ var env = process.env.NODE_ENV || 'development',
 	notifier = require('./lib/notifier'),
 	project = require('./lib/project'),
 	libLogger = require('./lib/logger'),
-	EventEmitter = require('events').EventEmitter;
+	EventEmitter = require('events').EventEmitter,
+	validateConfig = require('./lib/validateConfig');
 
 var app = new EventEmitter(),
 	logger = libLogger('app'),
@@ -180,6 +181,11 @@ Steppy(
 		}
 
 		reader.load(app.config.paths.data, 'config', this.slot());
+	},
+	function(err, mkdirResult, config) {
+		this.pass(mkdirResult);
+
+		validateConfig(config, this.slot());
 	},
 	function(err, mkdirResult, config) {
 		_(app.config).defaults(config);
