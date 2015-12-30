@@ -49,6 +49,7 @@ unknown revision or path not in the working tree.~~
 animation" appear but should not.
 * include fonts and other external static (if any)
 * build console doesn't stick to the bottom at ff
+* more strict server and project configs valifation
 
 
 ## Feature requests
