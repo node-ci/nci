@@ -65,6 +65,7 @@ down to the output which could be very long)~~
 * speed up build points animation at ff (maybe borrow something from animate.css?)
 * current successfully streak icons at project page
 * cancell in progress build + buld/step timeout
+* rev hash link to repo web ui
 
 
 ## Roadmap
