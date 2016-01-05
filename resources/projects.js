@@ -2,8 +2,6 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	getAvgProjectBuildDuration =
-		require('../lib/project').getAvgProjectBuildDuration,
 	createBuildDataResource = require('../distributor').createBuildDataResource,
 	logger = require('../lib/logger')('projects resource'),
 	db = require('../db');
@@ -19,14 +17,16 @@ module.exports = function(app) {
 	});
 
 	resource.use('readAll', function(req, res) {
-		var filteredProjects = app.projects,
+		var filteredProjects = app.projects.getAll(),
 			nameQuery = req.data && req.data.nameQuery;
 
 		if (nameQuery) {
-			filteredProjects = _(filteredProjects).filter(function(project) {
+			filteredProjects = app.projects.filter(function(project) {
 				return project.name.indexOf(nameQuery) !== -1;
 			});
 		}
+
+		filteredProjects = _(filteredProjects).sortBy('name');
 
 		res.send(filteredProjects);
 	});
@@ -35,9 +35,9 @@ module.exports = function(app) {
 		var project;
 		Steppy(
 			function() {
-				project = _(app.projects).findWhere(params.condition);
+				project = app.projects.findWhere(params.condition);
 
-				getAvgProjectBuildDuration(project.name, this.slot());
+				app.projects.getAvgBuildDuration(project.name, this.slot());
 
 				// get last done build
 				db.builds.find({

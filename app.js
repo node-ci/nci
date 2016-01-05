@@ -10,7 +10,7 @@ var env = process.env.NODE_ENV || 'development',
 	_ = require('underscore'),
 	reader = require('./lib/reader'),
 	notifier = require('./lib/notifier'),
-	project = require('./lib/project'),
+	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	libLogger = require('./lib/logger'),
 	EventEmitter = require('events').EventEmitter,
 	validateConfig = require('./lib/validateConfig');
@@ -205,16 +205,15 @@ Steppy(
 		db.init(app.config.paths.db, {db: dbBackend}, this.slot());
 	},
 	function() {
-		// load all projects for the first time
-		project.loadAll(app.config.paths.projects, this.slot());
+		app.projects = new ProjectsCollection({
+			db: db,
+			reader: reader,
+			baseDir: app.config.paths.projects
+		});
 
 		completeUncompletedBuilds(this.slot());
 	},
-	function(err, projects) {
-		// note that `app.projects` is live variable
-		app.projects = projects;
-		logger.log('Loaded projects: ', _(app.projects).pluck('name'));
-
+	function(err) {
 		require('./distributor').init(app, this.slot());
 	},
 	function(err, distributor) {
@@ -235,15 +234,17 @@ Steppy(
 
 		require('./scheduler').init(app, this.slot());
 
-		// notify about first project loading
-		_(app.projects).each(function(project) {
-			app.emit('projectLoaded', project);
-		});
-
 		// init resources
 		require('./resources')(app);
 	},
+	function() {
+		// load projects after all plugins to provide ability for plugins to
+		// handle `projectLoaded` event
+		app.projects.loadAll(this.slot());
+	},
 	function(err) {
+		logger.log('Loaded projects: ', app.projects.pluck('name'));
+
 		var host = app.config.http.host,
 			port = app.config.http.port;
 		logger.log('Start http server on %s:%s', host, port);

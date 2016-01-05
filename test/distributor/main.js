@@ -3,12 +3,13 @@
 var Distributor = require('../../lib/distributor').Distributor,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
-	createNodeMock = require('./helpers').createNodeMock;
+	createNodeMock = require('./helpers').createNodeMock,
+	createProjectsMock = require('./helpers').createProjectsMock;
 
 
 describe('Distributor main', function() {
 	var distributor,
-		projects = [{name: 'project1'}];
+		projects = createProjectsMock([{name: 'project1'}]);
 
 	var expectUpdateBuild = function(distributor, build, number, conditionsHash) {
 		var conditions = conditionsHash[number];

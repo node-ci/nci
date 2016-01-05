@@ -2,8 +2,7 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	querystring = require('querystring'),
-	libProject = require('./lib/project');
+	querystring = require('querystring');
 /*
  * Pure rest api on pure nodejs follows below
  */
@@ -59,7 +58,7 @@ module.exports = function(app) {
 		Steppy(
 			function() {
 				var projectName = req.body.project,
-					project = _(app.projects).findWhere({name: projectName});
+					project = app.projects.get(projectName);
 
 				if (project) {
 					res.statusCode = 204;
@@ -92,10 +91,7 @@ module.exports = function(app) {
 					throw new Error('Access token doesn`t match');
 				}
 
-				libProject.remove({
-					baseDir: app.config.paths.projects,
-					name: projectName
-				}, this.slot());
+				app.projects.remove(projectName, this.slot());
 			},
 			function() {
 				logger.log('Project "%s" cleaned up', projectName);
@@ -123,28 +119,22 @@ module.exports = function(app) {
 
 				if (!newProjectName) throw new Error('new project name is not set');
 
-				var curProject = _(app.projects).findWhere({name: projectName});
+				var curProject = app.projects.get(projectName);
 				if (!curProject) {
 					throw new Error('Project "' + projectName + '" not found');
 				}
 				this.pass(curProject);
 
-				var newProject = _(app.projects).findWhere({name: newProjectName});
+				var newProject = app.projects.get(newProjectName);
 				if (newProject) {
 					throw new Error(
 						'Project name "' + newProjectName + '" already used'
 					);
 				}
 
-				libProject.rename({
-					baseDir: app.config.paths.projects,
-					name: projectName,
-					newName: newProjectName
-				}, this.slot());
+				app.projects.rename(projectName, newProjectName, this.slot());
 			},
-			function(err, curProject) {
-				curProject.name = newProjectName;
-
+			function(err) {
 				res.statusCode = 204;
 				res.end();
 			},
