@@ -100,52 +100,7 @@ exports.init = function(app, callback) {
 		buildsResource.clientEmitSync('cancel', {buildId: build.id});
 	});
 
-	var buildLogLineNumbersHash = {},
-		lastLinesHash = {};
-
-	distributor.on('buildData', function(build, data) {
-		var cleanupText = function(text) {
-			return text.replace('\r', '');
-		};
-
-		var splittedData  = data.split('\n'),
-			logLineNumber = buildLogLineNumbersHash[build.id] || 0;
-
-		lastLinesHash[build.id] = lastLinesHash[build.id] || '';
-
-		// if we don't have last line, so we start new line
-		if (!lastLinesHash[build.id]) {
-			logLineNumber++;
-		}
-		lastLinesHash[build.id] += _(splittedData).first();
-
-		var lines = [{
-			text: cleanupText(lastLinesHash[build.id]),
-			buildId: build.id,
-			number: logLineNumber
-		}];
-
-		if (splittedData.length > 1) {
-			// if we have last '' we have to take all except last
-			// this shown that string ends with eol
-			if (_(splittedData).last() === '') {
-				lastLinesHash[build.id] = '';
-				splittedData = _(splittedData.slice(1)).initial();
-			} else {
-				lastLinesHash[build.id] = _(splittedData).last();
-				splittedData = _(splittedData).tail();
-			}
-
-			lines = lines.concat(_(splittedData).map(function(line) {
-				return {
-					text: cleanupText(line),
-					buildId: build.id,
-					number: ++logLineNumber
-				};
-			}));
-		}
-
-		buildLogLineNumbersHash[build.id] = logLineNumber;
+	distributor.on('buildLogLines', function(build, lines) {
 		app.dataio.resource('build' + build.id).clientEmitSync(
 			'data',
 			{lines: lines}
