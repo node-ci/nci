@@ -88,7 +88,7 @@ exports.init = function(app, callback) {
 		// related stat (last build date, avg build time, etc) 
 		if (changes.completed) {
 			var projectsResource = app.dataio.resource('projects');
-			projectsResource.clientEmitSyncChange({name: build.project.name});
+			projectsResource.clientEmitSyncChange(build.project.name);
 		}
 
 		buildsResource.clientEmitSync('change', {

@@ -31,11 +31,11 @@ module.exports = function(app) {
 		res.send(filteredProjects);
 	});
 
-	var getProject = function(params, callback) {
+	var getProject = function(name, callback) {
 		var project;
 		Steppy(
 			function() {
-				project = app.projects.findWhere(params.condition);
+				project = app.projects.get(name);
 
 				app.projects.getAvgBuildDuration(project.name, this.slot());
 
@@ -84,12 +84,12 @@ module.exports = function(app) {
 		);
 	};
 
-	// resource custom method which finds project by condition
+	// resource custom method which finds project by name
 	// and emits event about it change to clients
-	resource.clientEmitSyncChange = function(condition) {
+	resource.clientEmitSyncChange = function(name) {
 		Steppy(
 			function() {
-				getProject({condition: condition}, this.slot());
+				getProject(name, this.slot());
 			},
 			function(err, project) {
 				resource.clientEmitSync('change', {project: project});
@@ -106,7 +106,7 @@ module.exports = function(app) {
 	resource.use('read', function(req, res) {
 		Steppy(
 			function() {
-				getProject({condition: req.data}, this.slot());
+				getProject(req.data.name, this.slot());
 			},
 			function(err, project) {
 				res.send(project);

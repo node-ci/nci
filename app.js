@@ -243,7 +243,7 @@ Steppy(
 		app.projects.loadAll(this.slot());
 	},
 	function(err) {
-		logger.log('Loaded projects: ', app.projects.pluck('name'));
+		logger.log('Loaded projects: ', _(app.projects.getAll()).pluck('name'));
 
 		var host = app.config.http.host,
 			port = app.config.http.port;
