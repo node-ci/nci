@@ -11,6 +11,7 @@ var env = process.env.NODE_ENV || 'development',
 	reader = require('./lib/reader'),
 	notifier = require('./lib/notifier'),
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
+	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
 	EventEmitter = require('events').EventEmitter,
 	validateConfig = require('./lib/validateConfig');
@@ -217,7 +218,10 @@ Steppy(
 		require('./distributor').init(app, this.slot());
 	},
 	function(err, distributor) {
-		app.distributor = distributor;
+		app.builds = new BuildsCollection({
+			db: db,
+			distributor: distributor
+		});
 
 		// register other plugins
 		require('./lib/notifier/console').register(app);

@@ -3,13 +3,10 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	createBuildDataResource = require('../distributor').createBuildDataResource,
-	logger = require('../lib/logger')('projects resource'),
-	db = require('../db');
+	logger = require('../lib/logger')('projects resource');
 
 module.exports = function(app) {
-
-	var resource = app.dataio.resource('projects'),
-		distributor = app.distributor;
+	var resource = app.dataio.resource('projects');
 
 	resource.use('createBuildDataResource', function(req, res) {
 		createBuildDataResource(req.data.buildId);
@@ -40,7 +37,7 @@ module.exports = function(app) {
 				app.projects.getAvgBuildDuration(project.name, this.slot());
 
 				// get last done build
-				db.builds.find({
+				app.builds.find({
 					start: {
 						projectName: project.name,
 						status: 'done',
@@ -53,7 +50,7 @@ module.exports = function(app) {
 				var doneBuildsStreakCallback = _(this.slot()).once(),
 					doneBuildsStreak = 0;
 
-				db.builds.find({
+				app.builds.find({
 					start: {
 						projectName: project.name,
 						descCreateDate: ''
@@ -117,7 +114,7 @@ module.exports = function(app) {
 	resource.use('run', function(req, res) {
 		var projectName = req.data.projectName;
 		logger.log('Run the project: "%s"', projectName);
-		distributor.run({
+		app.builds.create({
 			projectName: projectName,
 			initiator: {type: 'user'},
 			queueQueued: true

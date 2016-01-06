@@ -21,7 +21,7 @@ exports.init = function(app, callback) {
 				cronTime: time,
 				onTick: function() {
 					logger.log('Run project "%s"', project.name);
-					app.distributor.run({
+					app.builds.create({
 						projectName: project.name,
 						withScmChangesOnly: project.buildEvery.withScmChangesOnly,
 						initiator: {type: 'scheduler'}

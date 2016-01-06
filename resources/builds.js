@@ -2,13 +2,10 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	db = require('../db'),
-	utils = require('../lib/utils'),
 	logger = require('../lib/logger')('builds resource');
 
 module.exports = function(app) {
-	var resource = app.dataio.resource('builds'),
-		distributor = app.distributor;
+	var resource = app.dataio.resource('builds');
 
 	resource.use('readAll', function(req, res, next) {
 		Steppy(
@@ -26,7 +23,7 @@ module.exports = function(app) {
 				findParams.start = start;
 				findParams.limit = findParams.limit || 20;
 
-				db.builds.find(findParams, this.slot());
+				app.builds.find(findParams, this.slot());
 			},
 			function(err, builds) {
 				// omit big fields not needed for list
@@ -49,12 +46,10 @@ module.exports = function(app) {
 	resource.use('read', function(req, res, next) {
 		Steppy(
 			function() {
-				var findParams = {};
-				findParams.start = _(req.data).pick('id');
-				db.builds.find(findParams, this.slot());
+				app.builds.get(req.data.id, this.slot());
 			},
 			function(err, build) {
-				res.send(build[0]);
+				res.send(build);
 			},
 			next
 		);
@@ -63,19 +58,13 @@ module.exports = function(app) {
 	resource.use('getBuildLogTail', function(req, res, next) {
 		Steppy(
 			function() {
-				var findParams = {
-					reverse: true,
-					start: {buildId: req.data.buildId},
+				app.builds.getLogLinesTail({
+					buildId: req.data.buildId,
 					limit: req.data.length
-				};
-
-				db.logLines.find(findParams, this.slot());
+				}, this.slot());
 			},
-			function(err, logLines) {
-				var lines = logLines.reverse(),
-					total = logLines.length ? logLines[0].number : 0;
-
-				res.send({lines: lines, total: total});
+			function(err, tail) {
+				res.send(tail);
 			},
 			next
 		);
@@ -84,23 +73,13 @@ module.exports = function(app) {
 	resource.use('getBuildLogLines', function(req, res, next) {
 		Steppy(
 			function() {
-				var buildId = req.data.buildId,
-					from = req.data.from,
-					to = req.data.to,
-					count = to - from;
-
-				db.logLines.find({
-					start: {buildId: buildId, number: from},
-					end: {buildId: buildId, number: to}
-				}, this.slot());
-
-				this.pass(count);
+				app.builds.getLogLines(
+					_(req.data).pick('buildId', 'from', 'to'),
+					this.slot()
+				);
 			},
-			function(err, logLines, count) {
-				res.send({
-					lines: logLines,
-					isLast: logLines.length < count
-				});
+			function(err, logLinesResult) {
+				res.send(logLinesResult);
 			},
 			next
 		);
@@ -111,7 +90,7 @@ module.exports = function(app) {
 			function() {
 				var buildId = req.data.buildId;
 				logger.log('Cancel build: "%s"', buildId);
-				distributor.cancel({buildId: buildId}, this.slot());
+				app.builds.cancel({buildId: buildId}, this.slot());
 			},
 			function() {
 				res.send();

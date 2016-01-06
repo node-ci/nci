@@ -63,7 +63,7 @@ module.exports = function(app) {
 				if (project) {
 					res.statusCode = 204;
 					logger.log('Run project "%s"', projectName);
-					app.distributor.run({
+					app.builds.create({
 						projectName: projectName,
 						withScmChangesOnly: req.body.withScmChangesOnly,
 						queueQueued: req.body.queueQueued,
