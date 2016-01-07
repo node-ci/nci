@@ -3,7 +3,8 @@
 var Distributor = require('../../lib/distributor').Distributor,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
-	createNodeMock = require('./helpers').createNodeMock;
+	createNodeMock = require('./helpers').createNodeMock,
+	createProjectsMock = require('./helpers').createProjectsMock;
 
 
 describe('Distributor trigger after', function() {
@@ -13,14 +14,14 @@ describe('Distributor trigger after', function() {
 
 	describe('done when project is done', function() {
 		before(function() {
-			projects = [{
+			projects = createProjectsMock([{
 				name: 'project1',
 				trigger: {
 					after: [{status: 'done', project: 'project2'}]
 				}
 			}, {
 				name: 'project2'
-			}];
+			}]);
 			executorRunSpy = sinon.stub().callsArgAsync(1);
 			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
 				executorRunSpy
@@ -39,11 +40,15 @@ describe('Distributor trigger after', function() {
 		});
 
 		it('should run project1 at first call', function() {
-			expect(executorRunSpy.getCall(0).thisValue.project).eql(projects[0]);
+			expect(executorRunSpy.getCall(0).thisValue.project).eql(
+				projects.get('project1')
+			);
 		});
 
 		it('should run project2 at second call', function() {
-			expect(executorRunSpy.getCall(1).thisValue.project).eql(projects[1]);
+			expect(executorRunSpy.getCall(1).thisValue.project).eql(
+				projects.get('project2')
+			);
 		});
 
 		it('should run totally 2 times', function() {
@@ -77,7 +82,9 @@ describe('Distributor trigger after', function() {
 		});
 
 		it('should run project1 at first call', function() {
-			expect(executorRunSpy.getCall(0).thisValue.project).eql(projects[0]);
+			expect(executorRunSpy.getCall(0).thisValue.project).eql(
+				projects.get('project1')
+			);
 		});
 
 		it('should run totally 1 time', function() {
@@ -91,14 +98,14 @@ describe('Distributor trigger after', function() {
 
 	describe('status is not set when project is done', function() {
 		before(function() {
-			projects = [{
+			projects = createProjectsMock([{
 				name: 'project1',
 				trigger: {
 					after: [{project: 'project2'}]
 				}
 			}, {
 				name: 'project2'
-			}];
+			}]);
 			executorRunSpy = sinon.stub().callsArgAsync(1);
 			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
 				executorRunSpy
@@ -117,11 +124,15 @@ describe('Distributor trigger after', function() {
 		});
 
 		it('should run project1 at first call', function() {
-			expect(executorRunSpy.getCall(0).thisValue.project).eql(projects[0]);
+			expect(executorRunSpy.getCall(0).thisValue.project).eql(
+				projects.get('project1')
+			);
 		});
 
 		it('should run project2 at second call', function() {
-			expect(executorRunSpy.getCall(1).thisValue.project).eql(projects[1]);
+			expect(executorRunSpy.getCall(1).thisValue.project).eql(
+				projects.get('project2')
+			);
 		});
 
 		it('should run totally 2 times', function() {
@@ -155,11 +166,15 @@ describe('Distributor trigger after', function() {
 		});
 
 		it('should run project1 at first call', function() {
-			expect(executorRunSpy.getCall(0).thisValue.project).eql(projects[0]);
+			expect(executorRunSpy.getCall(0).thisValue.project).eql(
+				projects.get('project1')
+			);
 		});
 
 		it('should run project2 at second call', function() {
-			expect(executorRunSpy.getCall(1).thisValue.project).eql(projects[1]);
+			expect(executorRunSpy.getCall(1).thisValue.project).eql(
+				projects.get('project2')
+			);
 		});
 
 		it('should run totally 2 times', function() {

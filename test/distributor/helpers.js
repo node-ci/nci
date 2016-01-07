@@ -1,7 +1,8 @@
 'use strict';
 
 var Node = require('../../lib/node').Node,
-	EventEmitter = require('events').EventEmitter;
+	EventEmitter = require('events').EventEmitter,
+	ProjectsCollection = require('../../lib/project').ProjectsCollection;
 
 
 exports.createNodeMock = function(executorRun) {
@@ -17,3 +18,8 @@ exports.createNodeMock = function(executorRun) {
 	};
 };
 
+exports.createProjectsMock = function(configs) {
+	var projects = new ProjectsCollection({});
+	projects.configs = configs;
+	return projects;
+};

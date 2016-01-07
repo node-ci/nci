@@ -2,80 +2,50 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	getAvgProjectBuildDuration =
-		require('../lib/project').getAvgProjectBuildDuration,
-	createBuildDataResource = require('../distributor').createBuildDataResource,
-	logger = require('../lib/logger')('projects resource'),
-	db = require('../db');
+	helpers = require('./helpers'),
+	logger = require('../lib/logger')('projects resource');
 
 module.exports = function(app) {
-
-	var resource = app.dataio.resource('projects'),
-		distributor = app.distributor;
+	var resource = app.dataio.resource('projects');
 
 	resource.use('createBuildDataResource', function(req, res) {
-		createBuildDataResource(req.data.buildId);
+		helpers.createBuildDataResource(app, req.data.buildId);
 		res.send();
 	});
 
 	resource.use('readAll', function(req, res) {
-		var filteredProjects = app.projects,
+		var filteredProjects = app.projects.getAll(),
 			nameQuery = req.data && req.data.nameQuery;
 
 		if (nameQuery) {
-			filteredProjects = _(filteredProjects).filter(function(project) {
+			filteredProjects = app.projects.filter(function(project) {
 				return project.name.indexOf(nameQuery) !== -1;
 			});
 		}
 
+		filteredProjects = _(filteredProjects).sortBy('name');
+
 		res.send(filteredProjects);
 	});
 
-	var getProject = function(params, callback) {
+	// get project with additional fields
+	var getProject = function(name, callback) {
 		var project;
 		Steppy(
 			function() {
-				project = _(app.projects).findWhere(params.condition);
+				project = _(app.projects.get(name)).clone();
 
-				getAvgProjectBuildDuration(project.name, this.slot());
-
-				// get last done build
-				db.builds.find({
-					start: {
-						projectName: project.name,
-						status: 'done',
-						descCreateDate: ''
-					},
-					limit: 1
+				app.builds.getRecent({
+					projectName: project.name,
+					status: 'done',
+					limit: 10
 				}, this.slot());
 
-				// tricky but effective streak counting inside filter goes below
-				var doneBuildsStreakCallback = _(this.slot()).once(),
-					doneBuildsStreak = 0;
-
-				db.builds.find({
-					start: {
-						projectName: project.name,
-						descCreateDate: ''
-					},
-					filter: function(build) {
-						// error exits streak
-						if (build.status === 'error') {
-							doneBuildsStreakCallback(null, doneBuildsStreak);
-							return true;
-						}
-						if (build.status === 'done') {
-							doneBuildsStreak++;
-						}
-					},
-					limit: 1
-				}, function(err) {
-					doneBuildsStreakCallback(err, doneBuildsStreak);
-				});
+				app.builds.getDoneStreak({projectName: project.name}, this.slot());
 			},
-			function(err, avgProjectBuildDuration, lastDoneBuilds, doneBuildsStreak) {
-				project.lastDoneBuild = lastDoneBuilds[0];
-				project.avgBuildDuration = avgProjectBuildDuration;
+			function(err, doneBuilds, doneBuildsStreak) {
+				project.avgBuildDuration = app.builds.getAvgBuildDuration(doneBuilds);
+				project.lastDoneBuild = doneBuilds[0];
 				project.doneBuildsStreak = doneBuildsStreak;
 
 				this.pass(project);
@@ -84,12 +54,12 @@ module.exports = function(app) {
 		);
 	};
 
-	// resource custom method which finds project by condition
+	// resource custom method which finds project by name
 	// and emits event about it change to clients
-	resource.clientEmitSyncChange = function(condition) {
+	resource.clientEmitSyncChange = function(name) {
 		Steppy(
 			function() {
-				getProject({condition: condition}, this.slot());
+				getProject(name, this.slot());
 			},
 			function(err, project) {
 				resource.clientEmitSync('change', {project: project});
@@ -106,7 +76,7 @@ module.exports = function(app) {
 	resource.use('read', function(req, res) {
 		Steppy(
 			function() {
-				getProject({condition: req.data}, this.slot());
+				getProject(req.data.name, this.slot());
 			},
 			function(err, project) {
 				res.send(project);
@@ -117,7 +87,7 @@ module.exports = function(app) {
 	resource.use('run', function(req, res) {
 		var projectName = req.data.projectName;
 		logger.log('Run the project: "%s"', projectName);
-		distributor.run({
+		app.builds.create({
 			projectName: projectName,
 			initiator: {type: 'user'},
 			queueQueued: true

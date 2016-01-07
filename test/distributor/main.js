@@ -3,12 +3,13 @@
 var Distributor = require('../../lib/distributor').Distributor,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
-	createNodeMock = require('./helpers').createNodeMock;
+	createNodeMock = require('./helpers').createNodeMock,
+	createProjectsMock = require('./helpers').createProjectsMock;
 
 
 describe('Distributor main', function() {
 	var distributor,
-		projects = [{name: 'project1'}];
+		projects = createProjectsMock([{name: 'project1'}]);
 
 	var expectUpdateBuild = function(distributor, build, number, conditionsHash) {
 		var conditions = conditionsHash[number];
@@ -154,7 +155,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel({buildId: 1}, function(err) {
+					distributor.cancel(1, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);
@@ -197,7 +198,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel({buildId: 2}, function(err) {
+					distributor.cancel(2, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);

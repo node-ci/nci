@@ -10,6 +10,9 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000",
     "dev": "gulp",
     "sync": "npm install && npm prune && bower install && bower prune",
+    "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
+    "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
+    "doc": "nrun docProjectsCollection && nrun docBuildsCollection",
     "buildJs": "r.js -o static/js/requirejs/buid.js",
     "buildClean": "rm static/index.html",
     "buildHtml": "jade views/index.jade --obj '{\"env\": \"production\"}' -o static/",
@@ -56,6 +59,7 @@
   },
   "devDependencies": {
     "bower": "1.4.1",
+    "dox": "0.8.0",
     "expect.js": "0.3.1",
     "gulp": "3.8.11",
     "gulp-less": "3.0.3",
