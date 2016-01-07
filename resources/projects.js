@@ -39,38 +39,13 @@ module.exports = function(app) {
 				}, this.slot());
 
 				// get last done build
-				app.builds.find({
-					start: {
-						projectName: project.name,
-						status: 'done',
-						descCreateDate: ''
-					},
+				app.builds.getRecent({
+					projectName: project.name,
+					status: 'done',
 					limit: 1
 				}, this.slot());
 
-				// tricky but effective streak counting inside filter goes below
-				var doneBuildsStreakCallback = _(this.slot()).once(),
-					doneBuildsStreak = 0;
-
-				app.builds.find({
-					start: {
-						projectName: project.name,
-						descCreateDate: ''
-					},
-					filter: function(build) {
-						// error exits streak
-						if (build.status === 'error') {
-							doneBuildsStreakCallback(null, doneBuildsStreak);
-							return true;
-						}
-						if (build.status === 'done') {
-							doneBuildsStreak++;
-						}
-					},
-					limit: 1
-				}, function(err) {
-					doneBuildsStreakCallback(err, doneBuildsStreak);
-				});
+				app.builds.getDoneStreak({projectName: project.name}, this.slot());
 			},
 			function(err, avgProjectBuildDuration, lastDoneBuilds, doneBuildsStreak) {
 				project.lastDoneBuild = lastDoneBuilds[0];
