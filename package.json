@@ -10,7 +10,7 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000",
     "dev": "gulp",
     "sync": "npm install && npm prune && bower install && bower prune",
-    "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js > docs/developing-plugins/projects-collection.md",
+    "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
     "buildJs": "r.js -o static/js/requirejs/buid.js",
     "buildClean": "rm static/index.html",
     "buildHtml": "jade views/index.jade --obj '{\"env\": \"production\"}' -o static/",

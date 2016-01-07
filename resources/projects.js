@@ -34,7 +34,9 @@ module.exports = function(app) {
 			function() {
 				project = app.projects.get(name);
 
-				app.projects.getAvgBuildDuration(project.name, this.slot());
+				app.builds.getProjectAvgBuildDuration({
+					projectName: project.name
+				}, this.slot());
 
 				// get last done build
 				app.builds.find({

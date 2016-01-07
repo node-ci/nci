@@ -1,14 +1,3 @@
-  - [ProjectsCollection()](#projectscollection)
-  - [ProjectsCollection.validateConfig():Function)](#projectscollectionvalidateconfigconfigobjectcallbackerrconfigfunction)
-  - [ProjectsCollection.load()]:Function)](#projectscollectionloadnamestringcallbackerrfunction)
-  - [ProjectsCollection.loadAll()]:Function)](#projectscollectionloadallcallbackerrfunction)
-  - [ProjectsCollection.unload()]:Function)](#projectscollectionunloadnamestringcallbackerrfunction)
-  - [ProjectsCollection.get()](#projectscollectiongetnamestring)
-  - [ProjectsCollection.getAll()](#projectscollectiongetall)
-  - [ProjectsCollection.filter()](#projectscollectionfilterpredicatefunction)
-  - [ProjectsCollection.getAvgBuildDuration():Function)](#projectscollectiongetavgbuilddurationnamestringcallbackerrdurationfunction)
-  - [ProjectsCollection.remove()]:Function)](#projectscollectionremovenamestringcallbackerrfunction)
-  - [ProjectsCollection.rename()]:Function)](#projectscollectionrenamenamestringcallbackerrfunction)
 
 ## ProjectsCollection()
 
@@ -20,7 +9,7 @@
 
 ## ProjectsCollection.validateConfig(config:Object, callback(err,config):Function)
 
-  Validate and return given config
+  Validate and return given config.
 
 ## ProjectsCollection.load(name:String, [callback(err)]:Function)
 
@@ -54,10 +43,6 @@
   Get project configs which match to predicate.
   Returns array of config objects or empty array if there is no matched
   project.
-
-## ProjectsCollection.getAvgBuildDuration(name:String, callback(err,duration):Function)
-
-  Calculates average build duration (in ms) for the given project
 
 ## ProjectsCollection.remove(name:String, [callback(err)]:Function)
 

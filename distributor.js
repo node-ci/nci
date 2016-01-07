@@ -17,7 +17,9 @@ exports.init = function(app, callback) {
 					if (_(build.project).has('avgBuildDuration')) {
 						this.pass(build.project.avgBuildDuration);
 					} else {
-						app.projects.getAvgBuildDuration(build.project.name, this.slot());
+						app.builds.getProjectAvgBuildDuration({
+							projectName: build.project.name
+						}, this.slot());
 					}
 				},
 				function(err, avgBuildDuration) {
