@@ -46,7 +46,9 @@ define([
 			var preloader = document.getElementsByClassName(
 				'terminal_preloader'
 			)[0];
-			preloader.parentNode.removeChild(preloader);
+			if (preloader) {
+				preloader.parentNode.removeChild(preloader);
+			}
 		},
 		componentWillUnmount: function() {
 			window.onscroll = null;
