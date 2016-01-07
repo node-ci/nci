@@ -10,20 +10,14 @@ module.exports = function(app) {
 	resource.use('readAll', function(req, res, next) {
 		Steppy(
 			function() {
-				var data = req.data || {};
+				var data = req.data || {},
+					getParams = {limit: data.limit || 20};
 
-				var start = {};
 				if (data.projectName) {
-					start.projectName = data.projectName;
+					getParams.projectName = data.projectName;
 				}
 
-				start.descCreateDate = data.descCreateDate || '';
-
-				var findParams = _(data).pick('offset', 'limit');
-				findParams.start = start;
-				findParams.limit = findParams.limit || 20;
-
-				app.builds.find(findParams, this.slot());
+				app.builds.getRecent(getParams, this.slot());
 			},
 			function(err, builds) {
 				// omit big fields not needed for list
