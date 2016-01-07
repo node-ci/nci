@@ -2,14 +2,14 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	createBuildDataResource = require('./helpers').createBuildDataResource,
+	helpers = require('./helpers'),
 	logger = require('../lib/logger')('projects resource');
 
 module.exports = function(app) {
 	var resource = app.dataio.resource('projects');
 
 	resource.use('createBuildDataResource', function(req, res) {
-		createBuildDataResource(app, req.data.buildId);
+		helpers.createBuildDataResource(app, req.data.buildId);
 		res.send();
 	});
 
@@ -28,28 +28,24 @@ module.exports = function(app) {
 		res.send(filteredProjects);
 	});
 
+	// get project with additional fields
 	var getProject = function(name, callback) {
 		var project;
 		Steppy(
 			function() {
-				project = app.projects.get(name);
+				project = _(app.projects.get(name)).clone();
 
-				app.builds.getProjectAvgBuildDuration({
-					projectName: project.name
-				}, this.slot());
-
-				// get last done build
 				app.builds.getRecent({
 					projectName: project.name,
 					status: 'done',
-					limit: 1
+					limit: 10
 				}, this.slot());
 
 				app.builds.getDoneStreak({projectName: project.name}, this.slot());
 			},
-			function(err, avgProjectBuildDuration, lastDoneBuilds, doneBuildsStreak) {
-				project.lastDoneBuild = lastDoneBuilds[0];
-				project.avgBuildDuration = avgProjectBuildDuration;
+			function(err, doneBuilds, doneBuildsStreak) {
+				project.avgBuildDuration = app.builds.getAvgBuildDuration(doneBuilds);
+				project.lastDoneBuild = doneBuilds[0];
 				project.doneBuildsStreak = doneBuildsStreak;
 
 				this.pass(project);

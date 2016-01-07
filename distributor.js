@@ -15,15 +15,21 @@ exports.init = function(app, callback) {
 			Steppy(
 				function() {
 					if (_(build.project).has('avgBuildDuration')) {
-						this.pass(build.project.avgBuildDuration);
+						this.pass(null);
 					} else {
-						app.builds.getProjectAvgBuildDuration({
-							projectName: build.project.name
+						app.builds.getRecent({
+							projectName: build.project.name,
+							status: 'done',
+							limit: 10
 						}, this.slot());
 					}
 				},
-				function(err, avgBuildDuration) {
-					build.project.avgBuildDuration = avgBuildDuration;
+				function(err, doneBuilds) {
+					if (doneBuilds) {
+						build.project.avgBuildDuration = (
+							app.builds.getAvgBuildDuration(doneBuilds)
+						);
+					}
 
 					db.builds.put(build, this.slot());
 				},

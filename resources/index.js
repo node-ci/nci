@@ -2,7 +2,7 @@
 
 var _ = require('underscore'),
 	errorHandler = require('./errorHandler'),
-	createBuildDataResource = require('./helpers').createBuildDataResource;
+	helpers = require('./helpers');
 
 module.exports = function(app) {
 	_(['builds', 'projects']).each(function(resource) {
@@ -14,7 +14,7 @@ module.exports = function(app) {
 
 	app.builds.on('buildUpdated', function(build, changes) {
 		if (build.status === 'queued') {
-			createBuildDataResource(app, build.id);
+			helpers.createBuildDataResource(app, build.id);
 		}
 
 		// notify about build's project change, coz building affects project
