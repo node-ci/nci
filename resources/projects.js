@@ -2,14 +2,14 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	createBuildDataResource = require('../distributor').createBuildDataResource,
+	createBuildDataResource = require('./helpers').createBuildDataResource,
 	logger = require('../lib/logger')('projects resource');
 
 module.exports = function(app) {
 	var resource = app.dataio.resource('projects');
 
 	resource.use('createBuildDataResource', function(req, res) {
-		createBuildDataResource(req.data.buildId);
+		createBuildDataResource(app, req.data.buildId);
 		res.send();
 	});
 

@@ -78,8 +78,8 @@ module.exports = function(app) {
 					this.slot()
 				);
 			},
-			function(err, logLinesResult) {
-				res.send(logLinesResult);
+			function(err, logLinesData) {
+				res.send(logLinesData);
 			},
 			next
 		);

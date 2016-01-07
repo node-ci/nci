@@ -41,71 +41,7 @@ exports.init = function(app, callback) {
 		}
 	});
 
-	var buildDataResourcesHash = {};
-
-	// create resource for build data
-	var createBuildDataResource = function(buildId) {
-		if (buildId in buildDataResourcesHash) {
-			return;
-		}
-		var buildDataResource = app.dataio.resource('build' + buildId);
-		buildDataResource.on('connection', function(client) {
-			var callback = this.async();
-			Steppy(
-				function() {
-					db.logLines.find({
-						start: {buildId: buildId},
-					}, this.slot());
-				},
-				function(err, lines) {
-					client.emit('sync', 'data', {lines: lines});
-					this.pass(true);
-				},
-				function(err) {
-					if (err) {
-						logger.error(
-							'error during read log for "' + buildId + '":',
-							err.stack || err
-						);
-					}
-					callback();
-				}
-			);
-		});
-		buildDataResourcesHash[buildId] = buildDataResource;
-	};
-
-	exports.createBuildDataResource = createBuildDataResource;
-
-	var buildsResource = app.dataio.resource('builds');
-
-	distributor.on('buildUpdate', function(build, changes) {
-		if (build.status === 'queued') {
-			createBuildDataResource(build.id);
-		}
-
-		// notify about build's project change, coz building affects project
-		// related stat (last build date, avg build time, etc) 
-		if (changes.completed) {
-			var projectsResource = app.dataio.resource('projects');
-			projectsResource.clientEmitSyncChange(build.project.name);
-		}
-
-		buildsResource.clientEmitSync('change', {
-			buildId: build.id, changes: changes
-		});
-	});
-
-	distributor.on('buildCancel', function(build) {
-		buildsResource.clientEmitSync('cancel', {buildId: build.id});
-	});
-
 	distributor.on('buildLogLines', function(build, lines) {
-		app.dataio.resource('build' + build.id).clientEmitSync(
-			'data',
-			{lines: lines}
-		);
-
 		// write build logs to db
 		db.logLines.put(lines, function(err) {
 			if (err) {
