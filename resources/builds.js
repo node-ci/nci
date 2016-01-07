@@ -84,7 +84,7 @@ module.exports = function(app) {
 			function() {
 				var buildId = req.data.buildId;
 				logger.log('Cancel build: "%s"', buildId);
-				app.builds.cancel({buildId: buildId}, this.slot());
+				app.builds.cancel(buildId, this.slot());
 			},
 			function() {
 				res.send();

@@ -155,7 +155,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel({buildId: 1}, function(err) {
+					distributor.cancel(1, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);
@@ -198,7 +198,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel({buildId: 2}, function(err) {
+					distributor.cancel(2, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);
