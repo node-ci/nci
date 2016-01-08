@@ -6,7 +6,7 @@ work in progress...
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
-## TODO for release 0.9
+## TODO for release 0.5
 
 * ~~Dashboard (builds list, projects autocomlete)~~
 * ~~Build page (build info(dates, changes, etc), console)~~
@@ -33,15 +33,25 @@ work in progress...
 
 * ~~git checkout before reset~~
 * slow move out from build page (with lot of output) to main page - several sec
+at ff (ff very slow on remove/replace terminal element)
 * ~~when long line appear console output row numbers not on the same line with
 content~~
-* some "undefined" comments in scm changes
+* ~~some "undefined" comments in scm changes~~
 * projects list scroll
 * ~~Error during send: TypeError: Cannot read property 'changes' of undefined~~
 * ~~Builds loss~~
 * ~~error on git after change branch: fatal: ambiguous argument '18a8ea4..branch':
 unknown revision or path not in the working tree.~~
 * "Uncaught TypeError: Cannot read property 'name' of undefined" at item.js (jade)
+* strange git with merge commits changes detection, e.g. whem update from
+"0.3.7" commit to master "new build timeline style, sime layout fixes" and
+"add some responsive styles to build timeline, revert in-progress pulsate
+animation" appear but should not.
+* include fonts and other external static (if any)
+* build console doesn't stick to the bottom at ff
+* ~~more strict server and project configs valifation~~
+* ui browser tests needed
+* use one from: jquery or native browser methods
 
 
 ## Feature requests
@@ -54,6 +64,8 @@ unknown revision or path not in the working tree.~~
 down to the output which could be very long)~~
 * speed up build points animation at ff (maybe borrow something from animate.css?)
 * current successfully streak icons at project page
+* cancell in progress build + buld/step timeout
+* rev hash link to repo web ui
 
 
 ## Roadmap

@@ -177,6 +177,21 @@
 						border-right-color: darken(@well-bg, 10%);
 						top: 13px;
 					}
+
+					&__current {
+						&:before {
+							left: 10px;
+							border-right-color: @component-active-bg;
+							top: 13px;
+						}
+
+						.builds {
+							&_inner {
+								border-left: 6px solid @component-active-bg;
+							}
+						}
+
+					}
 				}
 
 				&_header {

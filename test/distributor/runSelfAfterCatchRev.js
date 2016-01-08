@@ -2,8 +2,8 @@ var Distributor = require('../../lib/distributor').Distributor,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
 	helpers = require('../helpers'),
+	createProjectsMock = require('./helpers').createProjectsMock,
 	path = require('path');
-
 
 describe('Distributor run self after catch', function() {
 	var distributor, executorRunSpy, scmDataSpy;
@@ -17,7 +17,7 @@ describe('Distributor run self after catch', function() {
 			helpers.removeDirIfExists(workspacePath, done);
 
 			distributor = new Distributor({
-				projects: [{
+				projects: createProjectsMock([{
 					name: 'project1',
 					dir: __dirname,
 					scm: helpers.repository.scm,
@@ -25,7 +25,7 @@ describe('Distributor run self after catch', function() {
 						{type: 'shell', cmd: 'echo 1'}
 					],
 					catchRev: {comment: /.*/}
-				}],
+				}]),
 				nodes: nodes
 			});
 

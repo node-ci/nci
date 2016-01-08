@@ -1,7 +1,7 @@
 
-plugins:
-    # - nci-mail-notification
-    # - nci-jabber-notification
+# plugins:
+#     - nci-mail-notification
+#     - nci-jabber-notification
 
 nodes:
     - type: local
@@ -14,7 +14,6 @@ http:
 
 storage:
     backend: memdown
-    # backend: leveldown
 
 notify:
     mail:

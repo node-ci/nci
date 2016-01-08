@@ -4,6 +4,7 @@ var _ = require('underscore'),
 	React = require('react'),
 	Reflux = require('reflux'),
 	terminalStore = require('../../stores/terminal'),
+	buildStore = require('../../stores/build'),
 	ansiUp = require('ansi_up'),
 	template = require('./index.jade');
 
@@ -18,8 +19,27 @@ var Component = React.createClass({
 		this.listenTo(terminalStore, this.updateItems);
 		var node = document.getElementsByClassName('terminal')[0];
 		this.initialScrollPosition = node.getBoundingClientRect().top;
+		if (this.props.showPreloader) {
+			this.getTerminal().insertAdjacentHTML('afterend',
+				'<img src="/images/preloader.gif" class="terminal_preloader"/>'
+			);
+
+			this.listenTo(buildStore, function(build) {
+				if (build.completed) {
+					this.removePreloader();
+				}
+			});
+		}
 
 		window.onscroll = this.onScroll;
+	},
+	removePreloader: function() {
+		var preloader = document.getElementsByClassName(
+			'terminal_preloader'
+		)[0];
+		if (preloader) {
+			preloader.parentNode.removeChild(preloader);
+		}
 	},
 	componentWillUnmount: function() {
 		window.onscroll = null;
@@ -89,6 +109,9 @@ var Component = React.createClass({
 		if (build.buildId === this.props.build) {
 			this.data = build.data;
 			this.renderBuffer();
+		}
+		if (this.props.showPreloader && build.buildCompleted) {
+			this.removePreloader();
 		}
 	},
 	shouldComponentUpdate: function() {

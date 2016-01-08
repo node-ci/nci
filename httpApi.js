@@ -48,22 +48,25 @@ router.getRoute = function(req) {
 };
 
 module.exports = function(app) {
-	var logger = app.lib.logger('http api');
+	var logger = app.lib.logger('http api'),
+		accessToken = (Math.random() * Math.random()).toString(36).substring(2);
+
+	logger.log('access token is: %s', accessToken);
 
 	// run building of a project
 	router.post('/api/0.1/builds', function(req, res, next) {
 		Steppy(
 			function() {
 				var projectName = req.body.project,
-					project = _(app.projects).findWhere({name: projectName});
+					project = app.projects.get(projectName);
 
 				if (project) {
 					res.statusCode = 204;
 					logger.log('Run project "%s"', projectName);
-					app.distributor.run({
+					app.builds.create({
 						projectName: projectName,
 						withScmChangesOnly: req.body.withScmChangesOnly,
-						skipQueued: req.body.skipQueued,
+						queueQueued: req.body.queueQueued,
 						initiator: {type: 'httpApi'}
 					});
 				} else {
@@ -76,16 +79,19 @@ module.exports = function(app) {
 		);
 	});
 
-	// TODO: restrict access with some sort of token
 	router.del('/api/0.1/projects/:name', function(req, res, next) {
-		var projectName = req.params.name;
+		var token = req.body.token,
+			projectName = req.params.name;
+
 		Steppy(
 			function() {
 				logger.log('Cleaning up project "%s"', projectName);
-				app.lib.project.remove({
-					baseDir: app.config.paths.projects,
-					name: projectName
-				}, this.slot());
+
+				if (token !== accessToken) {
+					throw new Error('Access token doesn`t match');
+				}
+
+				app.projects.remove(projectName, this.slot());
 			},
 			function() {
 				logger.log('Project "%s" cleaned up', projectName);
@@ -97,7 +103,8 @@ module.exports = function(app) {
 	});
 
 	router.patch('/api/0.1/projects/:name', function(req, res, next) {
-		var projectName = req.params.name,
+		var token = req.body.token,
+			projectName = req.params.name,
 			newProjectName = req.body.name;
 
 		Steppy(
@@ -106,30 +113,28 @@ module.exports = function(app) {
 					'Rename project "%s" to "%s"', projectName, newProjectName
 				);
 
+				if (token !== accessToken) {
+					throw new Error('Access token doesn`t match');
+				}
+
 				if (!newProjectName) throw new Error('new project name is not set');
 
-				var curProject = _(app.projects).findWhere({name: projectName});
+				var curProject = app.projects.get(projectName);
 				if (!curProject) {
 					throw new Error('Project "' + projectName + '" not found');
 				}
 				this.pass(curProject);
 
-				var newProject = _(app.projects).findWhere({name: newProjectName});
+				var newProject = app.projects.get(newProjectName);
 				if (newProject) {
 					throw new Error(
 						'Project name "' + newProjectName + '" already used'
 					);
 				}
 
-				app.lib.project.rename({
-					baseDir: app.config.paths.projects,
-					name: projectName,
-					newName: newProjectName
-				}, this.slot());
+				app.projects.rename(projectName, newProjectName, this.slot());
 			},
-			function(err, curProject) {
-				curProject.name = newProjectName;
-
+			function(err) {
 				res.statusCode = 204;
 				res.end();
 			},

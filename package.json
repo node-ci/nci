@@ -1,13 +1,13 @@
 {
   "name": "nci",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Continuous integration server written in node.js",
   "bin": {
     "nci": "bin/nci"
   },
   "scripts": {
     "makeTestRepos": "rm -rf test/repos/{mercurial,git}; cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
-    "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 4000",
+    "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000",
     "build-less": "lessc app/styles/index.less > static/css/index.css",
     "build-js": "browserify  app/app.js -t ./transforms/jade.js | uglifyjs -mc > static/js/app.build.js",
     "watch-less": "chokidar --initial --silent app/styles/**/*.less app/styles/index.less -c 'npm run build-less'",
@@ -15,6 +15,9 @@
     "watch-server": "nodemon --ignore app --ignore static --ignore node_modules --ignore data app.js",
     "dev": "parallelshell 'npm run build-fonts' 'npm run watch-less' 'npm run watch-js' 'npm run watch-server'",
     "sync": "npm install && npm prune",
+    "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
+    "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
+    "doc": "nrun docProjectsCollection && nrun docBuildsCollection",
     "build-fonts": "cp ./node_modules/bootstrap/fonts/* ./static/fonts/ & cp ./node_modules/font-awesome/fonts/* ./static/fonts/",
     "build-clean": "rm static/index.html",
     "build-html": "jade views/index.jade --obj '{\"env\": \"production\"}' -o static/",
@@ -52,6 +55,7 @@
     "browserify": "12.0.1",
     "chokidar": "1.0.3",
     "colors": "1.1.2",
+    "conform": "0.2.12",
     "cron": "1.0.9",
     "data.io": "0.3.0",
     "font-awesome": "4.5.0",
@@ -71,6 +75,7 @@
   },
   "devDependencies": {
     "chokidar-cli": "1.2.0",
+    "dox": "0.8.0",
     "expect.js": "0.3.1",
     "jade": "1.11.0",
     "jshint": "2.9.1-rc1",
