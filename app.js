@@ -236,8 +236,6 @@ Steppy(
 
 		require('./projectsWatcher').init(app, this.slot());
 
-		require('./scheduler').init(app, this.slot());
-
 		// init resources
 		require('./resources')(app);
 	},

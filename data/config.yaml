@@ -2,6 +2,7 @@
 # plugins:
 #     - nci-mail-notification
 #     - nci-jabber-notification
+#     - nci-scheduler
 
 nodes:
     - type: local
