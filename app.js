@@ -234,8 +234,6 @@ Steppy(
 
 		notifier.init(app.config.notify, this.slot());
 
-		require('./projectsWatcher').init(app, this.slot());
-
 		// init resources
 		require('./resources')(app);
 	},

@@ -1,5 +1,6 @@
 
-# plugins:
+plugins:
+    - nci-projects-reloader
 #     - nci-mail-notification
 #     - nci-jabber-notification
 #     - nci-scheduler

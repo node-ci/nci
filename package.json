@@ -45,7 +45,6 @@
   },
   "homepage": "https://github.com/node-ci/nci",
   "dependencies": {
-    "chokidar": "1.0.3",
     "colors": "1.1.2",
     "data.io": "0.3.0",
     "nlevel": "1.0.3",
@@ -68,6 +67,7 @@
     "main-bower-files": "2.7.0",
     "memdown": "1.1.0",
     "mocha": "1.18.2",
+    "nci-projects-reloader": "0.1.1",
     "nci-yaml-reader": "0.1.0",
     "nodemon": "1.3.7",
     "nrun": "0.1.4",
