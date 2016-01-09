@@ -49,7 +49,7 @@
   Remove project by name.
   Calls `unload`, removes project from disk and db.
 
-## ProjectsCollection.rename(name:String, [callback(err)]:Function)
+## ProjectsCollection.rename(name:String, newName:String, [callback(err)]:Function)
 
   Rename project.
   Renames project on disk and db, also changes name for loaded project.

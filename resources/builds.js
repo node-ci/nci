@@ -11,7 +11,7 @@ module.exports = function(app) {
 		Steppy(
 			function() {
 				var data = req.data || {},
-					getParams = {limit: data.limit || 20};
+					getParams = {limit: Number(data.limit) || 20};
 
 				if (data.projectName) {
 					getParams.projectName = data.projectName;
