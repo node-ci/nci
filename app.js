@@ -19,8 +19,6 @@ var env = process.env.NODE_ENV || 'development',
 var app = new EventEmitter(),
 	logger = libLogger('app');
 
-var staticPath = path.join(__dirname, 'static');
-
 var httpServerLogger = libLogger('http server');
 
 app.httpServer = httpServer.create();
@@ -54,11 +52,6 @@ app.httpServer.addRequestListener(function(req, res, next) {
 
 	next();
 });
-
-var socketio = require('socket.io')(app.httpServer);
-var dataio = require('./dataio')(socketio);
-
-app.dataio = dataio;
 
 app.lib = {};
 app.lib.reader = reader;
@@ -231,33 +224,11 @@ Steppy(
 		});
 
 		notifier.init(app.config.notify, this.slot());
-
-		// init resources
-		require('./resources')(app);
 	},
 	function() {
 		// load projects after all plugins to provide ability for plugins to
 		// handle `projectLoaded` event
 		app.projects.loadAll(this.slot());
-
-		// serve index for all app pages, add this listener after all other
-		// listeners
-		app.httpServer.addRequestListener(function(req, res, next) {
-			if (req.url.indexOf('/data.io.js') === -1) {
-				if (env === 'development') {
-					var jade = require('jade');
-					// Compile a function
-					var index = jade.compileFile(__dirname + '/views/index.jade');
-					res.write(index({env: env}));
-					res.end();
-				} else {
-					fs.createReadStream(path.join(staticPath, 'index.html'))
-						.pipe(res);
-				}
-			} else {
-				next();
-			}
-		});
 	},
 	function(err) {
 		logger.log('Loaded projects: ', _(app.projects.getAll()).pluck('name'));

@@ -1,13 +1,6 @@
 data
 .npmignore
 test
-static/css/**/*.less
-#ignore all static/js except shared
-static/js/app
-static/js/libs
-static/js/requirejs
-static/js/templates
-static/js/*.js
-.bowerrc
-bower.json
 *.tgz
+.travis.yml
+docs

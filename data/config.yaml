@@ -6,6 +6,8 @@ plugins:
 #     - nci-mail-notification
 #     - nci-jabber-notification
 #     - nci-scheduler
+#ui better be last pugin
+#     - nci-classic-ui
 
 nodes:
     - type: local
@@ -18,7 +20,7 @@ http:
     static:
         locations:
             - url: !!js/regexp ^/(js|css|fonts|images)/
-              root: static/
+              root: node_modules/nci-classic-ui/static/
             - url: !!js/regexp ^/projects/(\w|-)+/workspace/
               root: data/
 
