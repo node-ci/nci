@@ -17,8 +17,7 @@ var env = process.env.NODE_ENV || 'development',
 	utils = require('./lib/utils');
 
 var app = new EventEmitter(),
-	logger = libLogger('app'),
-	httpApi;
+	logger = libLogger('app');
 
 var staticPath = path.join(__dirname, 'static');
 
@@ -54,14 +53,6 @@ app.httpServer.addRequestListener(function(req, res, next) {
 	});
 
 	next();
-});
-
-app.httpServer.addRequestListener(function(req, res, next) {
-	if (req.url.indexOf('/api/') === 0) {
-		return httpApi(req, res, next);
-	} else {
-		next();
-	}
 });
 
 var socketio = require('socket.io')(app.httpServer);
@@ -238,8 +229,6 @@ Steppy(
 			logger.log('Load plugin "%s"', plugin);
 			require(plugin).register(app);
 		});
-
-		httpApi = require('./httpApi')(app);
 
 		notifier.init(app.config.notify, this.slot());
 

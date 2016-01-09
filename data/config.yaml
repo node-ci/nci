@@ -2,6 +2,7 @@
 plugins:
     - nci-projects-reloader
     - nci-static-server
+    - nci-rest-api-server
 #     - nci-mail-notification
 #     - nci-jabber-notification
 #     - nci-scheduler
@@ -23,6 +24,7 @@ http:
 
 storage:
     backend: memdown
+    # backend: leveldown
 
 notify:
     mail:
