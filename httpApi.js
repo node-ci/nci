@@ -142,7 +142,7 @@ module.exports = function(app) {
 		);
 	});
 
-	return function(req, res) {
+	return function(req, res, next) {
 
 		Steppy(
 			function() {
@@ -175,11 +175,7 @@ module.exports = function(app) {
 					res.end();
 				}
 			},
-			function(err) {
-				logger.error('Error occurred during request: ', err.stack || err);
-				res.statusCode = 500;
-				res.end();
-			}
+			next
 		);
 	};
 

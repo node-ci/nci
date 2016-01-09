@@ -2,7 +2,7 @@
 
 var env = process.env.NODE_ENV || 'development',
 	db = require('./db'),
-	http = require('http'),
+	httpServer = require('./lib/httpServer'),
 	nodeStatic = require('node-static'),
 	path = require('path'),
 	fs = require('fs'),
@@ -24,39 +24,86 @@ var staticPath = path.join(__dirname, 'static'),
 	staticServer = new nodeStatic.Server(staticPath),
 	staticDataServer;
 
-var server = http.createServer(function(req, res) {
-	if (req.url.indexOf('/api/') === 0) {
-		return httpApi(req, res);
-	}
+var httpServerLogger = libLogger('http server');
 
-	if (new RegExp('^/projects/(\\w|-)+/workspace').test(req.url)) {
-		return staticDataServer.serve(req, res);
-	}
+app.httpServer = httpServer.create();
 
-	if (req.url.indexOf('/data.io.js') === -1) {
-		if (/(js|css|fonts|images)/.test(req.url)) {
-			staticServer.serve(req, res);
-		} else {
-			// serve index for all app pages
-			if (env === 'development') {
-				var jade = require('jade');
-				// Compile a function
-				var index = jade.compileFile(__dirname + '/views/index.jade');
-				res.write(index({env: env}));
-				res.end();
-			} else {
-				// serve index for all other pages (/builds/:id, etc)
-				fs.createReadStream(path.join(staticPath, 'index.html'))
-					.pipe(res);
-			}
-		}
+app.httpServer.on('error', function(err, req, res) {
+	httpServerLogger.error(
+		'Error processing request ' + req.method + ' ' + req.url + ':',
+		err.stack || err
+	);
+	if (!res.headersSent) {
+		res.statusCode = 500;
+		res.end();
 	}
 });
 
-var socketio = require('socket.io')(server);
+app.httpServer.addRequestListener(function(req, res, next) {
+	var start = Date.now();
+
+	res.on('finish', function() {
+		var end = Date.now();
+
+		httpServerLogger.log(
+			'[%s] %s %s %s - %s ms',
+			new Date(end).toUTCString(),
+			req.method,
+			req.url,
+			res.statusCode,
+			end - start
+		);
+	});
+
+	next();
+});
+
+app.httpServer.addRequestListener(function(req, res, next) {
+	if (req.url.indexOf('/api/') === 0) {
+		return httpApi(req, res, next);
+	} else {
+		next();
+	}
+});
+
+app.httpServer.addRequestListener(function(req, res, next) {
+	if (new RegExp('^/projects/(\\w|-)+/workspace/').test(req.url)) {
+		return staticDataServer.serve(req, res);
+	} else {
+		next();
+	}
+});
+
+app.httpServer.addRequestListener(function(req, res, next) {
+	if (new RegExp('^/(js|css|fonts|images)/').test(req.url)) {
+		staticServer.serve(req, res);
+	} else {
+		next();
+	}
+});
+
+app.httpServer.addRequestListener(function(req, res, next) {
+	if (req.url.indexOf('/data.io.js') === -1) {
+		// serve index for all app pages
+		if (env === 'development') {
+			var jade = require('jade');
+			// Compile a function
+			var index = jade.compileFile(__dirname + '/views/index.jade');
+			res.write(index({env: env}));
+			res.end();
+		} else {
+			// serve index for all other pages (/builds/:id, etc)
+			fs.createReadStream(path.join(staticPath, 'index.html'))
+				.pipe(res);
+		}
+	} else {
+		next();
+	}
+});
+
+var socketio = require('socket.io')(app.httpServer);
 var dataio = require('./dataio')(socketio);
 
-app.server = server;
 app.dataio = dataio;
 
 app.lib = {};
@@ -248,7 +295,7 @@ Steppy(
 		var host = app.config.http.host,
 			port = app.config.http.port;
 		logger.log('Start http server on %s:%s', host, port);
-		app.server.listen(port, host);
+		app.httpServer.listen(port, host);
 	},
 	function(err) {
 		if (err) throw err;
