@@ -3,7 +3,6 @@
 var env = process.env.NODE_ENV || 'development',
 	db = require('./db'),
 	httpServer = require('./lib/httpServer'),
-	nodeStatic = require('node-static'),
 	path = require('path'),
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
@@ -14,15 +13,14 @@ var env = process.env.NODE_ENV || 'development',
 	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
 	EventEmitter = require('events').EventEmitter,
-	validateConfig = require('./lib/validateConfig');
+	validateConfig = require('./lib/validateConfig'),
+	utils = require('./lib/utils');
 
 var app = new EventEmitter(),
 	logger = libLogger('app'),
 	httpApi;
 
-var staticPath = path.join(__dirname, 'static'),
-	staticServer = new nodeStatic.Server(staticPath),
-	staticDataServer;
+var staticPath = path.join(__dirname, 'static');
 
 var httpServerLogger = libLogger('http server');
 
@@ -61,41 +59,6 @@ app.httpServer.addRequestListener(function(req, res, next) {
 app.httpServer.addRequestListener(function(req, res, next) {
 	if (req.url.indexOf('/api/') === 0) {
 		return httpApi(req, res, next);
-	} else {
-		next();
-	}
-});
-
-app.httpServer.addRequestListener(function(req, res, next) {
-	if (new RegExp('^/projects/(\\w|-)+/workspace/').test(req.url)) {
-		return staticDataServer.serve(req, res);
-	} else {
-		next();
-	}
-});
-
-app.httpServer.addRequestListener(function(req, res, next) {
-	if (new RegExp('^/(js|css|fonts|images)/').test(req.url)) {
-		staticServer.serve(req, res);
-	} else {
-		next();
-	}
-});
-
-app.httpServer.addRequestListener(function(req, res, next) {
-	if (req.url.indexOf('/data.io.js') === -1) {
-		// serve index for all app pages
-		if (env === 'development') {
-			var jade = require('jade');
-			// Compile a function
-			var index = jade.compileFile(__dirname + '/views/index.jade');
-			res.write(index({env: env}));
-			res.end();
-		} else {
-			// serve index for all other pages (/builds/:id, etc)
-			fs.createReadStream(path.join(staticPath, 'index.html'))
-				.pipe(res);
-		}
 	} else {
 		next();
 	}
@@ -196,7 +159,6 @@ Steppy(
 
 		// path to root dir (with projects, builds etc)
 		app.config.paths.data = path.join(process.cwd(), 'data');
-		staticDataServer = new nodeStatic.Server(app.config.paths.data);
 
 		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
 		app.config.paths.db = path.join(app.config.paths.data, 'db');
@@ -239,7 +201,7 @@ Steppy(
 		_(app.config).defaults(config);
 		_(app.config).defaults(configDefaults);
 
-		logger.log('Server config:', JSON.stringify(app.config, null, 4));
+		logger.log('Server config:', utils.toPrettyJson(app.config));
 
 		var dbBackend = require(app.config.storage.backend);
 
@@ -288,6 +250,25 @@ Steppy(
 		// load projects after all plugins to provide ability for plugins to
 		// handle `projectLoaded` event
 		app.projects.loadAll(this.slot());
+
+		// serve index for all app pages, add this listener after all other
+		// listeners
+		app.httpServer.addRequestListener(function(req, res, next) {
+			if (req.url.indexOf('/data.io.js') === -1) {
+				if (env === 'development') {
+					var jade = require('jade');
+					// Compile a function
+					var index = jade.compileFile(__dirname + '/views/index.jade');
+					res.write(index({env: env}));
+					res.end();
+				} else {
+					fs.createReadStream(path.join(staticPath, 'index.html'))
+						.pipe(res);
+				}
+			} else {
+				next();
+			}
+		});
 	},
 	function(err) {
 		logger.log('Loaded projects: ', _(app.projects.getAll()).pluck('name'));
