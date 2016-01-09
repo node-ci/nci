@@ -3,10 +3,9 @@ test/workspace
 test/distributor/workspace
 test/repos/mercurial/
 test/repos/git/
-static/css/**/*.css
+static/css
 static/fonts
-static/js/libs
-static/js/templates
+static/js/*.js
 data/projects/**/workspace
 data/builds
 static/index.html

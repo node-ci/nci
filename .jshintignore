@@ -1,0 +1,5 @@
+static/scripts/**
+static/js/**
+node_modules/**
+lib/node/jake/**
+docs/build_docs/**
