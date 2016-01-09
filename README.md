@@ -52,6 +52,7 @@ animation" appear but should not.
 * ~~more strict server and project configs valifation~~
 * ui browser tests needed
 * use one from: jquery or native browser methods
+* cleanup project steps (remove cwd, options) inside build by migration
 
 
 ## Feature requests
