@@ -6,7 +6,7 @@ work in progress...
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
-## TODO for release 0.5
+## TODO for release 0.9
 
 * ~~Dashboard (builds list, projects autocomlete)~~
 * ~~Build page (build info(dates, changes, etc), console)~~

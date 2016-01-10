@@ -3,11 +3,11 @@ plugins:
     - nci-projects-reloader
     - nci-static-server
     - nci-rest-api-server
-#     - nci-mail-notification
-#     - nci-jabber-notification
-#     - nci-scheduler
-#ui better be last pugin
-#     - nci-classic-ui
+    # - nci-mail-notification
+    # - nci-jabber-notification
+    # - nci-scheduler
+    #ui better be last plugin
+    # - nci-classic-ui
 
 nodes:
     - type: local
