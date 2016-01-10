@@ -1,6 +1,6 @@
 'use strict';
 
-var notifier = require('../lib/notifier'),
+var Notifier = require('../lib/notifier').Notifier,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
 	_ = require('underscore');
@@ -8,16 +8,18 @@ var notifier = require('../lib/notifier'),
 
 describe('notifier module', function() {
 
-	function TestNotifier() {
-	}
-	TestNotifier.prototype.init = sinon.stub().callsArg(1);
-	TestNotifier.prototype.send = sinon.stub().callsArg(1);
+	var notifier = new Notifier({});
 
-	var sendSpy = TestNotifier.prototype.send;
+	function TestTransport() {
+	}
+	TestTransport.prototype.init = sinon.stub().callsArg(1);
+	TestTransport.prototype.send = sinon.stub().callsArg(1);
+
+	var sendSpy = TestTransport.prototype.send;
 
 	describe('test notifier', function() {
 		it('should be rigestered', function() {
-			notifier.register('test', TestNotifier);
+			notifier.register('test', TestTransport);
 		});
 
 		it('should be intialized without errors', function(done) {
@@ -25,7 +27,7 @@ describe('notifier module', function() {
 		});
 
 		it('init method should be called once during init', function() {
-			expect(TestNotifier.prototype.init.calledOnce).equal(true);
+			expect(TestTransport.prototype.init.calledOnce).equal(true);
 		});
 	});
 

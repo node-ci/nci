@@ -1,15 +1,13 @@
 'use strict';
 
-var Distributor = require('../../lib/distributor').Distributor,
-	expect = require('expect.js'),
+var expect = require('expect.js'),
 	sinon = require('sinon'),
-	createNodeMock = require('./helpers').createNodeMock,
-	createProjectsMock = require('./helpers').createProjectsMock;
+	helpers = require('./helpers');
 
 
 describe('Distributor main', function() {
 	var distributor,
-		projects = createProjectsMock([{name: 'project1'}]);
+		projects = [{name: 'project1'}];
 
 	var expectUpdateBuild = function(distributor, build, number, conditionsHash) {
 		var conditions = conditionsHash[number];
@@ -21,16 +19,10 @@ describe('Distributor main', function() {
 	};
 
 	describe('with success project', function() {
-		before(function() {
-			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-				sinon.stub().callsArgAsync(1)
-			));
-		});
-
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
-			distributor = new Distributor({
+			distributor = helpers.createDistributor({
 				projects: projects,
 				nodes: [{type: 'local', maxExecutorsCount: 1}]
 			});
@@ -74,25 +66,19 @@ describe('Distributor main', function() {
 		it('update build called 3 times in total', function() {
 			expect(updateBuildSpy.callCount).equal(3);
 		});
-
-		after(function() {
-			Distributor.prototype._createNode.restore();
-		});
 	});
 
 	describe('with fail project', function() {
-		before(function() {
-			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-				sinon.stub().callsArgWithAsync(1, new Error('Some error'))
-			));
-		});
-
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
-			distributor = new Distributor({
+			distributor = helpers.createDistributor({
 				projects: projects,
-				nodes: [{type: 'local', maxExecutorsCount: 1}]
+				nodes: [{type: 'local', maxExecutorsCount: 1}],
+				executorRun: sinon.stub().callsArgWithAsync(
+					1,
+					new Error('Some error')
+				)
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
@@ -124,19 +110,9 @@ describe('Distributor main', function() {
 		it('update build called 3 times in total', function() {
 			expect(updateBuildSpy.callCount).equal(3);
 		});
-
-		after(function() {
-			Distributor.prototype._createNode.restore();
-		});
 	});
 
 	describe('with success project and build cancel', function() {
-		before(function() {
-			sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-				sinon.stub().callsArgAsync(1)
-			));
-		});
-
 		var distributorParams = {
 			projects: projects,
 			nodes: [{type: 'local', maxExecutorsCount: 1}],
@@ -146,12 +122,12 @@ describe('Distributor main', function() {
 			}
 		};
 
-		describe('when cancel queued buid', function() {
+		describe('when cancel queued bulid', function() {
 			var updateBuildSpy;
 
 			var cancelError;
 			it('instance should be created without errors', function() {
-				distributor = new Distributor(distributorParams);
+				distributor = helpers.createDistributor(distributorParams);
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
@@ -194,7 +170,7 @@ describe('Distributor main', function() {
 			var cancelError;
 
 			it('instance should be created without errors', function() {
-				distributor = new Distributor(distributorParams);
+				distributor = helpers.createDistributor(distributorParams);
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
@@ -218,10 +194,6 @@ describe('Distributor main', function() {
 					'Build with id "2" not found for cancel'
 				);
 			});
-		});
-
-		after(function() {
-			Distributor.prototype._createNode.restore();
 		});
 	});
 });

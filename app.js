@@ -10,7 +10,9 @@ var env = process.env.NODE_ENV || 'development',
 	Reader = require('./lib/reader').Reader,
 	BaseReaderLoader = require('./lib/reader/loader/base').Loader,
 	JsonReaderLoader = require('./lib/reader/loader/json').Loader,
-	notifier = require('./lib/notifier'),
+	Notifier = require('./lib/notifier').Notifier,
+	BaseNotifierTransport = require('./lib/notifier/transport/base').Transport,
+	ConsoleNotifierTransport = require('./lib/notifier/transport/console').Transport,
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
@@ -60,7 +62,7 @@ app.httpServer.addRequestListener(function(req, res, next) {
 
 app.lib = {};
 app.lib.BaseReaderLoader = BaseReaderLoader;
-app.lib.notifier = notifier;
+app.lib.BaseNotifierTransport = BaseNotifierTransport;
 app.lib.logger = libLogger;
 
 var configDefaults = {
@@ -210,6 +212,9 @@ Steppy(
 			baseDir: app.config.paths.projects
 		});
 
+		app.notifier = new Notifier({db: db});
+		app.notifier.register('console', ConsoleNotifierTransport);
+
 		completeUncompletedBuilds(this.slot());
 	},
 	function(err) {
@@ -222,13 +227,12 @@ Steppy(
 		});
 
 		// register other plugins
-		require('./lib/notifier/console').register(app);
 		_(app.config.plugins).each(function(plugin) {
 			logger.log('Load plugin "%s"', plugin);
 			require(plugin).register(app);
 		});
 
-		notifier.init(app.config.notify, this.slot());
+		app.notifier.init(app.config.notify, this.slot());
 	},
 	function() {
 		// load projects after all plugins to provide ability for plugins to

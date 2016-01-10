@@ -11,6 +11,7 @@ exports.init = function(app, callback) {
 	var distributor = new Distributor({
 		nodes: app.config.nodes,
 		projects: app.projects,
+		notifier: app.notifier,
 		saveBuild: function(build, callback) {
 			Steppy(
 				function() {

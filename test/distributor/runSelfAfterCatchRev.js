@@ -1,8 +1,7 @@
-var Distributor = require('../../lib/distributor').Distributor,
-	expect = require('expect.js'),
+var expect = require('expect.js'),
 	sinon = require('sinon'),
 	helpers = require('../helpers'),
-	createProjectsMock = require('./helpers').createProjectsMock,
+	distributorHelpers = require('./helpers'),
 	path = require('path');
 
 describe('Distributor run self after catch', function() {
@@ -16,8 +15,8 @@ describe('Distributor run self after catch', function() {
 		before(function(done) {
 			helpers.removeDirIfExists(workspacePath, done);
 
-			distributor = new Distributor({
-				projects: createProjectsMock([{
+			distributor = distributorHelpers.createDistributor({
+				projects: [{
 					name: 'project1',
 					dir: __dirname,
 					scm: helpers.repository.scm,
@@ -25,8 +24,9 @@ describe('Distributor run self after catch', function() {
 						{type: 'shell', cmd: 'echo 1'}
 					],
 					catchRev: {comment: /.*/}
-				}]),
-				nodes: nodes
+				}],
+				nodes: nodes,
+				mockNode: false
 			});
 
 			var createExecutor = distributor.nodes[0]._createExecutor;

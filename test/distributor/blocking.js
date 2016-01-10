@@ -1,10 +1,8 @@
 'use strict';
 
-var Distributor = require('../../lib/distributor').Distributor,
-	expect = require('expect.js'),
+var expect = require('expect.js'),
 	sinon = require('sinon'),
-	createNodeMock = require('./helpers').createNodeMock,
-	createProjectsMock = require('./helpers').createProjectsMock,
+	helpers = require('./helpers'),
 	Steppy = require('twostep').Steppy;
 
 
@@ -18,15 +16,11 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 	var nodes = [{type: 'local', maxExecutorsCount: 2}];
 
-	before(function() {
-		sinon.stub(Distributor.prototype, '_createNode', createNodeMock(
-			sinon.stub().callsArgAsync(1)
-		));
-	});
-
 	var itRunParallelProjects = function() {
 		it('distributor should be created without errors', function() {
-			distributor = new Distributor({projects: projects, nodes: nodes});
+			distributor = helpers.createDistributor({
+				projects: projects, nodes: nodes
+			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
@@ -66,7 +60,9 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 	var itRunSequentialProjects = function() {
 		it('distributor should be created without errors', function() {
-			distributor = new Distributor({projects: projects, nodes: nodes});
+			distributor = helpers.createDistributor({
+				projects: projects, nodes: nodes
+			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
@@ -120,11 +116,11 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 	describe('should run 2 non-blocking projects in parallel', function() {
 		before(function() {
-			projects = createProjectsMock([{
+			projects = [{
 				name: 'project1',
 			}, {
 				name: 'project2'
-			}]);
+			}];
 		});
 
 		itRunParallelProjects();
@@ -132,12 +128,12 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 	describe('should run project1, then 2, when 2 blocked by 1', function() {
 		before(function() {
-			projects = createProjectsMock([{
+			projects = [{
 				name: 'project1',
 			}, {
 				name: 'project2',
 				blockedBy: ['project1']
-			}]);
+			}];
 		});
 
 		itRunSequentialProjects();
@@ -145,12 +141,12 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 	describe('should run project1, then 2, when 1 blocks 2', function() {
 		before(function() {
-			projects = createProjectsMock([{
+			projects = [{
 				name: 'project1',
 				blocks: ['project2']
 			}, {
 				name: 'project2'
-			}]);
+			}];
 		});
 
 		itRunSequentialProjects();
@@ -160,7 +156,7 @@ describe('Distributor blocking with max 2 executors count', function() {
 		'should run 1, 2 in parallel, when 1 block 3, 2 blocked by 3',
 		function() {
 			before(function() {
-				projects = createProjectsMock([{
+				projects = [{
 					name: 'project1',
 					blocks: ['project3']
 				}, {
@@ -168,15 +164,10 @@ describe('Distributor blocking with max 2 executors count', function() {
 					blockedBy: ['project3']
 				}, {
 					name: 'project3'
-				}]);
+				}];
 			});
 
 			itRunParallelProjects();
 		}
 	);
-
-	after(function() {
-		Distributor.prototype._createNode.restore();
-	});
-
 });
