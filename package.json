@@ -56,7 +56,7 @@
     "nci-projects-reloader": "0.1.1",
     "nci-rest-api-server": "0.1.1",
     "nci-static-server": "0.1.0",
-    "nci-yaml-reader": "0.1.0",
+    "nci-yaml-reader": "0.2.0",
     "nodemon": "1.3.7",
     "nrun": "0.1.4",
     "sinon": "1.14.1"

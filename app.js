@@ -7,7 +7,9 @@ var env = process.env.NODE_ENV || 'development',
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	reader = require('./lib/reader'),
+	Reader = require('./lib/reader').Reader,
+	BaseReaderLoader = require('./lib/reader/loader/base').Loader,
+	JsonReaderLoader = require('./lib/reader/loader/json').Loader,
 	notifier = require('./lib/notifier'),
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	BuildsCollection = require('./lib/build').BuildsCollection,
@@ -18,6 +20,9 @@ var env = process.env.NODE_ENV || 'development',
 
 var app = new EventEmitter(),
 	logger = libLogger('app');
+
+app.reader = new Reader();
+app.reader.register('json', JsonReaderLoader);
 
 var httpServerLogger = libLogger('http server');
 
@@ -54,7 +59,7 @@ app.httpServer.addRequestListener(function(req, res, next) {
 });
 
 app.lib = {};
-app.lib.reader = reader;
+app.lib.BaseReaderLoader = BaseReaderLoader;
 app.lib.notifier = notifier;
 app.lib.logger = libLogger;
 
@@ -174,7 +179,7 @@ Steppy(
 			});
 		}
 
-		reader.load(app.config.paths.data, 'config', this.slot());
+		app.reader.load(app.config.paths.data, 'config', this.slot());
 	},
 	function(err, mkdirResult, config) {
 		this.pass(mkdirResult);
@@ -201,7 +206,7 @@ Steppy(
 	function() {
 		app.projects = new ProjectsCollection({
 			db: db,
-			reader: reader,
+			reader: app.reader,
 			baseDir: app.config.paths.projects
 		});
 
