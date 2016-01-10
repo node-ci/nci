@@ -53,6 +53,7 @@ animation" appear but should not.
 * ui browser tests needed
 * use one from: jquery or native browser methods
 * cleanup project steps (remove cwd, options) inside build by migration
+* bad mercurial tags inside scm.rev.tags
 
 
 ## Feature requests
