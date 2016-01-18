@@ -151,27 +151,14 @@ Steppy(
 		// path to root dir (with projects, builds etc)
 		app.config.paths.data = path.join(process.cwd(), 'data');
 
-		app.config.paths.projects = path.join(app.config.paths.data, 'projects');
-		app.config.paths.db = path.join(app.config.paths.data, 'db');
 		app.config.paths.preload = path.join(app.config.paths.data, 'preload.json');
-
-		var dbDirExistsCallback = this.slot();
-		fs.exists(app.config.paths.db, function(isExists) {
-			dbDirExistsCallback(null, isExists);
-		});
 
 		var preloadExistsCallback = this.slot();
 		fs.exists(app.config.paths.preload, function(isExists) {
 			preloadExistsCallback(null, isExists);
 		});
 	},
-	function(err, isDbDirExists, isPreloadExists) {
-		if (isDbDirExists) {
-			this.pass(null);
-		} else {
-			fs.mkdir(app.config.paths.db, this.slot());
-		}
-
+	function(err, isPreloadExists) {
 		if (isPreloadExists) {
 			var preload = require(app.config.paths.preload);
 			// register rc plugins
@@ -183,17 +170,34 @@ Steppy(
 
 		app.reader.load(app.config.paths.data, 'config', this.slot());
 	},
-	function(err, mkdirResult, config) {
-		this.pass(mkdirResult);
-
+	function(err, config) {
 		validateConfig(config, this.slot());
 	},
-	function(err, mkdirResult, config) {
+	function(err, config) {
 		_(app.config).defaults(config);
 		_(app.config).defaults(configDefaults);
 
+		// try to read db and projects paths from config or set default values
+		_(app.config.paths).defaults(config.paths, {
+			db: path.join(app.config.paths.data, 'db'),
+			projects: path.join(app.config.paths.data, 'projects')
+		});
+
 		logger.log('Server config:', utils.toPrettyJson(app.config));
 
+		var dbDirExistsCallback = this.slot();
+		fs.exists(app.config.paths.db, function(isExists) {
+			dbDirExistsCallback(null, isExists);
+		});
+	},
+	function(err, isDbDirExists) {
+		if (isDbDirExists) {
+			this.pass(null);
+		} else {
+			fs.mkdir(app.config.paths.db, this.slot());
+		}
+	},
+	function() {
 		var dbBackend = require(app.config.storage.backend);
 
 		// monkey patch memdown to allow save empty strings which is correct
@@ -217,7 +221,7 @@ Steppy(
 
 		completeUncompletedBuilds(this.slot());
 	},
-	function(err) {
+	function() {
 		require('./distributor').init(app, this.slot());
 	},
 	function(err, distributor) {
