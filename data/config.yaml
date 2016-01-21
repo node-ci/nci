@@ -17,12 +17,19 @@ http:
     host: 127.0.0.1
     port: 3000
     url: http://127.0.0.1:3000
+    # ws: http://127.0.0.1:3001
     static:
         locations:
+            - url: /favicon.ico
+              root: node_modules/nci-classic-ui/static/
             - url: !!js/regexp ^/(js|css|fonts|images)/
               root: node_modules/nci-classic-ui/static/
             - url: !!js/regexp ^/projects/(\w|-)+/workspace/
               root: data/
+
+# paths:
+#     db: /var/tmp/123
+#     projects: /var/tmp/123
 
 storage:
     backend: memdown
