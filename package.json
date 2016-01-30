@@ -8,7 +8,7 @@
   "scripts": {
     "makeTestRepos": "rm -rf test/repos/{mercurial,git}; cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000",
-    "dev": "supervisor -w ./ -i node_modules/nci-classic-ui/node_modules,node_modules/nci-projects-reloader/node_modules app.js",
+    "dev": "nodemon -w ./ -i node_modules/nci-classic-ui/node_modules/ -i node_modules/nci-projects-reloader/node_modules/ app.js",
     "sync": "npm install && npm prune",
     "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
     "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
@@ -57,8 +57,8 @@
     "nci-rest-api-server": "0.5.0",
     "nci-static-server": "1.0.0",
     "nci-yaml-reader": "1.1.0",
+    "nodemon": "1.8.1",
     "nrun": "0.1.4",
-    "sinon": "1.14.1",
-    "supervisor": "0.9.1"
+    "sinon": "1.14.1"
   }
 }
