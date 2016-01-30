@@ -1,3 +1,9 @@
 {
-	"ignoreRoot": [".git"]
+	"ignoreRoot": [".git"],
+	"ignore": [
+		"data ",
+		"node_modules/nci-classic-ui/node_modules/",
+		"node_modules/nci-projects-reloader/node_modules/"
+	],
+	"watch": "./"
 }
