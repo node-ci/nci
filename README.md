@@ -6,7 +6,7 @@ work in progress...
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
-## TODO for release 0.9
+## TODO for public release
 
 * ~~Dashboard (builds list, projects autocomlete)~~
 * ~~Build page (build info(dates, changes, etc), console)~~
@@ -24,7 +24,7 @@ work in progress...
 * ~~Scheduler~~
 * ~~Better tests coverage~~
 * ~~Compile client for production~~
-* Semantic versioning and plugins
+* ~~Semantic versioning and plugins~~
 * ~~Complete uncompleted builds on server start~~
 * ~~Throw away workspace changes on repository update~~
 
@@ -64,7 +64,7 @@ animation" appear but should not.
 * ~~show more builds button (or infinity scroll) on start page~~
 * ~~hide console output by default (when go on completed build page you scroll
 down to the output which could be very long)~~
-* speed up build points animation at ff (maybe borrow something from animate.css?)
+* ~~speed up build points animation at ff (maybe borrow something from animate.css?)~~
 * current successfully streak icons at project page
 * cancell in progress build + buld/step timeout
 * rev hash link to repo web ui
@@ -74,7 +74,7 @@ down to the output which could be very long)~~
 
 * ~~Responsive ui (persistent connection via socketio or something else +
 data streams (from shell commands, etc))~~
-* Console output should be very close to the terminal output
+* ~~Console output should be very close to the terminal output~~
 * ~~Shell command is the main script~~
 * ~~Tasks relations can be set easily (runAfter, runBefore, prevents, prevented)
 it also can be attached to the specific branch or commit (e.g. release commits
