@@ -4,6 +4,8 @@
 General recommendations:
 
 * log plugin activity by creating and using `app.lib.logger`
+* set nci minor version with which plugin was tested as peer dependency,
+e.g. 0.9.x
 * minimize dependencies, try to use dependencies used by core for similar
 kind of job (twostep for async flow control, underscore as functional
 programming helpers, conform.js for validation)
