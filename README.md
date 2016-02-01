@@ -1,7 +1,7 @@
 
 # nci
 
-Flexible, modular continuous integration server written in node.js.
+Flexible, open source continuous integration server written in node.js
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
