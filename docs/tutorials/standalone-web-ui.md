@@ -2,20 +2,24 @@
 # nci standalone server with web ui tutorial
 
 In this tutorial we will setting up continuous integration server powered
-by leveldb (`leveldown` package) with web interface (`nci-classic-ui` plugin)
-which will serve all required static files by it self (`nci-static-server`
-plugin). We will use yaml (`nci-yaml-reader` plugin) for configure server and
-projects. Running app will be controlled by `forever` to get restarted in
-case of unexpected failure.
+by leveldb (`leveldown` package) with web interface
+([classic ui plugin](https://github.com/node-ci/nci-classic-ui))
+which will serve all required static files by it self
+([static server plugin](https://github.com/node-ci/nci-static-server)). We will
+use yaml ([yaml reader plugin](https://github.com/node-ci/nci-yaml-reader))
+for configure server and projects. Running app will be controlled by `forever`
+to get restarted in case of unexpected failure.
 
 We will also use following plugins:
 
-* `nci-mail-notification` to get notifications about failed builds via email
-* `nci-projects-reloader` to auto reload projects config when it changes on
-disk
-* `nci-rest-api-server` to expose rest api for having ability to trigger build
-by simple `curl` call
-* `nci-scheduler` to trigger project building by schedule
+* [mail notification plugin](https://github.com/node-ci/nci-mail-notification)
+to get notifications about failed builds via email
+* [projects reloader plugin](https://github.com/node-ci/nci-projects-reloader)
+to auto reload projects config when it changes on disk
+* [rest api server plugin](https://github.com/node-ci/nci-rest-api-server)
+to expose rest api for having ability to trigger build by simple `curl` call
+* [scheduler plugin](https://github.com/node-ci/nci-scheduler) to trigger
+project building by schedule
 
 
 ## Installation

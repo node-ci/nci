@@ -1,0 +1,72 @@
+
+#sample project config
+
+#configure scm
+scm:
+    type: git
+    repository: https://github.com/node-ci/nci
+    rev: master
+
+#specify which revisions should be built (by `tag` or `comment` regexp)
+#in any case (e.g. when several commits pushed at once)
+catchRev:
+    #for catching semver tags like 1.3.6, etc
+    tag: !!js/regexp /\d+\.\d+\.\d+/
+
+#notification settings
+notify:
+    #when
+    on:
+        #build successfully done
+        - done
+        #build completed with error
+        - error
+        #build status other than previous build status
+        #of this project
+        - change
+    to:
+        #target transports, `console` just log to console
+        #see `nci-mail-notification` plugin for mail notifications
+        console:
+
+#trigger another project
+trigger:
+    after:
+        #bulld `project2` after successful `done` of current project
+        - status: done
+          project: project2
+
+#specify which projects builds will block building of current project (each
+#element could be string or regexp)
+blockedBy:
+    # - project2
+    - !!js/regexp /project1|project2/
+
+#specify which projects will be blocked by current project (each element could
+#be string or regexp)
+blocks:
+    - project2
+
+#specify project steps, each must has `cmd`.
+#`name` (will be get from `cmd` by default) and `shell` (/bin/sh is default)
+# are optional
+steps:
+    - cmd: >
+        echo "long multiline string" &&
+        sleep 2 &&
+        echo "is not a problem when you're using yaml" &&
+        echo "cur dir is `pwd`"
+
+    - name: sleep
+      cmd: sleep 4
+
+    - cmd: echo 2 > 2.txt
+
+    - cmd: cat 2.txt
+
+    - shell: /bin/bash
+      cmd: >
+        for i in {1..100}; do
+            echo "tick $i";
+            sleep 0.3;
+        done;
