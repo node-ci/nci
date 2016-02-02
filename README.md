@@ -38,11 +38,10 @@ Basic tutorial [here](./docs/tutorials/standalone-web-ui.md).
 
 ## System requirements
 
-* unix-like operating system (tested mostly on Ubuntu 14.04, CentOS 6.6)
+* unix-like operating system, not tested on windows
 * node.js >= 0.10
-* git client (tested with 1.9.1) (only when git projects are used)
-* mercurial client (tested with 2.8.2) (only when mercurial
-projects are used)
+* git client >= 1.9 (only when git projects are used)
+* mercurial client >= 2.8.2 (only when mercurial projects are used)
 
 
 ## Resources
