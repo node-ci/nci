@@ -3,6 +3,12 @@
 
 Flexible, open source continuous integration server written in node.js
 
+
+It's good for those who prefer modular things to build system for specific
+requirements by blocks, starting from small core then extend functionality
+by plugins.
+
+
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 
 
@@ -10,7 +16,7 @@ Flexible, open source continuous integration server written in node.js
 
 * modular approach, small core a lot of plugins (e.g. rest api, web interface - 
 plugins, not core)
-* minimalistic system requirements (only node and scm clients are required, no
+* modest system requirements (only node and scm clients are required, no
 external db)
 * pluginnable db storage (any [levelup](https://github.com/Level/levelup)
 backend could be used)
@@ -30,18 +36,16 @@ pretty shell scripting (strings without quotes, nice multiline strings, etc)
 [sample project config](./docs/sample-project-config.yaml))
 
 
-Online demo is [here](http://classicui-ncidemo.rhcloud.com/).
-
-
-Basic tutorial [here](./docs/tutorials/standalone-web-ui.md).
+Online demo is [here](http://classicui-ncidemo.rhcloud.com/), basic tutorial
+[here](./docs/tutorials/standalone-web-ui.md).
 
 
 ## System requirements
 
 * unix-like operating system, not tested on windows
 * node.js >= 0.10
-* git client >= 1.9 (only when git projects are used)
-* mercurial client >= 2.8.2 (only when mercurial projects are used)
+* git client >= 1.9 (only for building git projects)
+* mercurial client >= 2.8 (only for building mercurial projects)
 
 
 ## Resources
@@ -59,6 +63,7 @@ Basic tutorial [here](./docs/tutorials/standalone-web-ui.md).
 running (docker or similar). Only local executor currently available.
 * extend web interface functionality
 * allow store project config inside repository of this project
+* provide integration with external systems (e.g. gogs)
 
 
 ## Plugins
