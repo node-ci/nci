@@ -1,6 +1,6 @@
 {
   "name": "nci",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Flexible, open source continuous integration server written in node.js",
   "bin": {
     "nci": "bin/nci"
