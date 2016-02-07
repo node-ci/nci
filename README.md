@@ -36,8 +36,7 @@ pretty shell scripting (strings without quotes, nice multiline strings, etc)
 [sample project config](./docs/sample-project-config.yaml))
 
 
-Online demo is [here](http://classicui-ncidemo.rhcloud.com/), basic tutorial
-[here](./docs/tutorials/standalone-web-ui.md).
+Online demo is [here](http://classicui-ncidemo.rhcloud.com/).
 
 
 ## System requirements
@@ -46,6 +45,37 @@ Online demo is [here](http://classicui-ncidemo.rhcloud.com/), basic tutorial
 * node.js >= 0.10
 * git client >= 1.9 (only for building git projects)
 * mercurial client >= 2.8 (only for building mercurial projects)
+
+
+## Quick setup
+
+Clone quick setup repo, go into it and install dependencies:
+
+```sh
+
+git clone https://github.com/node-ci/nci-quick-setup && cd nci-quick-setup && npm install
+
+```
+
+run nci:
+
+
+```sh
+
+node_modules/.bin/nci
+
+```
+
+that's all, now you can experiment with it by adding/changing projects,
+use web interface (on http://127.0.0.1:3000 by default) for run project builds,
+etc.
+
+Currently web interface doesn't support adding new projects or editing of
+existing projects. You have to do that by adding/editing project config
+file.
+
+See [basic tutorial](https://github.com/node-ci/nci/blob/master/docs/tutorials/standalone-web-ui.md)
+for setup and usage details.
 
 
 ## Resources
