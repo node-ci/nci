@@ -239,6 +239,22 @@ Steppy(
 		app.notifier.init(app.config.notify, this.slot());
 	},
 	function() {
+		// only at development and only when there is no other request listeners
+		// (e.g. socketio) add not found route to the very end (after all
+		// plugins register)
+		if (
+			env === 'development' &&
+			app.httpServer._events &&
+			_(app.httpServer._events.request).isFunction()
+		) {
+			app.httpServer.addRequestListener(function(req, res, next) {
+				if (!res.headersSent) {
+					res.statusCode = 404;
+					res.end(req.method.toUpperCase() + ' ' + req.url + ' Not Found');
+				}
+			});
+		}
+
 		// load projects after all plugins to provide ability for plugins to
 		// handle `projectLoaded` event
 		app.projects.loadAll(this.slot());
