@@ -1,6 +1,6 @@
 'use strict';
 
-var Node = require('../lib/node').Node,
+var createNode = require('../lib/node').createNode,
 	expect = require('expect.js');
 
 
@@ -19,7 +19,7 @@ describe('Node', function() {
 
 	describe('basic', function() {
 		it('instance should be created without errors', function() {
-			node = new Node({
+			node = createNode({
 				type: 'local',
 				maxExecutorsCount: 1
 			});

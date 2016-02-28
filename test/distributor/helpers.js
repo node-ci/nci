@@ -2,16 +2,16 @@
 
 var _ = require('underscore'),
 	sinon = require('sinon'),
-	Node = require('../../lib/node').Node,
+	createNode = require('../../lib/node').createNode,
 	EventEmitter = require('events').EventEmitter,
 	ProjectsCollection = require('../../lib/project').ProjectsCollection,
 	Distributor = require('../../lib/distributor').Distributor,
 	Notifier = require('../../lib/notifier').Notifier;
 
 
-var createNode = function(executorRun) {
+var createMockedNode = function(executorRun) {
 	return function(params) {
-		var node = new Node(params);
+		var node = createNode(params);
 		node._createExecutor = function(project) {
 			var executor = new EventEmitter();
 			executor.project = project;
@@ -38,7 +38,7 @@ exports.createDistributor = function(params) {
 			distributorParams.executorRun || sinon.stub().callsArgAsync(1)
 		);
 		// patch method which will be called at constructor
-		sinon.stub(Distributor.prototype, '_createNode', createNode(
+		sinon.stub(Distributor.prototype, '_createNode', createMockedNode(
 			executorRun
 		));
 		delete distributorParams.executorRun;
