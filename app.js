@@ -16,6 +16,10 @@ var env = process.env.NODE_ENV || 'development',
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
+	libNode = require('./lib/node'),
+	libCommand = require('./lib/command'),
+	libExecutor = require('./lib/executor'),
+	libScm = require('./lib/scm'),
 	EventEmitter = require('events').EventEmitter,
 	validateConfig = require('./lib/validateConfig'),
 	utils = require('./lib/utils');
@@ -64,6 +68,10 @@ app.lib = {};
 app.lib.BaseReaderLoader = BaseReaderLoader;
 app.lib.BaseNotifierTransport = BaseNotifierTransport;
 app.lib.logger = libLogger;
+app.lib.command = libCommand;
+app.lib.executor = libExecutor;
+app.lib.scm = libScm;
+app.lib.node = libNode;
 
 var configDefaults = {
 	notify: {},
