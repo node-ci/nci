@@ -230,7 +230,7 @@ Steppy(
 		completeUncompletedBuilds(this.slot());
 	},
 	function() {
-		require('./distributor').init(app, this.slot());
+		require('./distributor').create(app, this.slot());
 	},
 	function(err, distributor) {
 		app.builds = new BuildsCollection({
@@ -243,6 +243,8 @@ Steppy(
 			logger.log('Load plugin "%s"', plugin);
 			require(plugin).register(app);
 		});
+
+		distributor.init();
 
 		app.notifier.init(app.config.notify, this.slot());
 	},

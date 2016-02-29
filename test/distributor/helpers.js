@@ -52,6 +52,7 @@ exports.createDistributor = function(params) {
 	});
 
 	var distributor = new Distributor(distributorParams);
+	distributor.init();
 
 	if (mockNode) {
 		Distributor.prototype._createNode.restore();
