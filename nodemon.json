@@ -3,6 +3,7 @@
 	"ignore": [
 		"data",
 		"node_modules/*/node_modules/",
+		"node_modules/nci-classic-ui/app/",
 		"node_modules/nci-classic-ui/static/"
 	],
 	"watch": "./"

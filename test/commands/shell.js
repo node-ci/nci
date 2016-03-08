@@ -44,7 +44,7 @@ describe('Shell command', function() {
 			// messages and codes are slightly different across the OSes
 			// e.g. at linux and macos
 			expect(err.message).match(
-				/^Spawned command exits with non-zero code: \d+/
+				/Spawned command exits with non-zero code: \d+/
 			);
 			expect(err.stderr).match(/echo1:.*not found/);
 			expect(std.err).equal('');
