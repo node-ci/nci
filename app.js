@@ -8,14 +8,13 @@ var env = process.env.NODE_ENV || 'development',
 	Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	Reader = require('./lib/reader').Reader,
-	BaseReaderLoader = require('./lib/reader/loader/base').Loader,
-	JsonReaderLoader = require('./lib/reader/loader/json').Loader,
 	Notifier = require('./lib/notifier').Notifier,
 	BaseNotifierTransport = require('./lib/notifier/transport/base').Transport,
 	ConsoleNotifierTransport = require('./lib/notifier/transport/console').Transport,
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
+	libReader = require('./lib/reader'),
 	libNode = require('./lib/node'),
 	libCommand = require('./lib/command'),
 	libExecutor = require('./lib/executor'),
@@ -28,7 +27,6 @@ var app = new EventEmitter(),
 	logger = libLogger('app');
 
 app.reader = new Reader();
-app.reader.register('json', JsonReaderLoader);
 
 var httpServerLogger = libLogger('http server');
 
@@ -65,9 +63,9 @@ app.httpServer.addRequestListener(function(req, res, next) {
 });
 
 app.lib = {};
-app.lib.BaseReaderLoader = BaseReaderLoader;
 app.lib.BaseNotifierTransport = BaseNotifierTransport;
 app.lib.logger = libLogger;
+app.lib.reader = libReader;
 app.lib.command = libCommand;
 app.lib.executor = libExecutor;
 app.lib.scm = libScm;
