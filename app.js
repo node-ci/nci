@@ -9,12 +9,11 @@ var env = process.env.NODE_ENV || 'development',
 	_ = require('underscore'),
 	Reader = require('./lib/reader').Reader,
 	Notifier = require('./lib/notifier').Notifier,
-	BaseNotifierTransport = require('./lib/notifier/transport/base').Transport,
-	ConsoleNotifierTransport = require('./lib/notifier/transport/console').Transport,
 	ProjectsCollection = require('./lib/project').ProjectsCollection,
 	BuildsCollection = require('./lib/build').BuildsCollection,
 	libLogger = require('./lib/logger'),
 	libReader = require('./lib/reader'),
+	libNotifier = require('./lib/notifier'),
 	libNode = require('./lib/node'),
 	libCommand = require('./lib/command'),
 	libExecutor = require('./lib/executor'),
@@ -63,9 +62,9 @@ app.httpServer.addRequestListener(function(req, res, next) {
 });
 
 app.lib = {};
-app.lib.BaseNotifierTransport = BaseNotifierTransport;
 app.lib.logger = libLogger;
 app.lib.reader = libReader;
+app.lib.notifier = libNotifier;
 app.lib.command = libCommand;
 app.lib.executor = libExecutor;
 app.lib.scm = libScm;
@@ -223,7 +222,6 @@ Steppy(
 		});
 
 		app.notifier = new Notifier({db: db});
-		app.notifier.register('console', ConsoleNotifierTransport);
 
 		completeUncompletedBuilds(this.slot());
 	},

@@ -1,6 +1,7 @@
 'use strict';
 
-var Notifier = require('../lib/notifier').Notifier,
+var libNotifier = require('../lib/notifier'),
+	Notifier = libNotifier.Notifier,
 	expect = require('expect.js'),
 	sinon = require('sinon'),
 	_ = require('underscore');
@@ -19,7 +20,7 @@ describe('notifier module', function() {
 
 	describe('test notifier', function() {
 		it('should be rigestered', function() {
-			notifier.register('test', TestTransport);
+			libNotifier.register('test', TestTransport);
 		});
 
 		it('should be intialized without errors', function(done) {
