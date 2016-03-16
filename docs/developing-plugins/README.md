@@ -31,6 +31,12 @@ See [mail notification plugin](https://github.com/node-ci/nci-mail-notification)
 for example.
 
 
+## Node plugin
+
+Extends nci with different node types (e.g. ssh, docker, etc) for executing
+builds. To implement such plugin you need to make subclass of `BaseNode`.
+
+
 ## Custom plugin
 
 Can use following public api:
