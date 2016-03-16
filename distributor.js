@@ -7,7 +7,7 @@ var Steppy = require('twostep').Steppy,
 	logger = require('./lib/logger')('distributor');
 
 
-exports.init = function(app, callback) {
+exports.create = function(app, callback) {
 	var distributor = new Distributor({
 		nodes: app.config.nodes,
 		projects: app.projects,

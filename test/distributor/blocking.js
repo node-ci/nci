@@ -93,7 +93,7 @@ describe('Distributor blocking with max 2 executors count', function() {
 			var spy = updateBuildSpy;
 			expect(spy.getCall(3).args[0].project.name).equal('project2');
 			expect(spy.getCall(3).args[1].waitReason).equal(
-				'Blocked by currently running "project1"'
+				'local: blocked by currently running "project1"'
 			);
 		});
 

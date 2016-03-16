@@ -1,13 +1,122 @@
 'use strict';
 
-var Node = require('../lib/node').Node,
-	expect = require('expect.js');
+var createNode = require('../lib/node').createNode,
+	expect = require('expect.js'),
+	_ = require('underscore');
 
 
 describe('Node', function() {
 	var node,
 		project1 = {name: 'project1'},
 		project2 = {name: 'project2'};
+
+	var createNodeMock = function(params) {
+		params = params || {};
+
+		var node = createNode(_({
+			name: 'executor1',
+			type: 'local',
+			maxExecutorsCount: 1,
+			usageStrategy: 'maximum'
+		}).extend(params));
+
+		// only for testing
+		if (params.executors) {
+			node.executors = params.executors;
+		}
+		return node;
+	};
+
+	describe('wait reason', function() {
+
+		it('should be not a target node when node target is not match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1'
+			}).getExecutorWaitReason({
+				name: 'project1',
+				node: {target: 'other executor'}
+			});
+			expect(waitReason).eql('executor1: not a target node');
+		});
+
+		it('should be falsy when node target match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1'
+			}).getExecutorWaitReason({
+				name: 'project1',
+				node: {target: 'executor1'}
+			});
+			expect(waitReason).not.ok();
+		});
+
+		it('should be falsy when node target (array) match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1'
+			}).getExecutorWaitReason({
+				name: 'project1',
+				node: {target: ['executor1']}
+			});
+			expect(waitReason).not.ok();
+		});
+
+		it('should be only for specific projects when target is not set', function() {
+			var waitReason = createNodeMock({
+				usageStrategy: 'specificProject'
+			}).getExecutorWaitReason({
+				name: 'project1'
+			});
+			expect(waitReason).eql('executor1: only for specific projects');
+		});
+
+		it('should be all executors are busy when true', function() {
+			var waitReason = createNodeMock({
+				maxExecutorsCount: 1,
+				executors: {project2: 1}
+			}).getExecutorWaitReason({
+				name: 'project1'
+			});
+			expect(waitReason).eql('executor1: all executors are busy');
+		});
+
+		it('should be project already running on node when true', function() {
+			var waitReason = createNodeMock({
+				maxExecutorsCount: 2,
+				executors: {project1: 1}
+			}).getExecutorWaitReason({
+				name: 'project1'
+			});
+			expect(waitReason).eql('executor1: project already running on node');
+		});
+
+		it('should be blocked by project when blocked by executing', function() {
+			var waitReason = createNodeMock({
+				maxExecutorsCount: 2,
+				executors: {project2: {project: {name: 'project2'}}}
+			}).getExecutorWaitReason({
+				name: 'project1',
+				blockedBy: ['project2']
+			});
+			expect(waitReason).eql(
+				'executor1: blocked by currently running "project2"'
+			);
+		});
+
+		it('should be blocked by project when executing blocks it', function() {
+			var waitReason = createNodeMock({
+				maxExecutorsCount: 2,
+				executors: {project2: {project: {
+					name: 'project2',
+					blocks: ['project1']
+				}}}
+			}).getExecutorWaitReason({
+				name: 'project1'
+			});
+			expect(waitReason).eql(
+				'executor1: blocked by currently running "project2"'
+			);
+		});
+
+	});
 
 	var expectNodeHasFreeExecutor = function(project, value) {
 		it('should' + (value ? ' ' : ' not ') + 'has free executors for ' +
@@ -19,7 +128,7 @@ describe('Node', function() {
 
 	describe('basic', function() {
 		it('instance should be created without errors', function() {
-			node = new Node({
+			node = createNode({
 				type: 'local',
 				maxExecutorsCount: 1
 			});

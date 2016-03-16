@@ -42,7 +42,8 @@ var expect = require('expect.js'),
 		it('create scm instance attached to new repository without errors', function() {
 			scm = createScm({
 				type: type,
-				repository: originalRepositoryPath
+				repository: originalRepositoryPath,
+				command: new SpawnCommand()
 			});
 		});
 
@@ -129,7 +130,11 @@ var expect = require('expect.js'),
 		});
 
 		it('create scm instance attached to existing `cwd` without errors', function() {
-			scm = createScm({type: type, cwd: repositoryPath});
+			scm = createScm({
+				type: type,
+				cwd: repositoryPath,
+				command: new SpawnCommand()
+			});
 		});
 
 		it('expect repository log from rev0 to default revision equals to ' +
