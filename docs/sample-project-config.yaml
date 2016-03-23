@@ -7,6 +7,10 @@ scm:
     repository: https://github.com/node-ci/nci
     rev: master
 
+#configure target node (by it's name)
+node:
+    target: localhost
+
 #specify which revisions should be built (by `tag` or `comment` regexp)
 #in any case (e.g. when several commits pushed at once)
 catchRev:
