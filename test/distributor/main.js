@@ -2,7 +2,8 @@
 
 var expect = require('expect.js'),
 	sinon = require('sinon'),
-	helpers = require('./helpers');
+	helpers = require('./helpers'),
+	_ = require('underscore');
 
 
 describe('Distributor main', function() {
@@ -48,9 +49,12 @@ describe('Distributor main', function() {
 
 		it('build should be in-progress', function() {
 			var changes = updateBuildSpy.getCall(1).args[1];
-			expect(changes).only.have.keys('startDate', 'status', 'waitReason');
+			expect(changes).only.have.keys(
+				'startDate', 'status', 'waitReason', 'node'
+			);
 			expect(changes.status).equal('in-progress');
 			expect(changes.waitReason).equal('');
+			expect(changes.node).eql(_(distributor.nodes[0]).pick('type', 'name'));
 		});
 
 		it('build should be done', function() {
