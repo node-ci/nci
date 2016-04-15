@@ -35,6 +35,7 @@ for example.
 
 Extends nci with different node types (e.g. ssh, docker, etc) for executing
 builds. To implement such plugin you need to make subclass of `BaseNode`.
+See [ssh node plugin](https://github.com/node-ci/nci-ssh-node) for example.
 
 
 ## Custom plugin

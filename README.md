@@ -86,18 +86,9 @@ for setup and usage details.
 * [developing plugins doc](./docs/developing-plugins)
 
 
-## Roadmap
-
-* preserve output colors when spawn commands
-* expose node/executors api, implement plugin for remote and isolated build
-running (docker or similar). Only local executor currently available.
-* extend web interface functionality
-* allow store project config inside repository of this project
-* provide integration with external systems (e.g. gogs)
-
-
 ## Plugins
 
+* [ssh node plugin](https://github.com/node-ci/nci-ssh-node)
 * [yaml reader plugin](https://github.com/node-ci/nci-yaml-reader)
 * [classic ui plugin](https://github.com/node-ci/nci-classic-ui)
 * [static server plugin](https://github.com/node-ci/nci-static-server)
