@@ -4,3 +4,5 @@ test
 *.tgz
 .travis.yml
 docs
+.nvmrc
+
