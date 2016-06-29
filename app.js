@@ -33,7 +33,7 @@ app.httpServer = httpServer.create();
 
 app.httpServer.on('error', function(err, req, res) {
 	httpServerLogger.error(
-		'Error processing request ' + req.method + ' ' + req.url + ':',
+                'Error processing request ' + (req&&req.method) + ' ' + (req&&req.url) + ':',
 		err.stack || err
 	);
 	if (!res.headersSent) {
