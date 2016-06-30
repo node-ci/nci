@@ -32,11 +32,16 @@ var httpServerLogger = libLogger('http server');
 app.httpServer = httpServer.create();
 
 app.httpServer.on('error', function(err, req, res) {
-	httpServerLogger.error(
-                'Error processing request ' + (req&&req.method) + ' ' + (req&&req.url) + ':',
-		err.stack || err
-	);
-	if (!res.headersSent) {
+	if (req) {
+		httpServerLogger.error(
+			'Error processing request ' + req.method + ' ' + req.url + ':',
+			err.stack || err
+		);
+	} else {
+		httpServerLogger.error(err.stack || err);
+	}
+
+	if (res && !res.headersSent) {
 		res.statusCode = 500;
 		res.end();
 	}
