@@ -152,7 +152,7 @@ exports.init = function(dbPath, params, callback) {
 			.on('error', function(err) {
 				resultStream.emit('error', err);
 			})
-			.pipe(resultStream)
+			.pipe(resultStream);
 	};
 
 	exports.logLines.find = function(params, callback) {
@@ -167,7 +167,7 @@ exports.init = function(dbPath, params, callback) {
 			})
 			.on('end', function() {
 				callback(null, lines);
-			})
+			});
 	};
 
 	exports.logLines.remove = function(params, callback) {
@@ -248,7 +248,9 @@ function generateIds(section, docs, callback) {
 			}
 
 			section.find({
-				start: {createDate: ''}, limit: 1, reverse: true
+				start: {createDate: ''},
+				limit: 1,
+				reverse: true
 			}, this.slot());
 		},
 		function(err, lastDocs) {

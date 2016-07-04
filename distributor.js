@@ -55,7 +55,7 @@ exports.create = function(app, callback) {
 		db.logLines.put(lines, function(err) {
 			if (err) {
 				logger.error(
-					'Error during write log line "' + logLineNumber +
+					'Error during write log lines "' + _(lines).pluck('number') +
 					'" for build "' + build.id + '":',
 					err.stack || err
 				);

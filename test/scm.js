@@ -39,13 +39,15 @@ var expect = require('expect.js'),
 
 		var scm;
 
-		it('create scm instance attached to new repository without errors', function() {
-			scm = createScm({
-				type: type,
-				repository: originalRepositoryPath,
-				command: new SpawnCommand()
-			});
-		});
+		it('create scm instance attached to new repository without errors',
+			function() {
+				scm = createScm({
+					type: type,
+					repository: originalRepositoryPath,
+					command: new SpawnCommand()
+				});
+			}
+		);
 
 		var currentRev = data[0].id;
 		it('clone rev0 to dst without errors', function(done) {
@@ -129,13 +131,15 @@ var expect = require('expect.js'),
 			});
 		});
 
-		it('create scm instance attached to existing `cwd` without errors', function() {
-			scm = createScm({
-				type: type,
-				cwd: repositoryPath,
-				command: new SpawnCommand()
-			});
-		});
+		it('create scm instance attached to existing `cwd` without errors',
+			function() {
+				scm = createScm({
+					type: type,
+					cwd: repositoryPath,
+					command: new SpawnCommand()
+				});
+			}
+		);
 
 		it('expect repository log from rev0 to default revision equals to ' +
 			'all revs followed by rev 0 (in reverse order)', function(done) {

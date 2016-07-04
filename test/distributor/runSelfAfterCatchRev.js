@@ -1,3 +1,5 @@
+'use strict';
+
 var expect = require('expect.js'),
 	sinon = require('sinon'),
 	helpers = require('../helpers'),
