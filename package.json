@@ -10,6 +10,7 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000",
     "dev": "nodemon app.js",
     "sync": "npm install && npm prune",
+    "lint": "jshint ./",
     "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
     "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
     "doc": "nrun docProjectsCollection && nrun docBuildsCollection"
@@ -51,6 +52,7 @@
   "devDependencies": {
     "dox": "0.8.0",
     "expect.js": "0.3.1",
+    "jshint": "2.4.4",
     "memdown": "1.1.0",
     "mocha": "1.18.2",
     "nci-projects-reloader": "1.1.0",

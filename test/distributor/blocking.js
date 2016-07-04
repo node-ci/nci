@@ -19,7 +19,8 @@ describe('Distributor blocking with max 2 executors count', function() {
 	var itRunParallelProjects = function() {
 		it('distributor should be created without errors', function() {
 			distributor = helpers.createDistributor({
-				projects: projects, nodes: nodes
+				projects: projects,
+				nodes: nodes
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
@@ -61,7 +62,8 @@ describe('Distributor blocking with max 2 executors count', function() {
 	var itRunSequentialProjects = function() {
 		it('distributor should be created without errors', function() {
 			distributor = helpers.createDistributor({
-				projects: projects, nodes: nodes
+				projects: projects,
+				nodes: nodes
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
@@ -117,7 +119,7 @@ describe('Distributor blocking with max 2 executors count', function() {
 	describe('should run 2 non-blocking projects in parallel', function() {
 		before(function() {
 			projects = [{
-				name: 'project1',
+				name: 'project1'
 			}, {
 				name: 'project2'
 			}];
@@ -129,7 +131,7 @@ describe('Distributor blocking with max 2 executors count', function() {
 	describe('should run project1, then 2, when 2 blocked by 1', function() {
 		before(function() {
 			projects = [{
-				name: 'project1',
+				name: 'project1'
 			}, {
 				name: 'project2',
 				blockedBy: ['project1']
