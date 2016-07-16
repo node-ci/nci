@@ -15,6 +15,8 @@
   - `params.initiator` - contains information about initiator of the build,
   must contain `type` property e.g. when one build triggers another:
   initiator: {type: 'build', id: 123, number: 10, project: {name: 'project1'}
+  - `params.buildParams` - params for current build (override project config)
+  - `params.buildParams.scmRev` - target revision for the build
 
 ## BuildsCollection.cancel(id:Number, [callback(err)]:Function)
 

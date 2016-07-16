@@ -200,4 +200,69 @@ describe('Distributor main', function() {
 			});
 		});
 	});
+
+	describe('with success project and buildParams.scmRev', function() {
+		var project1 = {
+				name: 'project1',
+				scm: {type: 'mercurial', rev: '1'}
+			},
+			distributorParams = {
+				projects: [project1],
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
+			};
+
+		describe('when buildParams.scmRev is not set', function() {
+			var updateBuildSpy;
+
+			it('instance should be created without errors', function() {
+				distributor = helpers.createDistributor(distributorParams);
+				updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+			});
+
+			it('should run without errors', function(done) {
+				distributor.run({projectName: 'project1'}, function(err) {
+					expect(err).not.ok();
+					done();
+				});
+			});
+
+			it('build should be queued with proper params', function() {
+				var changes = updateBuildSpy.getCall(0).args[1];
+				expect(changes.params).eql({});
+				expect(changes.project).eql(project1);
+			});
+		});
+
+		describe('when buildParams.scmRev is set', function() {
+			var updateBuildSpy,
+				buildParams = {scmRev: '2'};
+
+			it('instance should be created without errors', function() {
+				distributor = helpers.createDistributor(distributorParams);
+				updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+			});
+
+			it('should run without errors', function(done) {
+				distributor.run({
+					projectName: 'project1',
+					buildParams: buildParams
+				}, function(err) {
+					expect(err).not.ok();
+					done();
+				});
+			});
+
+			it('build should be queued with proper params', function() {
+				var changes = updateBuildSpy.getCall(0).args[1];
+				expect(changes.params).eql(buildParams);
+				expect(changes.project).eql(
+					_({}).extend(
+						project1,
+						{scm: _({}).extend(project1.scm, {rev: buildParams.scmRev})}
+					)
+				);
+			});
+		});
+	});
+
 });
