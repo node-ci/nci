@@ -13,8 +13,16 @@ describe('Shell command', function() {
 		});
 	});
 
-	it('Default shell should be sh', function() {
-		expect(shellCommand.shell).equal('/bin/sh');
+	var defaultShell = process.platform === 'win32' ? 'cmd' : '/bin/sh';
+
+	it('Default shell should be ' + defaultShell, function() {
+		expect(shellCommand.shell).equal(defaultShell);
+	});
+
+	var defaultShellCmdArg = process.platform === 'win32' ? '/C' : '-c';
+
+	it('Default shell cmd arg should ' + defaultShellCmdArg, function() {
+		expect(shellCommand.shellCmdArg).equal(defaultShellCmdArg);
 	});
 
 	var collectData = function(result, field) {
