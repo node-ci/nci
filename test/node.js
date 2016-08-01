@@ -29,13 +29,13 @@ describe('Node', function() {
 
 	describe('wait reason', function() {
 
-		it('should be not a target node when node target is not match', function() {
+		it('should be not a target node when node target does not match', function() {
 			var waitReason = createNodeMock({
 				name: 'executor1'
 			}).getExecutorWaitReason({
 				name: 'project1',
 				node: {target: 'other executor'}
-			});
+			}, {});
 			expect(waitReason).eql('executor1: not a target node');
 		});
 
@@ -45,7 +45,7 @@ describe('Node', function() {
 			}).getExecutorWaitReason({
 				name: 'project1',
 				node: {target: 'executor1'}
-			});
+			}, {});
 			expect(waitReason).not.ok();
 		});
 
@@ -55,7 +55,36 @@ describe('Node', function() {
 			}).getExecutorWaitReason({
 				name: 'project1',
 				node: {target: ['executor1']}
-			});
+			}, {});
+			expect(waitReason).not.ok();
+		});
+
+		it('should be not a target env when node envs are not set', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1'
+			}).getExecutorWaitReason({
+				name: 'project1'
+			}, {env: {name: 'some env'}});
+			expect(waitReason).eql('executor1: not a target env');
+		});
+
+		it('should be not a target env when node envs do not match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1',
+				envs: ['some env']
+			}).getExecutorWaitReason({
+				name: 'project1'
+			}, {env: {name: 'another env'}});
+			expect(waitReason).eql('executor1: not a target env');
+		});
+
+		it('should be falsy when node envs match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1',
+				envs: ['some env']
+			}).getExecutorWaitReason({
+				name: 'project1'
+			}, {env: {name: 'some env'}});
 			expect(waitReason).not.ok();
 		});
 
@@ -64,7 +93,7 @@ describe('Node', function() {
 				usageStrategy: 'specificProject'
 			}).getExecutorWaitReason({
 				name: 'project1'
-			});
+			}, {});
 			expect(waitReason).eql('executor1: only for specific projects');
 		});
 
@@ -74,7 +103,7 @@ describe('Node', function() {
 				executors: {project2: 1}
 			}).getExecutorWaitReason({
 				name: 'project1'
-			});
+			}, {});
 			expect(waitReason).eql('executor1: all executors are busy');
 		});
 
@@ -84,7 +113,7 @@ describe('Node', function() {
 				executors: {project1: 1}
 			}).getExecutorWaitReason({
 				name: 'project1'
-			});
+			}, {});
 			expect(waitReason).eql('executor1: project already running on node');
 		});
 
@@ -95,7 +124,7 @@ describe('Node', function() {
 			}).getExecutorWaitReason({
 				name: 'project1',
 				blockedBy: ['project2']
-			});
+			}, {});
 			expect(waitReason).eql(
 				'executor1: blocked by currently running "project2"'
 			);
@@ -110,7 +139,7 @@ describe('Node', function() {
 				}}}
 			}).getExecutorWaitReason({
 				name: 'project1'
-			});
+			}, {});
 			expect(waitReason).eql(
 				'executor1: blocked by currently running "project2"'
 			);
@@ -121,7 +150,7 @@ describe('Node', function() {
 	var expectNodeHasFreeExecutor = function(project, value) {
 		it('should' + (value ? ' ' : ' not ') + 'has free executors for ' +
 			project.name, function() {
-				expect(node.hasFreeExecutor(project)).equal(value);
+				expect(node.hasFreeExecutor(project, {})).equal(value);
 			}
 		);
 	};
