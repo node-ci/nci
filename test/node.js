@@ -100,7 +100,7 @@ describe('Node', function() {
 		it('should be all executors are busy when true', function() {
 			var waitReason = createNodeMock({
 				maxExecutorsCount: 1,
-				executors: {project2: 1}
+				executors: [{project: {name: 'project2'}}]
 			}).getExecutorWaitReason({
 				name: 'project1'
 			}, {});
@@ -110,7 +110,7 @@ describe('Node', function() {
 		it('should be project already running on node when true', function() {
 			var waitReason = createNodeMock({
 				maxExecutorsCount: 2,
-				executors: {project1: 1}
+				executors: [{project: {name: 'project1'}}]
 			}).getExecutorWaitReason({
 				name: 'project1'
 			}, {});
@@ -120,7 +120,7 @@ describe('Node', function() {
 		it('should be blocked by project when blocked by executing', function() {
 			var waitReason = createNodeMock({
 				maxExecutorsCount: 2,
-				executors: {project2: {project: {name: 'project2'}}}
+				executors: [{project: {name: 'project2'}}]
 			}).getExecutorWaitReason({
 				name: 'project1',
 				blockedBy: ['project2']
@@ -133,10 +133,9 @@ describe('Node', function() {
 		it('should be blocked by project when executing blocks it', function() {
 			var waitReason = createNodeMock({
 				maxExecutorsCount: 2,
-				executors: {project2: {project: {
-					name: 'project2',
-					blocks: ['project1']
-				}}}
+				executors: [{
+					project: {name: 'project2', blocks: ['project1']}
+				}]
 			}).getExecutorWaitReason({
 				name: 'project1'
 			}, {});
