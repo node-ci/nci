@@ -20,6 +20,10 @@ describe('Node', function() {
 			usageStrategy: 'maximum'
 		}).extend(params));
 
+		if (params.parallelProjectBuilds) {
+			node.parallelProjectBuilds = params.parallelProjectBuilds;
+		}
+
 		// only for testing
 		if (params.executors) {
 			node.executors = params.executors;
@@ -115,6 +119,17 @@ describe('Node', function() {
 				name: 'project1'
 			}, {});
 			expect(waitReason).eql('executor1: project already running on node');
+		});
+
+		it('should be falsy when parallel project builds are allowed', function() {
+			var waitReason = createNodeMock({
+				maxExecutorsCount: 2,
+				executors: [{project: {name: 'project1'}}],
+				parallelProjectBuilds: true
+			}).getExecutorWaitReason({
+				name: 'project1'
+			}, {});
+			expect(waitReason).not.ok();
 		});
 
 		it('should be blocked by project when blocked by executing', function() {
