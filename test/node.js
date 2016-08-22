@@ -132,6 +132,22 @@ describe('Node', function() {
 			expect(waitReason).not.ok();
 		});
 
+		it('should be set when parallel project builds are allowed but same env',
+			function() {
+				var waitReason = createNodeMock({
+					maxExecutorsCount: 2,
+					envs: ['env1'],
+					executors: [{project: {name: 'project1'}, env: {name: 'env1'}}],
+					parallelProjectBuilds: true
+				}).getExecutorWaitReason({
+					name: 'project1'
+				}, {env: {name: 'env1'}});
+				expect(waitReason).eql(
+					'executor1: project within "env1" env already running on node'
+				);
+			}
+		);
+
 		it('should be blocked by project when blocked by executing', function() {
 			var waitReason = createNodeMock({
 				maxExecutorsCount: 2,
