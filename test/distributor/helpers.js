@@ -12,9 +12,9 @@ var _ = require('underscore'),
 var createMockedNode = function(executorRun) {
 	return function(params) {
 		var node = createNode(params);
-		node._createExecutor = function(project) {
+		node._createExecutor = function(createExecutorParams) {
 			var executor = new EventEmitter();
-			executor.project = project;
+			executor.project = createExecutorParams.project;
 			executor.run = executorRun;
 			return executor;
 		};
