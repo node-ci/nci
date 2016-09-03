@@ -80,7 +80,7 @@ describe('Distributor main', function() {
 				projects: projects,
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
 				executorRun: sinon.stub().callsArgWithAsync(
-					1,
+					0,
 					new Error('Some error')
 				)
 			});

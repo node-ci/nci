@@ -35,7 +35,7 @@ exports.createDistributor = function(params) {
 
 	if (mockNode) {
 		var executorRun = (
-			distributorParams.executorRun || sinon.stub().callsArgAsync(1)
+			distributorParams.executorRun || sinon.stub().callsArgAsync(0)
 		);
 		// patch method which will be called at constructor
 		sinon.stub(Distributor.prototype, '_createNode', createMockedNode(

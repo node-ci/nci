@@ -178,7 +178,7 @@ describe('Node', function() {
 	});
 
 	var expectNodeHasFreeExecutor = function(project, value) {
-		it('should' + (value ? ' ' : ' not ') + 'has free executors for ' +
+		it('should' + (value ? ' ' : ' not ') + 'have free executors for ' +
 			project.name, function() {
 				expect(node.hasFreeExecutor(project, {})).equal(value);
 			}
@@ -202,7 +202,7 @@ describe('Node', function() {
 		before(function() {
 			originalCreateExecutor = node._createExecutor;
 			node._createExecutor = function() {
-				return {run: function(params, callback) {
+				return {run: function(callback) {
 					setTimeout(callback, 100);
 				}};
 			};

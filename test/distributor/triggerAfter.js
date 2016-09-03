@@ -20,7 +20,7 @@ describe('Distributor trigger after', function() {
 			}, {
 				name: 'project2'
 			}];
-			executorRunSpy = sinon.stub().callsArgAsync(1);
+			executorRunSpy = sinon.stub().callsArgAsync(0);
 		});
 
 		it('distributor should be created without errors', function() {
@@ -53,7 +53,7 @@ describe('Distributor trigger after', function() {
 
 	describe('done when project is error', function() {
 		before(function() {
-			executorRunSpy = sinon.stub().callsArgWithAsync(1, new Error(
+			executorRunSpy = sinon.stub().callsArgWithAsync(0, new Error(
 				'Some error'
 			));
 		});
@@ -92,7 +92,7 @@ describe('Distributor trigger after', function() {
 			}, {
 				name: 'project2'
 			}];
-			executorRunSpy = sinon.stub().callsArgAsync(1);
+			executorRunSpy = sinon.stub().callsArgAsync(0);
 		});
 
 		it('distributor should be created without errors', function() {
@@ -125,7 +125,7 @@ describe('Distributor trigger after', function() {
 
 	describe('status is not set when project is error', function() {
 		before(function() {
-			executorRunSpy = sinon.stub().callsArgWithAsync(1, new Error(
+			executorRunSpy = sinon.stub().callsArgWithAsync(0, new Error(
 				'Some error'
 			));
 		});
