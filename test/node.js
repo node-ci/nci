@@ -82,10 +82,20 @@ describe('Node', function() {
 			expect(waitReason).eql('executor1: not a target env');
 		});
 
-		it('should be falsy when node envs match', function() {
+		it('should be falsy when node envs string match', function() {
 			var waitReason = createNodeMock({
 				name: 'executor1',
 				envs: ['some env']
+			}).getExecutorWaitReason({
+				name: 'project1'
+			}, {env: {name: 'some env'}});
+			expect(waitReason).not.ok();
+		});
+
+		it('should be falsy when node envs regexp match', function() {
+			var waitReason = createNodeMock({
+				name: 'executor1',
+				envs: [/some env/]
 			}).getExecutorWaitReason({
 				name: 'project1'
 			}, {env: {name: 'some env'}});
