@@ -39,7 +39,10 @@ exports.init = function(dbPath, params, callback) {
 				id: 1
 			}, value: function(build) {
 				return _(build).pick('id', 'number', 'startDate', 'endDate');
-			}}
+			}},
+			// note that not all builds have groupId, so it's suitable only for
+			// select by particular groupId
+			{key: {groupId: 1, id: 1}, value: pickId}
 		]
 	});
 
@@ -92,7 +95,7 @@ exports.init = function(dbPath, params, callback) {
 	var buildLogsDbPath = path.join(dbPath, 'buildLogs'),
 		buildLogsDb = nlevel.db(buildLogsDbPath, params, callback);
 
-	// custom optimized emplementation for storing log lines
+	// custom optimized implementation for storing log lines
 	exports.logLines = {};
 
 	exports.logLines.separator = '~';
