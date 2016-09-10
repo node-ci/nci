@@ -106,7 +106,7 @@ describe('Distributor usage with environments', function() {
 
 		it('build should be queued with env', function() {
 			var changes = updateBuildSpy.getCall(0).args[1];
-			expect(changes).have.keys('env');
+			expect(changes).have.keys('status', 'env');
 			expect(changes.env).eql({name: env});
 			expect(changes.status).equal('queued');
 			expect(changes.completed).equal(false);
