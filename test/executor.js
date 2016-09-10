@@ -42,7 +42,7 @@ var expect = require('expect.js'),
 			});
 
 			it('should run without errors', function(done) {
-				executor.run({}, done);
+				executor.run(done);
 				executor.on('scmData', function(data) {
 					scmData = data;
 				});
@@ -86,7 +86,7 @@ var expect = require('expect.js'),
 				});
 
 				it('should run without errors', function(done) {
-					executor.run({}, function(err) {
+					executor.run(function(err) {
 						expect(err).not.ok();
 						done();
 					});
@@ -107,7 +107,7 @@ var expect = require('expect.js'),
 				itHasScmChanges(true);
 
 				it('should run it again without errors', function(done) {
-					executor.run({}, done);
+					executor.run(done);
 				});
 
 				it(
@@ -140,7 +140,7 @@ var expect = require('expect.js'),
 				});
 
 				it('should run without errors', function(done) {
-					executor.run({}, function(err) {
+					executor.run(function(err) {
 						expect(err).not.ok();
 						done();
 					});
@@ -161,7 +161,7 @@ var expect = require('expect.js'),
 					});
 
 				it('should run it again without errors', function(done) {
-					executor.run({}, done);
+					executor.run(done);
 				});
 
 				it(

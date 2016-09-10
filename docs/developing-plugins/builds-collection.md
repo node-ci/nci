@@ -17,6 +17,7 @@
   initiator: {type: 'build', id: 123, number: 10, project: {name: 'project1'}
   - `params.buildParams` - params for current build (override project config)
   - `params.buildParams.scmRev` - target revision for the build
+  - `params.env` - target environment for the build
 
 ## BuildsCollection.cancel(id:Number, [callback(err)]:Function)
 
