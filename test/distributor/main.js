@@ -10,15 +10,6 @@ describe('Distributor main', function() {
 	var distributor,
 		projects = [{name: 'project1'}];
 
-	var expectUpdateBuild = function(distributor, build, number, conditionsHash) {
-		var conditions = conditionsHash[number];
-		expect(distributor.queue).length(conditions.queue.length);
-		expect(build.status).equal(conditions.build.status);
-		if (build.status === 'error') {
-			expect(build.error.message).eql(conditions.build.error.message);
-		}
-	};
-
 	describe('with success project', function() {
 		var updateBuildSpy;
 
