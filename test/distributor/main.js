@@ -50,12 +50,9 @@ describe('Distributor main', function() {
 
 		it('build should be done', function() {
 			var changes = updateBuildSpy.getCall(2).args[1];
-			expect(changes).only.have.keys(
-				'endDate', 'status', 'completed', 'error'
-			);
+			expect(changes).only.have.keys('endDate', 'status', 'completed');
 			expect(changes.status).equal('done');
 			expect(changes.completed).equal(true);
-			expect(changes.error).equal(null);
 		});
 
 		it('update build called 3 times in total', function() {
@@ -126,7 +123,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel(1, function(err) {
+					distributor.cancel({buildId: 1}, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);
@@ -169,7 +166,7 @@ describe('Distributor main', function() {
 
 				var originalRunNext = distributor._runNext;
 				distributor._runNext = function() {
-					distributor.cancel(2, function(err) {
+					distributor.cancel({buildId: 2}, function(err) {
 						cancelError = err;
 					});
 					originalRunNext.apply(distributor, arguments);

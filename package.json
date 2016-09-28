@@ -46,6 +46,7 @@
     "conform": "0.2.12",
     "nlevel": "1.0.3",
     "through": "2.3.6",
+    "tree-kill": "1.1.0",
     "twostep": "0.4.1",
     "underscore": "1.8.3"
   },

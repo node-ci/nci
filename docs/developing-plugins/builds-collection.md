@@ -19,10 +19,11 @@
   - `params.buildParams.scmRev` - target revision for the build
   - `params.env` - target environment for the build
 
-## BuildsCollection.cancel(id:Number, [callback(err)]:Function)
+## BuildsCollection.cancel(params:Object, [callback(err)]:Function)
 
   Cancel build by id.
-  Note that only queued build can be canceled currently.
+  Queued or running build can be canceled.
+  - `params.buildId` - id of target build to cancel
 
 ## BuildsCollection.get(id:Number, callback(err,build):Function)
 

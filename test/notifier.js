@@ -44,7 +44,7 @@ describe('notifier module', function() {
 			notifier.send(build, function(err) {
 				expect(err).ok();
 				expect(err.message).match(/Build should be completed/);
-				expect(sendSpy.calledOnce).equal(false);
+				expect(sendSpy.called).equal(false);
 				done();
 			});
 		});
@@ -57,7 +57,7 @@ describe('notifier module', function() {
 		it('will do nothing if notify section isn`t set for project', function(done) {
 			notifier.send(build, function(err) {
 				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(false);
+				expect(sendSpy.called).equal(false);
 				done();
 			});
 		});
@@ -112,7 +112,7 @@ describe('notifier module', function() {
 		it('should not notify when build is error', function(done) {
 			notifier.send(build, function(err) {
 				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(false);
+				expect(sendSpy.called).equal(false);
 				done();
 			});
 		});
@@ -150,7 +150,45 @@ describe('notifier module', function() {
 		it('should not notify when build is done', function(done) {
 			notifier.send(build, function(err) {
 				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(false);
+				expect(sendSpy.called).equal(false);
+				done();
+			});
+		});
+	});
+
+	describe('notify on canceled', function() {
+		it('set build info', function() {
+			build = makeBuild({
+				status: 'canceled',
+				project: {notify: {on: ['canceled']}}
+			});
+			sendSpy.reset();
+		});
+
+		it('should notify when build with canceled', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(true);
+				done();
+			});
+		});
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'canceled'},
+				build: build
+			})).equal(true);
+		});
+
+		it('set build to done', function() {
+			build.status = 'done';
+			sendSpy.reset();
+		});
+
+		it('should not notify when build is done', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.called).equal(false);
 				done();
 			});
 		});
@@ -183,7 +221,7 @@ describe('notifier module', function() {
 				notifier.send(build, function(err) {
 					expect(err).not.ok();
 					expect(sendSpy.calledOnce).equal(true);
-					expect(notifier._getPrevBuild.calledOnce).equal(false);
+					expect(notifier._getPrevBuild.called).equal(false);
 					done();
 				});
 			}
@@ -206,7 +244,7 @@ describe('notifier module', function() {
 		it('should not notify when same previos build status', function(done) {
 			notifier.send(build, function(err) {
 				expect(err).not.ok();
-				expect(sendSpy.calledOnce).equal(false);
+				expect(sendSpy.called).equal(false);
 				done();
 			});
 		});
@@ -227,6 +265,72 @@ describe('notifier module', function() {
 		it('should be notified with right params', function() {
 			expect(sendSpy.calledWith({
 				notifyReason: {strategy: 'change'},
+				build: build
+			})).equal(true);
+		});
+
+	});
+
+	describe('notify on fix', function() {
+		it('set build info', function() {
+			build = makeBuild({
+				number: 1,
+				status: 'done',
+				project: {notify: {on: ['fix']}}
+			});
+			sendSpy.reset();
+		});
+
+		it('should notify for the first build (without get prev build)',
+			function(done) {
+				notifier._getPrevBuild.reset();
+				notifier.send(build, function(err) {
+					expect(err).not.ok();
+					expect(sendSpy.calledOnce).equal(true);
+					expect(notifier._getPrevBuild.called).equal(false);
+					done();
+				});
+			}
+		);
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'fix'},
+				build: build
+			})).equal(true);
+		});
+
+		it('set previos build info (same status)', function() {
+			build.number = 2;
+			prevBuild = _(build).clone();
+			prevBuild.number = 1;
+			sendSpy.reset();
+		});
+
+		it('should not notify when same previos build status', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.called).equal(false);
+				done();
+			});
+		});
+
+		it('set previos build info to error', function() {
+			prevBuild.status = 'error';
+			sendSpy.reset();
+		});
+
+		it('should notify when status is fixed', function(done) {
+			notifier.send(build, function(err) {
+				expect(err).not.ok();
+				expect(sendSpy.calledOnce).equal(true);
+				done();
+			});
+		});
+
+		it('should be notified with right params', function() {
+			expect(sendSpy.calledWith({
+				notifyReason: {strategy: 'fix'},
 				build: build
 			})).equal(true);
 		});
