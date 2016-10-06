@@ -1,4 +1,5 @@
 node_modules
+.idea
 test/workspace
 test/distributor/workspace
 test/repos/mercurial/
