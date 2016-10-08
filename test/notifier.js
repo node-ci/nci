@@ -275,13 +275,28 @@ describe('notifier module', function() {
 		it('set build info', function() {
 			build = makeBuild({
 				number: 1,
-				status: 'done',
+				status: 'error',
 				project: {notify: {on: ['fix']}}
 			});
 			sendSpy.reset();
 		});
 
-		it('should notify for the first build (without get prev build)',
+		it(
+			'should not notify when first build (without get prev build) is error',
+			function(done) {
+				notifier.send(build, function(err) {
+					expect(err).not.ok();
+					expect(sendSpy.called).equal(false);
+					done();
+				});
+			}
+		);
+
+		it('set first build status to done', function() {
+			build.status = 'done';
+		});
+
+		it('should notify for the first build (without get prev build) is done',
 			function(done) {
 				notifier._getPrevBuild.reset();
 				notifier.send(build, function(err) {
