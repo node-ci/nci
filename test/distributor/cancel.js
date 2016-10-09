@@ -19,7 +19,7 @@ describe('Distributor cancel method', function() {
 		}
 	};
 
-	describe('when cancel queued bulid', function() {
+	describe('when cancel queued build', function() {
 		var updateBuildSpy;
 
 		var cancelError;
@@ -46,12 +46,8 @@ describe('Distributor cancel method', function() {
 
 		it('build should be queued', function() {
 			var changes = updateBuildSpy.getCall(0).args[1];
-			expect(changes).only.have.keys(
-				'project', 'initiator', 'params', 'createDate', 'status',
-				'completed'
-			);
+			expect(changes).have.keys('status');
 			expect(changes.status).equal('queued');
-			expect(changes.completed).equal(false);
 		});
 
 		it('should be cancelled without error', function() {
@@ -60,6 +56,74 @@ describe('Distributor cancel method', function() {
 
 		it('update build called only once', function() {
 			expect(updateBuildSpy.callCount).equal(1);
+		});
+	});
+
+	describe('when cancel running build', function() {
+		var updateBuildSpy, canceledBy = {type: 'user'};
+
+		var cancelError;
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor(_({
+				executorRun: function(callback) {
+					distributor.cancel({
+						buildId: 1,
+						canceledBy: canceledBy
+					}, function(err) {
+						cancelError = err;
+
+						// that's usually happend when you kill something
+						callback(new Error(
+							'Spawned command exits with non-zero exit code: null'
+						));
+					});
+				},
+				executorCancel: function(callback) {
+					this.canceled = true;
+					distributor.inprogressBuildsHash[1].canceledBy = canceledBy;
+					callback();
+				}
+			}).defaults(distributorParams));
+
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+		});
+
+		it('should run without errors', function(done) {
+			distributor.run({projectName: 'project1'}, function(err) {
+				expect(err).not.ok();
+				done();
+			});
+
+		});
+
+		it('build should be queued', function() {
+			var changes = updateBuildSpy.getCall(0).args[1];
+			expect(changes).have.keys('status');
+			expect(changes.status).equal('queued');
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes).have.keys('status');
+			expect(changes.status).equal('in-progress');
+		});
+
+		it('build should be canceled', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
+			expect(changes).only.have.keys(
+				'status', 'endDate', 'completed', 'canceledBy'
+			);
+			expect(changes.status).equal('canceled');
+			expect(changes.completed).equal(true);
+			expect(changes.canceledBy).eql(canceledBy);
+		});
+
+		it('should be cancelled without error', function() {
+			expect(cancelError).not.ok();
+		});
+
+		it('update build called 3 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(3);
 		});
 	});
 
