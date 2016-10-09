@@ -14,15 +14,19 @@
   again
   - `params.initiator` - contains information about initiator of the build,
   must contain `type` property e.g. when one build triggers another:
-  initiator: {type: 'build', id: 123, number: 10, project: {name: 'project1'}
+  initiator: {type: 'build', id: 123, number: 10, project: {name: 'project1'}}
   - `params.buildParams` - params for current build (override project config)
   - `params.buildParams.scmRev` - target revision for the build
   - `params.env` - target environment for the build
 
-## BuildsCollection.cancel(id:Number, [callback(err)]:Function)
+## BuildsCollection.cancel(params:Object, [callback(err)]:Function)
 
   Cancel build by id.
-  Note that only queued build can be canceled currently.
+  Queued or running build can be canceled.
+  - `params.buildId` - id of target build to cancel
+  - `params.canceledBy` - contains information about initiator of cancel,
+  must contain `type` property e.g. when canceled via http api:
+  canceledBy: {type: 'httpApi'}
 
 ## BuildsCollection.get(id:Number, callback(err,build):Function)
 

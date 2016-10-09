@@ -9,13 +9,14 @@ var _ = require('underscore'),
 	Notifier = require('../../lib/notifier').Notifier;
 
 
-var createMockedNode = function(executorRun) {
+var createMockedNode = function(executorParams) {
 	return function(params) {
 		var node = createNode(params);
 		node._createExecutor = function(createExecutorParams) {
 			var executor = new EventEmitter();
 			executor.project = createExecutorParams.project;
-			executor.run = executorRun;
+			executor.run = executorParams.run;
+			executor.cancel = executorParams.cancel;
 			return executor;
 		};
 		return node;
@@ -37,11 +38,16 @@ exports.createDistributor = function(params) {
 		var executorRun = (
 			distributorParams.executorRun || sinon.stub().callsArgAsync(0)
 		);
+		var executorCancel = params.executorCancel;
+
 		// patch method which will be called at constructor
-		sinon.stub(Distributor.prototype, '_createNode', createMockedNode(
-			executorRun
-		));
+		sinon.stub(Distributor.prototype, '_createNode', createMockedNode({
+			run: executorRun,
+			cancel: executorCancel
+		}));
+
 		delete distributorParams.executorRun;
+		delete distributorParams.executorCancel;
 	}
 
 	if (distributorParams.projects) {

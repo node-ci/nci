@@ -5,3 +5,4 @@ require('./triggerAfter.js');
 require('./blocking.js');
 require('./runSelfAfterCatchRev.js');
 require('./env.js');
+require('./cancel.js');
