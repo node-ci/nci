@@ -5,4 +5,5 @@ test
 .travis.yml
 docs
 .nvmrc
-
+.npmrc
+*.log
