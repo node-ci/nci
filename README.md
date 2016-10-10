@@ -10,6 +10,7 @@ by plugins.
 
 
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
+[![Coverage Status](https://coveralls.io/repos/github/node-ci/nci/badge.svg?branch=master)](https://coveralls.io/github/node-ci/nci?branch=master)
 
 
 ## Features
