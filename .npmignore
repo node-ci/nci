@@ -7,3 +7,9 @@ docs
 .nvmrc
 .npmrc
 *.log
+coverage
+.nyc_output
+.nycrc
+.jshintrc
+.jshintignore
+nodemon.json

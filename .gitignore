@@ -5,3 +5,5 @@ test/repos/mercurial/
 test/repos/git/
 data/projects/**/workspace
 data/builds
+coverage
+.nyc_output
