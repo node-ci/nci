@@ -11,7 +11,7 @@ node_js:
 
 script:
   - npm run lint
-  - npm coverage
+  - npm run coverage
 
 after_script:
   - cat ./coverage/lcov.info | coveralls
