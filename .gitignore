@@ -7,3 +7,7 @@ data/projects/**/workspace
 data/builds
 coverage
 .nyc_output
+data/config.yaml
+data/config.json
+data/db
+data/projects/test*
