@@ -2,9 +2,9 @@
 
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
-	Distributor = require('./lib/distributor').Distributor,
+	Distributor = require('../lib/distributor').Distributor,
 	db = require('./db'),
-	logger = require('./lib/logger')('distributor');
+	logger = require('../lib/logger')('distributor');
 
 
 exports.create = function(app, callback) {

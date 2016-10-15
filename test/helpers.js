@@ -3,7 +3,7 @@
 var SpawnCommand = require('../lib/command/spawn').Command,
 	fs = require('fs'),
 	path = require('path'),
-	db = require('../db');
+	db = require('../app/db');
 
 
 exports.removeDir = function(dir, callback) {
