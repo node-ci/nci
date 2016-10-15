@@ -11,11 +11,7 @@ var expect = require('expect.js'),
 
 
 _(['mercurial', 'git']).each(function(type) {
-	// travis has some problems with hg (maybe just an old version)
-	var describeOrSkip = (
-		process.env.TRAVIS && type === 'mercurial' ? describe.skip : describe
-	);
-	describeOrSkip(type, function() {
+	describe(type, function() {
 		var data = helpers.revs[type],
 			originalRepositoryPath = path.resolve(__dirname, '../repos', type),
 			repositoryName = 'test-repository',
