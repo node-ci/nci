@@ -2,7 +2,6 @@
 
 var env = process.env.NODE_ENV || 'development',
 	db = require('./db'),
-	httpServer = require('../lib/httpServer'),
 	path = require('path'),
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
@@ -11,70 +10,16 @@ var env = process.env.NODE_ENV || 'development',
 	Notifier = require('../lib/notifier').Notifier,
 	ProjectsCollection = require('../lib/project').ProjectsCollection,
 	BuildsCollection = require('../lib/build').BuildsCollection,
-	libLogger = require('../lib/logger'),
-	libReader = require('../lib/reader'),
-	libNotifier = require('../lib/notifier'),
-	libNode = require('../lib/node'),
-	libCommand = require('../lib/command'),
-	libExecutor = require('../lib/executor'),
-	libScm = require('../lib/scm'),
+	logger = require('../lib/logger'),
 	EventEmitter = require('events').EventEmitter,
 	validateConfig = require('../lib/validateConfig'),
 	utils = require('../lib/utils'),
 	build = require('./build');
 
 var app = new EventEmitter(),
-	logger = libLogger('app');
+	logger = logger('app');
 
 app.reader = new Reader();
-
-var httpServerLogger = libLogger('http server');
-
-app.httpServer = httpServer.create();
-
-app.httpServer.on('error', function(err, req, res) {
-	if (req) {
-		httpServerLogger.error(
-			'Error processing request ' + req.method + ' ' + req.url + ':',
-			err.stack || err
-		);
-	} else {
-		httpServerLogger.error(err.stack || err);
-	}
-
-	if (res && !res.headersSent) {
-		res.statusCode = 500;
-		res.end();
-	}
-});
-
-app.httpServer.addRequestListener(function(req, res, next) {
-	var start = Date.now();
-
-	res.on('finish', function() {
-		var end = Date.now();
-
-		httpServerLogger.log(
-			'[%s] %s %s %s - %s ms',
-			new Date(end).toUTCString(),
-			req.method,
-			req.url,
-			res.statusCode,
-			end - start
-		);
-	});
-
-	next();
-});
-
-app.lib = {};
-app.lib.logger = libLogger;
-app.lib.reader = libReader;
-app.lib.notifier = libNotifier;
-app.lib.command = libCommand;
-app.lib.executor = libExecutor;
-app.lib.scm = libScm;
-app.lib.node = libNode;
 
 var configDefaults = {
 	notify: {},
@@ -84,6 +29,14 @@ var configDefaults = {
 
 Steppy(
 	function() {
+		require('./lib')(app, this.slot());
+
+		require('./httpServer')(app, this.slot());
+	},
+	function(err, lib, httpServer) {
+		app.lib = lib;
+		app.httpServer = httpServer;
+
 		app.config = {};
 		app.config.paths = {};
 
@@ -160,7 +113,7 @@ Steppy(
 		build.completeUncompleted({logger: logger}, this.slot());
 	},
 	function() {
-		require('./distributor').create(app, this.slot());
+		require('./distributor')(app, this.slot());
 	},
 	function(err, distributor) {
 		app.builds = new BuildsCollection({
