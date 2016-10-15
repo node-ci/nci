@@ -4,23 +4,23 @@ var expect = require('expect.js'),
 	_ = require('underscore'),
 	path = require('path'),
 	fs = require('fs'),
-	createScm = require('../lib/scm').createScm,
-	SpawnCommand = require('../lib/command/spawn').Command,
-	helpers = require('./helpers'),
-	gitRevs = require('./helpers').gitRevs;
+	createScm = require('../../lib/scm').createScm,
+	SpawnCommand = require('../../lib/command/spawn').Command,
+	helpers = require('../helpers'),
+	gitRevs = require('../helpers').gitRevs;
 
 
-['mercurial', 'git'].forEach(function(type) {
+_(['mercurial', 'git']).each(function(type) {
 	// travis has some problems with hg (maybe just an old version)
 	var describeOrSkip = (
 		process.env.TRAVIS && type === 'mercurial' ? describe.skip : describe
 	);
 	describeOrSkip(type, function() {
 		var data = helpers.revs[type],
-			originalRepositoryPath = path.join(__dirname, 'repos', type),
+			originalRepositoryPath = path.resolve(__dirname, '../repos', type),
 			repositoryName = 'test-repository',
 			repositoryPath = path.join(
-				path.join(__dirname, 'repos'), repositoryName
+				path.resolve(__dirname, '../repos'), repositoryName
 			);
 
 		function rmdir(dir, callback) {
