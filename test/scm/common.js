@@ -19,18 +19,8 @@ _(['mercurial', 'git']).each(function(type) {
 				path.resolve(__dirname, '../repos'), repositoryName
 			);
 
-		function rmdir(dir, callback) {
-			new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
-		}
-
 		it('remove test repository dir if it exists', function(done) {
-			if (fs.exists(repositoryPath, function(isExists) {
-				if (isExists) {
-					rmdir(repositoryPath, done);
-				} else {
-					done();
-				}
-			}));
+			helpers.removeDirIfExists(repositoryPath, done);
 		});
 
 		var scm;
@@ -148,7 +138,7 @@ _(['mercurial', 'git']).each(function(type) {
 		});
 
 		it('remove test repository dir', function(done) {
-			rmdir(repositoryPath, done);
+			helpers.removeDir(repositoryPath, done);
 		});
 	});
 });
