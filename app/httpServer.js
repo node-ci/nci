@@ -3,7 +3,7 @@
 var libHttpServer = require('../lib/httpServer'),
 	logger = require('../lib/logger')('http server');
 
-module.exports = function(app, callback) {
+module.exports = function(params, callback) {
 	var httpServer = libHttpServer.create();
 
 	httpServer.on('error', function(err, req, res) {

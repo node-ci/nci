@@ -8,7 +8,7 @@ var libLogger = require('../lib/logger'),
 	libScm = require('../lib/scm'),
 	libNode = require('../lib/node');
 
-module.exports = function(app, callback) {
+module.exports = function(params, callback) {
 	var lib = {};
 	lib.logger = libLogger;
 	lib.reader = libReader;
