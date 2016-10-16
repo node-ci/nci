@@ -55,6 +55,8 @@ describe('Shell command', function() {
 				/Spawned command exits with non-zero code: \d+/
 			);
 			expect(err.stderr).match(/echo1:.*not found/);
+			expect(err.exitCode).to.be.a('number');
+			expect(err.exitCode).not.equal(0);
 			expect(std.err).equal('');
 			expect(std.out).equal('');
 			done();

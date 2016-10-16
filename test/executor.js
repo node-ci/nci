@@ -8,7 +8,7 @@ var expect = require('expect.js'),
 	repository = require('./helpers').repository;
 
 
-['local'].forEach(function(type) {
+_(['local']).each(function(type) {
 	describe(type + ' executor', function() {
 		var workspacePath = path.join(__dirname, 'workspace');
 
@@ -86,10 +86,7 @@ var expect = require('expect.js'),
 				});
 
 				it('should run without errors', function(done) {
-					executor.run(function(err) {
-						expect(err).not.ok();
-						done();
-					});
+					executor.run(done);
 					executor.on('scmData', function(data) {
 						scmData = data;
 					});

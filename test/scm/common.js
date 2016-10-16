@@ -4,37 +4,23 @@ var expect = require('expect.js'),
 	_ = require('underscore'),
 	path = require('path'),
 	fs = require('fs'),
-	createScm = require('../lib/scm').createScm,
-	SpawnCommand = require('../lib/command/spawn').Command,
-	helpers = require('./helpers'),
-	gitRevs = require('./helpers').gitRevs;
+	createScm = require('../../lib/scm').createScm,
+	SpawnCommand = require('../../lib/command/spawn').Command,
+	helpers = require('../helpers'),
+	gitRevs = require('../helpers').gitRevs;
 
 
-['mercurial', 'git'].forEach(function(type) {
-	// travis has some problems with hg (maybe just an old version)
-	var describeOrSkip = (
-		process.env.TRAVIS && type === 'mercurial' ? describe.skip : describe
-	);
-	describeOrSkip(type, function() {
+_(['mercurial', 'git']).each(function(type) {
+	describe(type, function() {
 		var data = helpers.revs[type],
-			originalRepositoryPath = path.join(__dirname, 'repos', type),
+			originalRepositoryPath = path.resolve(__dirname, '../repos', type),
 			repositoryName = 'test-repository',
 			repositoryPath = path.join(
-				path.join(__dirname, 'repos'), repositoryName
+				path.resolve(__dirname, '../repos'), repositoryName
 			);
 
-		function rmdir(dir, callback) {
-			new SpawnCommand().run({cmd: 'rm', args: ['-R', dir]}, callback);
-		}
-
 		it('remove test repository dir if it exists', function(done) {
-			if (fs.exists(repositoryPath, function(isExists) {
-				if (isExists) {
-					rmdir(repositoryPath, done);
-				} else {
-					done();
-				}
-			}));
+			helpers.removeDirIfExists(repositoryPath, done);
 		});
 
 		var scm;
@@ -152,7 +138,7 @@ var expect = require('expect.js'),
 		});
 
 		it('remove test repository dir', function(done) {
-			rmdir(repositoryPath, done);
+			helpers.removeDir(repositoryPath, done);
 		});
 	});
 });
