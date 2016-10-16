@@ -2,7 +2,6 @@
 
 var env = process.env.NODE_ENV || 'development',
 	db = require('./db'),
-	path = require('path'),
 	fs = require('fs'),
 	Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
@@ -12,7 +11,6 @@ var env = process.env.NODE_ENV || 'development',
 	BuildsCollection = require('../lib/build').BuildsCollection,
 	logger = require('../lib/logger'),
 	EventEmitter = require('events').EventEmitter,
-	validateConfig = require('../lib/validateConfig'),
 	utils = require('../lib/utils'),
 	build = require('./build'),
 	inherits = require('util').inherits;
@@ -28,10 +26,6 @@ inherits(App, EventEmitter);
 
 App.prototype.init = function(callback) {
 	var self = this;
-	var configDefaults = {
-		notify: {},
-		http: {host: '127.0.0.1', port: 3000, url: 'http://127.0.0.1:3000'}
-	};
 
 	Steppy(
 		function() {
@@ -44,47 +38,14 @@ App.prototype.init = function(callback) {
 			self.httpServer = httpServer;
 			self.reader = new Reader();
 
-
-			self.config = {};
-			self.config.paths = {};
-
-			// path to root dir (with projects, builds etc)
-			self.config.paths.data = path.join(process.cwd(), 'data');
-
-			self.config.paths.preload = path.join(
-				self.config.paths.data,
-				'preload.json'
-			);
-
-			var preloadExistsCallback = this.slot();
-			fs.exists(self.config.paths.preload, function(isExists) {
-				preloadExistsCallback(null, isExists);
-			});
-		},
-		function(err, isPreloadExists) {
-			if (isPreloadExists) {
-				var preload = require(self.config.paths.preload);
-				// register rc plugins
-				_(preload.plugins).each(function(plugin) {
-					logger.log('Preload plugin "%s"', plugin);
-					require(plugin).register(self);
-				});
-			}
-
-			self.reader.load(self.config.paths.data, 'config', this.slot());
+			require('./config')({
+				app: self,
+				reader: self.reader,
+				logger: logger
+			}, this.slot());
 		},
 		function(err, config) {
-			validateConfig(config, this.slot());
-		},
-		function(err, config) {
-			_(self.config).defaults(config);
-			_(self.config).defaults(configDefaults);
-
-			// try to read db and projects paths from config or set default values
-			_(self.config.paths).defaults(config.paths, {
-				db: path.join(self.config.paths.data, 'db'),
-				projects: path.join(self.config.paths.data, 'projects')
-			});
+			self.config = config;
 
 			logger.log('Server config:', utils.toPrettyJson(self.config));
 
