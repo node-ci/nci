@@ -84,8 +84,13 @@ describe('git specific', function() {
 			test('patch-1', 'patch-2', [], done);
 		});
 
-		it('should return empty on unknown rev', function(done) {
-			test('master', 'foobar', [], done);
+		it('should throw error on unknown rev', function(done) {
+			test('master', 'foobar', [], function(err) {
+				expect(err).to.be.ok();
+				expect(err.stderr).to.match(
+					/pathspec 'foobar' did not match any file\(s\) known to git/);
+				done();
+			});
 		});
 	});
 
