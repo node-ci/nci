@@ -2,8 +2,7 @@ node_modules
 test/workspace
 test/distributor/workspace
 test/repos/
-!test/repos/git.tar.gz
-!test/repos/mercurial.tar.gz
+!test/repos/*.tar.gz
 data/projects/**/workspace
 data/builds
 coverage

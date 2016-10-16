@@ -6,7 +6,7 @@
     "nci": "bin/nci"
   },
   "scripts": {
-    "makeTestRepos": "rm -rf test/repos/{mercurial,git}; cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
+    "makeTestRepos": "find test/repos/* | grep -v '.tar.gz' | xargs rm -rf && cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000 --colors",
     "coverage": "nyc nrun test",
     "dev": "nodemon app.js",
