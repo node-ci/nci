@@ -12,7 +12,6 @@ var env = process.env.NODE_ENV || 'development',
 	logger = require('../lib/logger'),
 	EventEmitter = require('events').EventEmitter,
 	utils = require('../lib/utils'),
-	build = require('./build'),
 	inherits = require('util').inherits;
 
 
@@ -82,9 +81,6 @@ App.prototype.init = function(callback) {
 
 			self.notifier = new Notifier({db: db});
 
-			build.completeUncompleted({logger: logger}, this.slot());
-		},
-		function() {
 			require('./distributor')(self, this.slot());
 		},
 		function(err, distributor) {
@@ -92,6 +88,8 @@ App.prototype.init = function(callback) {
 				db: db,
 				distributor: distributor
 			});
+
+			self.builds.completeUncompleted({logger: logger}, this.slot());
 
 			// register other plugins
 			_(self.config.plugins).each(function(plugin) {
