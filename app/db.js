@@ -4,7 +4,7 @@ var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	nlevel = require('nlevel'),
 	path = require('path'),
-	utils = require('./lib/utils'),
+	utils = require('../lib/utils'),
 	through = require('through');
 
 
