@@ -37,7 +37,7 @@ describe('Db concurrency', function() {
 		);
 	});
 
-	describe('prallel builds add should produce different ids', function() {
+	describe('parallel builds add should produce different ids', function() {
 
 		var expectedIds = [];
 		var builds = _(100).chain().range().map(function(number) {
@@ -57,7 +57,7 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('shoud have all ' + expectedIds.length +' ids ', function() {
+		it('should have all ' + expectedIds.length +' ids ', function() {
 			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
 				expectedIds
 			);
@@ -68,7 +68,8 @@ describe('Db concurrency', function() {
 		});
 	});
 
-	describe('prallel builds add/update should produce different ids', function() {
+	describe('parallel builds add/update should produce ' +
+		'different ids', function() {
 
 		var expectedIds = [];
 		var builds = _(200).chain().range().map(function(number) {
@@ -94,7 +95,7 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('shoud have all ' + expectedIds.length +' ids ', function() {
+		it('should have all ' + expectedIds.length +' ids ', function() {
 			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
 				expectedIds
 			);
@@ -105,7 +106,8 @@ describe('Db concurrency', function() {
 		});
 	});
 
-	describe('prallel builds put should produce different numbers', function() {
+	describe('parallel builds put should produce ' +
+		'different numbers', function() {
 
 		var expectedIds = [];
 		var builds = _(100).chain().range().map(function(number) {
@@ -128,7 +130,7 @@ describe('Db concurrency', function() {
 			);
 		});
 
-		it('shoud have all ' + expectedIds.length +' ids ', function() {
+		it('should have all ' + expectedIds.length +' ids ', function() {
 			expect(_(builds).chain().pluck('id').sortBy().value()).eql(
 				expectedIds
 			);
