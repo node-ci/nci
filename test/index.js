@@ -7,3 +7,4 @@ require('./executor');
 require('./node');
 require('./distributor');
 require('./notifier');
+require('./app');
