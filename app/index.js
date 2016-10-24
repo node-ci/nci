@@ -76,15 +76,20 @@ App.prototype.init = function(callback) {
 				baseDir: self.config.paths.projects
 			});
 
+			self.builds = new BuildsCollection({db: db});
+
 			self.notifier = new Notifier({db: db});
 
-			require('./distributor')(self, this.slot());
+			require('./distributor')({
+				config: self.config,
+				projects: self.projects,
+				builds: self.builds,
+				notifier: self.notifier,
+				db: db
+			}, this.slot());
 		},
 		function(err, distributor) {
-			self.builds = new BuildsCollection({
-				db: db,
-				distributor: distributor
-			});
+			self.builds.setDistributor(distributor);
 
 			self.builds.completeUncompleted({logger: self.logger}, this.slot());
 
