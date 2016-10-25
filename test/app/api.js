@@ -1,52 +1,18 @@
 'use strict';
 
 var expect = require('expect.js'),
-	proxyquire = require('proxyquire').noCallThru(),
-	fs = require('fs'),
-	_ = require('underscore');
-
-// Mock all the things to provide app init
-
-var config = {
-	paths: {db: 'some/path'},
-	nodes: [{type: 'local', maxExecutorsCount: 1}],
-	notify: {},
-	storage: {backend: 'memdown'}
-};
-
-function ProjectsCollection() {
-}
-
-ProjectsCollection.prototype.loadAll = function(callback) {
-	callback();
-};
-
-ProjectsCollection.prototype.getAll = _.noop;
-
-
-var App = proxyquire('../../app/index', {
-	'./config': function(params, callback) {
-		callback(null, config);
-	},
-	'../lib/project': {
-		ProjectsCollection: ProjectsCollection
-	},
-	fs: {
-		exists: function(path, callback) {
-			if (path === config.paths.db) {
-				callback(true);
-			} else {
-				fs.exists(path, callback);
-			}
-		}
-	}
-});
+	helpers = require('./helpers'),
+	libReader = require('../../lib/reader'),
+	libNotifier = require('../../lib/notifier'),
+	libProject = require('../../lib/project'),
+	libBuild = require('../../lib/build');
 
 describe('App plugins api', function() {
 
 	var app;
 
 	before(function(done) {
+		var App = helpers.requireApp();
 		app = new App();
 
 		app.init(done);
@@ -55,6 +21,10 @@ describe('App plugins api', function() {
 	describe('lib', function() {
 		it('should be presented in app', function() {
 			expect(app).have.keys('lib');
+		});
+
+		it('should expose logger', function() {
+			expect(app.lib.logger).a('function');
 		});
 
 		it('should expose reader', function() {
@@ -122,4 +92,42 @@ describe('App plugins api', function() {
 		});
 	});
 
+	describe('instance', function() {
+		it('reader should be presented in app', function() {
+			expect(app).have.keys('reader');
+		});
+
+		it('reader should be instance of lib reader', function() {
+			expect(app.reader).an('object');
+			expect(app.reader).a(libReader.Reader);
+		});
+
+		it('notifier should be presented in app', function() {
+			expect(app).have.keys('notifier');
+		});
+
+		it('notifier should be instance of notifier', function() {
+			expect(app.notifier).an('object');
+			expect(app.notifier).a(libNotifier.Notifier);
+		});
+
+		it('projects collection should be presented in app', function() {
+			expect(app).have.keys('projects');
+		});
+
+		// coz mocked in helper
+		it.skip('projects should be instance of projects collection', function() {
+			expect(app.projects).an('object');
+			expect(app.projects).a(libProject.ProjectsCollection);
+		});
+
+		it('builds collection should be presented in app', function() {
+			expect(app).have.keys('builds');
+		});
+
+		it('builds should be instance of builds collection', function() {
+			expect(app.builds).an('object');
+			expect(app.builds).a(libBuild.BuildsCollection);
+		});
+	});
 });
