@@ -9,16 +9,13 @@ var env = process.env.NODE_ENV || 'development',
 	Notifier = require('../lib/notifier').Notifier,
 	ProjectsCollection = require('../lib/project').ProjectsCollection,
 	BuildsCollection = require('../lib/build').BuildsCollection,
-	logger = require('../lib/logger'),
 	EventEmitter = require('events').EventEmitter,
 	utils = require('../lib/utils'),
 	inherits = require('util').inherits;
 
-
-var logger = logger('app');
-
-function App() {
-
+function App(params) {
+	params = params || {};
+	this.logger = params.logger || utils.noopLogger;
 }
 
 inherits(App, EventEmitter);
@@ -40,13 +37,13 @@ App.prototype.init = function(callback) {
 			require('./config')({
 				app: self,
 				reader: self.reader,
-				logger: logger
+				logger: self.logger
 			}, this.slot());
 		},
 		function(err, config) {
 			self.config = config;
 
-			logger.log('Server config:', utils.toPrettyJson(self.config));
+			self.logger.log('Server config:', utils.toPrettyJson(self.config));
 
 			var dbDirExistsCallback = this.slot();
 			fs.exists(self.config.paths.db, function(isExists) {
@@ -79,21 +76,26 @@ App.prototype.init = function(callback) {
 				baseDir: self.config.paths.projects
 			});
 
+			self.builds = new BuildsCollection({db: db});
+
 			self.notifier = new Notifier({db: db});
 
-			require('./distributor')(self, this.slot());
+			require('./distributor')({
+				config: self.config,
+				projects: self.projects,
+				builds: self.builds,
+				notifier: self.notifier,
+				db: db
+			}, this.slot());
 		},
 		function(err, distributor) {
-			self.builds = new BuildsCollection({
-				db: db,
-				distributor: distributor
-			});
+			self.builds.setDistributor(distributor);
 
-			self.builds.completeUncompleted({logger: logger}, this.slot());
+			self.builds.completeUncompleted({logger: self.logger}, this.slot());
 
 			// register other plugins
 			_(self.config.plugins).each(function(plugin) {
-				logger.log('Load plugin "%s"', plugin);
+				self.logger.log('Load plugin "%s"', plugin);
 				require(plugin).register(self);
 			});
 
@@ -123,7 +125,9 @@ App.prototype.init = function(callback) {
 			self.projects.loadAll(this.slot());
 		},
 		function(err) {
-			logger.log('Loaded projects: ', _(self.projects.getAll()).pluck('name'));
+			self.logger.log(
+				'Loaded projects: ', _(self.projects.getAll()).pluck('name')
+			);
 
 			this.pass(null);
 		},
@@ -136,7 +140,7 @@ App.prototype.listen = function() {
 	var host = this.config.http.host,
 		port = this.config.http.port;
 
-	logger.log('Start http server on %s:%s', host, port);
+	this.logger.log('Start http server on %s:%s', host, port);
 	this.httpServer.listen(port, host);
 };
 

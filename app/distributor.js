@@ -3,11 +3,13 @@
 var Steppy = require('twostep').Steppy,
 	_ = require('underscore'),
 	Distributor = require('../lib/distributor').Distributor,
-	db = require('./db'),
 	logger = require('../lib/logger')('distributor');
 
 
 module.exports = function(params, callback) {
+	var builds = params.builds,
+		db = params.db;
+
 	var distributor = new Distributor({
 		nodes: params.config.nodes,
 		projects: params.projects,
@@ -18,7 +20,7 @@ module.exports = function(params, callback) {
 					if (_(build.project).has('avgBuildDuration')) {
 						this.pass(null);
 					} else {
-						params.builds.getRecent({
+						builds.getRecent({
 							projectName: build.project.name,
 							status: 'done',
 							limit: 10
@@ -28,7 +30,7 @@ module.exports = function(params, callback) {
 				function(err, doneBuilds) {
 					if (doneBuilds) {
 						build.project.avgBuildDuration = (
-							params.builds.getAvgBuildDuration(doneBuilds)
+							builds.getAvgBuildDuration(doneBuilds)
 						);
 					}
 
