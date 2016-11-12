@@ -157,34 +157,6 @@ describe('Node', function() {
 				);
 			}
 		);
-
-		it('should be blocked by project when blocked by executing', function() {
-			var waitReason = createNodeMock({
-				maxExecutorsCount: 2,
-				executors: [{project: {name: 'project2'}}]
-			}).getExecutorWaitReason({
-				name: 'project1',
-				blockedBy: ['project2']
-			}, {});
-			expect(waitReason).eql(
-				'executor1: blocked by currently running "project2"'
-			);
-		});
-
-		it('should be blocked by project when executing blocks it', function() {
-			var waitReason = createNodeMock({
-				maxExecutorsCount: 2,
-				executors: [{
-					project: {name: 'project2', blocks: ['project1']}
-				}]
-			}).getExecutorWaitReason({
-				name: 'project1'
-			}, {});
-			expect(waitReason).eql(
-				'executor1: blocked by currently running "project2"'
-			);
-		});
-
 	});
 
 	var expectNodeHasFreeExecutor = function(project, value) {
