@@ -79,6 +79,14 @@ describe('App plugins api', function() {
 			expect(app.lib.scm.BaseScm).a('function');
 		});
 
+		it('should expose scm GitScm', function() {
+			expect(app.lib.scm.GitScm).a('function');
+		});
+
+		it('should expose scm MercurialScm', function() {
+			expect(app.lib.scm.MercurialScm).a('function');
+		});
+
 		it('should expose node', function() {
 			expect(app.lib.node).an('object');
 		});
