@@ -3,6 +3,7 @@
 var _ = require('underscore'),
 	sinon = require('sinon'),
 	createNode = require('../../lib/node').createNode,
+	BaseExecutor = require('../../lib/executor').BaseExecutor,
 	EventEmitter = require('events').EventEmitter,
 	ProjectsCollection = require('../../lib/project').ProjectsCollection,
 	Distributor = require('../../lib/distributor').Distributor,
@@ -13,8 +14,7 @@ var createMockedNode = function(executorParams) {
 	return function(params) {
 		var node = createNode(params);
 		node._createExecutor = function(createExecutorParams) {
-			var executor = new EventEmitter();
-			executor.project = createExecutorParams.project;
+			var executor = new BaseExecutor(createExecutorParams);
 			executor.run = executorParams.run;
 			executor.cancel = executorParams.cancel;
 			return executor;

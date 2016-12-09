@@ -184,9 +184,12 @@ describe('Node', function() {
 		before(function() {
 			originalCreateExecutor = node._createExecutor;
 			node._createExecutor = function() {
-				return {run: function(callback) {
-					setTimeout(callback, 100);
-				}};
+				return {
+					run: function(callback) {
+						setTimeout(callback, 100);
+					},
+					setParams: _.noop
+				};
 			};
 		});
 
