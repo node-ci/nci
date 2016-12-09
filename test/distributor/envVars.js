@@ -10,7 +10,7 @@ describe('Distributor build env vars usage', function() {
 
 	describe('env vars passed to create executor', function() {
 		var project = {name: 'project1'},
-			createExecutorSpy,
+			runExecutorSpy,
 			buildId = 20,
 			buildNumber = 10,
 			node = {name: 'local', type: 'local', maxExecutorsCount: 1};
@@ -28,10 +28,8 @@ describe('Distributor build env vars usage', function() {
 					callback(null, build);
 				}
 			});
-			createExecutorSpy = sinon.spy(
-				distributor.nodes[0],
-				'_createExecutor'
-			);
+
+			runExecutorSpy = sinon.spy(distributor.nodes[0], 'runExecutor');
 
 		});
 
@@ -42,14 +40,10 @@ describe('Distributor build env vars usage', function() {
 			});
 		});
 
-		it('should call create executor twice', function() {
-			expect(createExecutorSpy.calledTwice).equal(true);
-		});
-
 		var envVars;
 
-		it('should provide env vars for the second call', function() {
-			var params = createExecutorSpy.getCall(1).args[0];
+		it('should provide env vars for runExecutor call', function() {
+			var params = runExecutorSpy.getCall(0).args[1];
 			expect(params).have.keys('envVars');
 			expect(params.envVars).a('object');
 			envVars = params.envVars;
