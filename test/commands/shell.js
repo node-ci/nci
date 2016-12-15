@@ -25,6 +25,10 @@ describe('Shell command', function() {
 		expect(shellCommand.shellCmdArg).equal(defaultShellCmdArg);
 	});
 
+	it('Default shell extra args should be empty array', function() {
+		expect(shellCommand.shellExtraArgs).eql([]);
+	});
+
 	var collectData = function(result, field) {
 		return function(data) {
 			result[field] += data;
