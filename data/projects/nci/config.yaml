@@ -14,5 +14,8 @@ notify:
         console:
 
 steps:
-    sync: npm install && npm prune
-    test: npm test
+  - name: sync
+    cmd: npm install && npm prune
+
+  - name: test
+    cmd: npm test
