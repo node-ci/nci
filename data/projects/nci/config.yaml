@@ -1,7 +1,7 @@
 
 scm:
     type: git
-    repository: https://github.com/node-ci/nci
+    repository: ./
     rev: master
 
 # catchRev:
