@@ -50,7 +50,12 @@ Online demo is [here](http://classicui-ncidemo.rhcloud.com/).
 
 ## Quick setup
 
-Clone quick setup repo, go into it and install dependencies:
+Clone quick setup repo, go into it and install dependencies.
+
+You can choose from one of following repositories with sample configurations:
+
+* With local node (all builds will be executed locally from user that started
+nci server):
 
 ```sh
 
@@ -58,7 +63,16 @@ git clone https://github.com/node-ci/nci-quick-setup && cd nci-quick-setup && np
 
 ```
 
-run nci:
+* With docker node (all builds will be executed within docker, requires
+installed docker client and server):
+
+```sh
+
+git clone https://github.com/node-ci/nci-docker-node-quick-setup && cd nci-docker-node-quick-setup && npm install
+
+```
+
+After installing dependencies run nci:
 
 
 ```sh
@@ -89,6 +103,7 @@ for setup and usage details.
 
 ## Plugins
 
+* [docker node plugin](https://github.com/node-ci/nci-docker-node)
 * [ssh node plugin](https://github.com/node-ci/nci-ssh-node)
 * [yaml reader plugin](https://github.com/node-ci/nci-yaml-reader)
 * [classic ui plugin](https://github.com/node-ci/nci-classic-ui)
