@@ -45,6 +45,7 @@
   "dependencies": {
     "colors": "1.1.2",
     "conform": "0.2.12",
+    "junk": "1.0.3",
     "nlevel": "1.0.3",
     "through": "2.3.6",
     "tree-kill": "1.1.0",
