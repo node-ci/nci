@@ -25,7 +25,11 @@
     "integration",
     "server",
     "ci",
-    "build"
+    "build",
+    "mercurial",
+    "git",
+    "docker",
+    "leveldb"
   ],
   "contributors": [
     {
