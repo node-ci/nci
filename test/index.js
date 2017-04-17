@@ -8,3 +8,4 @@ require('./node');
 require('./distributor');
 require('./notifier');
 require('./app');
+require('./collections');

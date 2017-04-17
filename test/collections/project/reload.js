@@ -1,0 +1,102 @@
+'use strict';
+
+var _ = require('underscore'),
+	expect = require('expect.js'),
+	ProjectsCollection = require('../../../lib/project').ProjectsCollection,
+	sinon = require('sinon');
+
+describe('Projcts collection reload method', function() {
+
+	var getMocks = function(params) {
+		return {
+			projects: {
+				get: sinon.stub().returns(params.projectsGetResult),
+				unload: sinon.stub().callsArgWithAsync(1, null),
+				load: sinon.stub().callsArgWithAsync(1, null)
+			}
+		};
+	};
+
+	var projects, mocks;
+
+	var checkProjectsGetCall = function(expected) {
+		it('should call `get` method with project name', function() {
+			expect(mocks.projects.get.calledOnce).equal(true);
+			var args = mocks.projects.get.getCall(0).args;
+			expect(args[0]).eql(expected.projectName);
+		});
+	};
+
+	var checkProjectsUnloadCall = function(expected) {
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `unload` method with project name', function() {
+				expect(mocks.projects.unload.calledOnce).equal(true);
+				var args = mocks.projects.unload.getCall(0).args;
+				expect(args[0]).eql(expected.projectName);
+			});
+		} else {
+			it('should not call `unload` method', function() {
+				expect(mocks.projects.unload.called).equal(false);
+			});
+		}
+	};
+
+	var checkProjectsLoadCall = function(expected) {
+		it('should call `load` method with project name', function() {
+			expect(mocks.projects.load.calledOnce).equal(true);
+			var args = mocks.projects.load.getCall(0).args;
+			expect(args[0]).eql(expected.projectName);
+		});
+	};
+
+	describe('when project already loaded', function() {
+		var projectName = 'test_project';
+
+		before(function() {
+			projects = new ProjectsCollection({});
+
+			mocks = getMocks({
+				projectsGetResult: projectName
+			});
+
+			_(projects).extend(mocks.projects);
+		});
+
+		it('should be called witout errors', function(done) {
+			projects.reload(projectName, done);
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkProjectsUnloadCall({projectName: projectName});
+
+		checkProjectsLoadCall({projectName: projectName});
+	});
+
+	describe('when project not previously loaded', function() {
+		var projectName = 'test_project';
+
+		before(function() {
+			projects = new ProjectsCollection({});
+
+			mocks = getMocks({
+				projectsGetResult: null
+			});
+
+			_(projects).extend(mocks.projects);
+		});
+
+		it('should be called witout errors', function(done) {
+			projects.reload(projectName, done);
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkProjectsUnloadCall({called: false});
+
+		checkProjectsLoadCall({projectName: projectName});
+	});
+
+});
