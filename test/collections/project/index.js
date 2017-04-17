@@ -2,3 +2,4 @@
 
 require('./reload');
 require('./projectPathExists');
+require('./setConfig');

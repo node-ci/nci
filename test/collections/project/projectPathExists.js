@@ -51,7 +51,7 @@ describe('Projcts collection _projectPathExists method', function() {
 			});
 
 			var ProjectsCollection = proxyquire(
-				'../../../lib/project', mocks
+				'../../../lib/project', _(mocks).pick('fs')
 			).ProjectsCollection;
 
 			projects = new ProjectsCollection({});
