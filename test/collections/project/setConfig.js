@@ -70,6 +70,14 @@ describe('Projcts collection setConfig method', function() {
 		}
 	};
 
+	var checkProjectsGetPathCall = function(expected) {
+		it('should call `_getProjectPath` method with project name', function() {
+			expect(mocks.projects._getProjectPath.calledOnce).equal(true);
+			var args = mocks.projects._getProjectPath.getCall(0).args;
+			expect(args[0]).eql(expected.projectName);
+		});
+	};
+
 	var checkFsWriteFileCall = function(expected) {
 		it('should call `fs.writeFile` for config', function() {
 			expect(mocks.fs.writeFile.calledOnce).equal(true);
@@ -123,6 +131,8 @@ describe('Projcts collection setConfig method', function() {
 
 		checkProjectsValidateConfigCall({config: projectConfig});
 
+		checkProjectsGetPathCall({projectName: projectName});
+
 		checkFsWriteFileCall({
 			projectConfigFile: {
 				path: path.join(projectPath, 'config.json'),
@@ -157,6 +167,8 @@ describe('Projcts collection setConfig method', function() {
 		checkProjectsPathExsitsCall({projectName: projectName});
 
 		checkProjectsValidateConfigCall({called: false});
+
+		checkProjectsGetPathCall({projectName: projectName});
 
 		checkFsWriteFileCall({
 			projectConfigFile: {
@@ -194,6 +206,8 @@ describe('Projcts collection setConfig method', function() {
 		checkProjectsPathExsitsCall({projectName: projectName});
 
 		checkProjectsValidateConfigCall({config: projectConfig});
+
+		checkProjectsGetPathCall({projectName: projectName});
 
 		checkFsWriteFileCall({
 			projectConfigFile: {
