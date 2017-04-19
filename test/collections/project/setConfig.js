@@ -47,11 +47,19 @@ describe('Projcts collection setConfig method', function() {
 	var projects, mocks;
 
 	var checkProjectsPathExsitsCall = function(expected) {
-		it('should call `_projectPathExists` method with project name', function() {
-			expect(mocks.projects._projectPathExists.calledOnce).equal(true);
-			var args = mocks.projects._projectPathExists.getCall(0).args;
-			expect(args[0]).eql(expected.projectName);
-		});
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `_projectPathExists` method with project name', function() {
+				expect(mocks.projects._projectPathExists.calledOnce).equal(true);
+				var args = mocks.projects._projectPathExists.getCall(0).args;
+				expect(args[0]).eql(expected.projectName);
+			});
+		} else {
+			it('should not call `_projectPathExists`', function() {
+				expect(mocks.projects._projectPathExists.called).equal(false);
+			});
+		}
 	};
 
 	var checkProjectsValidateConfigCall = function(expected) {
@@ -71,21 +79,37 @@ describe('Projcts collection setConfig method', function() {
 	};
 
 	var checkProjectsGetPathCall = function(expected) {
-		it('should call `_getProjectPath` method with project name', function() {
-			expect(mocks.projects._getProjectPath.calledOnce).equal(true);
-			var args = mocks.projects._getProjectPath.getCall(0).args;
-			expect(args[0]).eql(expected.projectName);
-		});
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `_getProjectPath` method with project name', function() {
+				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
+				var args = mocks.projects._getProjectPath.getCall(0).args;
+				expect(args[0]).eql(expected.projectName);
+			});
+		} else {
+			it('should not call `_getProjectPath`', function() {
+				expect(mocks.projects._getProjectPath.called).equal(false);
+			});
+		}
 	};
 
 	var checkFsWriteFileCall = function(expected) {
-		it('should call `fs.writeFile` for config', function() {
-			expect(mocks.fs.writeFile.calledOnce).equal(true);
-			var args = mocks.fs.writeFile.getCall(0).args;
-			expect(args[0]).eql(expected.projectConfigFile.path);
-			expect(args[1]).eql(expected.projectConfigFile.content);
-			expect(args[2]).eql({encoding: 'utf-8'});
-		});
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `fs.writeFile` for config', function() {
+				expect(mocks.fs.writeFile.calledOnce).equal(true);
+				var args = mocks.fs.writeFile.getCall(0).args;
+				expect(args[0]).eql(expected.projectConfigFile.path);
+				expect(args[1]).eql(expected.projectConfigFile.content);
+				expect(args[2]).eql({encoding: 'utf-8'});
+			});
+		} else {
+			it('should not call `fs.writeFile`', function() {
+				expect(mocks.fs.writeFile.called).equal(false);
+			});
+		}
 	};
 
 	var checkProjectsReloadCall = function(expected) {
@@ -219,46 +243,62 @@ describe('Projcts collection setConfig method', function() {
 		checkProjectsReloadCall({projectName: projectName});
 	});
 
-	describe('error', function() {
+	describe('when project name is not set', function() {
+		var projectName = null,
+			projectPath = '/some/path',
+			projectConfig = {someOption: 'someValue'};
 
-		it('should happen when project name is not set', function(done) {
-			var projectConfig = {someOption: 'someValue'},
-				projectPath = '/some/path';
-
+		before(function() {
 			mocks = getMocks({
 				projectPathExists: true,
-				projectPath: projectPath
+				projectPath: projectPath,
+				validateConfigResult: projectConfig
 			});
 
 			projects = getProjectsCollection(mocks);
+		});
 
+		it('should be called with error', function(done) {
 			projects.setConfig({
-				projectConfig: projectConfig
+				projectName: projectName,
+				config: projectConfig
 			}, function(err) {
 				expect(err).an(Error);
-				expect(err.message).eql(
-					'Project name is required'
-				);
+				expect(err.message).eql('Project name is required');
 
 				done();
 			});
 		});
 
-		it('should happen when project path doesn`t exist', function(done) {
-			var projectName = 'test_project',
-				projectConfig = {someOption: 'someValue'},
-				projectPath = '/some/path';
+		checkProjectsPathExsitsCall({called: false});
 
+		checkProjectsValidateConfigCall({called: false});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkFsWriteFileCall({called: false});
+
+		checkProjectsReloadCall({called: false});
+	});
+
+	describe('when project path doesn`t exist', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			projectConfig = {someOption: 'someValue'};
+
+		before(function() {
 			mocks = getMocks({
 				projectPathExists: false,
 				projectPath: projectPath
 			});
 
 			projects = getProjectsCollection(mocks);
+		});
 
+		it('should be called with error', function(done) {
 			projects.setConfig({
 				projectName: projectName,
-				projectConfig: projectConfig
+				config: projectConfig
 			}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql(
@@ -269,17 +309,31 @@ describe('Projcts collection setConfig method', function() {
 			});
 		});
 
-		it('should happen when neither config or config file set', function(done) {
-			var projectName = 'test_project',
-				projectPath = '/some/path';
+		checkProjectsPathExsitsCall({projectName: projectName});
 
+		checkProjectsValidateConfigCall({called: false});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkFsWriteFileCall({called: false});
+
+		checkProjectsReloadCall({called: false});
+	});
+
+	describe('when neither config or config file set', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path';
+
+		before(function() {
 			mocks = getMocks({
 				projectPathExists: true,
 				projectPath: projectPath
 			});
 
 			projects = getProjectsCollection(mocks);
+		});
 
+		it('should be called with error', function(done) {
 			projects.setConfig({
 				projectName: projectName
 			}, function(err) {
@@ -292,12 +346,24 @@ describe('Projcts collection setConfig method', function() {
 			});
 		});
 
-		it('should happen when config is not valid', function(done) {
-			var projectName = 'test_project',
-				projectConfig = {someOption: 'someValue'},
-				projectPath = '/some/path',
-				validateConfigError = new Error('mailformed config');
+		checkProjectsPathExsitsCall({projectName: projectName});
 
+		checkProjectsValidateConfigCall({called: false});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkFsWriteFileCall({called: false});
+
+		checkProjectsReloadCall({called: false});
+	});
+
+	describe('when config is not valid', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			projectConfig = {someOption: 'someValue'},
+			validateConfigError = new Error('mailformed config');
+
+		before(function() {
 			mocks = getMocks({
 				projectPathExists: true,
 				projectPath: projectPath,
@@ -305,18 +371,29 @@ describe('Projcts collection setConfig method', function() {
 			});
 
 			projects = getProjectsCollection(mocks);
+		});
 
+		it('should be called with error', function(done) {
 			projects.setConfig({
 				projectName: projectName,
 				config: projectConfig
 			}, function(err) {
 				expect(err).an(Error);
-				expect(err).eql(validateConfigError);
+				expect(err).equal(validateConfigError);
 
 				done();
 			});
 		});
 
+		checkProjectsPathExsitsCall({projectName: projectName});
+
+		checkProjectsValidateConfigCall({config: projectConfig});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkFsWriteFileCall({called: false});
+
+		checkProjectsReloadCall({called: false});
 	});
 
 });
