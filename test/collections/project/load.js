@@ -23,7 +23,8 @@ describe('Projcts collection load method', function() {
 				configs: {
 					push: sinon.stub()
 				},
-				emit: sinon.stub()
+				emit: sinon.stub(),
+				loadingProjectsHash: params.loadingProjectsHash || {}
 			}
 		};
 	};
@@ -139,6 +140,19 @@ describe('Projcts collection load method', function() {
 		}
 	};
 
+	var checkProjectsLoadingHash = function(expected) {
+		expected.contains = _(expected).has('contains') ? expected.contains : true;
+
+		if (expected.contains) {
+			it('should contain project name in loading hash', function() {
+				expect(projects.loadingProjectsHash).have.keys([expected.projectName]);
+			});
+		} else {
+			it('should not contain project name in loading hash', function() {
+				expect(projects.loadingProjectsHash).not.have.keys([expected.projectName]);
+			});
+		}
+	};
 
 	describe('with suitable params', function() {
 		var projectName = 'test_project',
@@ -179,6 +193,8 @@ describe('Projcts collection load method', function() {
 			eventName: 'projectLoaded',
 			config: projectConfigExtended
 		});
+
+		checkProjectsLoadingHash({contains: false, projectName: projectName});
 	});
 
 	describe('when project name is not set', function() {
@@ -222,6 +238,8 @@ describe('Projcts collection load method', function() {
 		checkProjectsConfigsPushCall({called: false});
 
 		checkProjectsEmitCall({called: false});
+
+		checkProjectsLoadingHash({contains: false, projectName: projectName});
 	});
 
 	describe('when project already loaded', function() {
@@ -245,15 +263,8 @@ describe('Projcts collection load method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called with error', function(done) {
-			projects.load(projectName, function(err) {
-				expect(err).an(Error);
-				expect(err.message).eql(
-					'Can`t load already loaded project "' + projectName + '"'
-				);
-
-				done();
-			});
+		it('should be called withot errors', function(done) {
+			projects.load(projectName, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
@@ -267,6 +278,51 @@ describe('Projcts collection load method', function() {
 		checkProjectsConfigsPushCall({called: false});
 
 		checkProjectsEmitCall({called: false});
+
+		checkProjectsLoadingHash({contains: false, projectName: projectName});
 	});
 
+	describe('when project is loading', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			projectConfig = {someOption: 'someValue'};
+
+		var projectConfigExtended = _({
+			name: projectName,
+			dir: projectPath
+		}).extend(projectConfig);
+
+		var loadingProjectsHash = {};
+		loadingProjectsHash[projectName] = 1;
+
+		before(function() {
+			mocks = getMocks({
+				projectPath: projectPath,
+				projectsGetResult: null,
+				loadConfigResult: projectConfig,
+				validateConfigResult: projectConfigExtended,
+				loadingProjectsHash: loadingProjectsHash
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called withot errors', function(done) {
+			projects.load(projectName, done);
+		});
+
+		checkProjectsGetPathCall({projectName: projectName});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkProjectsLoadConfigCall({called: false});
+
+		checkProjectsValidateConfigCall({called: false});
+
+		checkProjectsConfigsPushCall({called: false});
+
+		checkProjectsEmitCall({called: false});
+
+		checkProjectsLoadingHash({projectName: projectName});
+	});
 });
