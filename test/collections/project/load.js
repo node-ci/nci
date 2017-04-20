@@ -5,7 +5,7 @@ var _ = require('underscore'),
 	sinon = require('sinon'),
 	path = require('path');
 
-describe('Projcts collection load method', function() {
+describe('Projcts collection `load` method', function() {
 
 	var getMocks = function(params) {
 		return {
@@ -47,7 +47,7 @@ describe('Projcts collection load method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `_getProjectPath` method with project name', function() {
+			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
 				expect(args[0]).eql(expected.projectName);
@@ -63,7 +63,7 @@ describe('Projcts collection load method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `get` method with project name', function() {
+			it('should call `get` with project name', function() {
 				expect(mocks.projects.get.calledOnce).equal(true);
 				var args = mocks.projects.get.getCall(0).args;
 				expect(args[0]).eql(expected.projectName);

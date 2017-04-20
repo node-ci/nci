@@ -5,7 +5,7 @@ var _ = require('underscore'),
 	ProjectsCollection = require('../../../lib/project').ProjectsCollection,
 	sinon = require('sinon');
 
-describe('Projcts collection reload method', function() {
+describe('Projcts collection `reload` method', function() {
 
 	var getMocks = function(params) {
 		return {
@@ -20,7 +20,7 @@ describe('Projcts collection reload method', function() {
 	var projects, mocks;
 
 	var checkProjectsGetCall = function(expected) {
-		it('should call `get` method with project name', function() {
+		it('should call `get` with project name', function() {
 			expect(mocks.projects.get.calledOnce).equal(true);
 			var args = mocks.projects.get.getCall(0).args;
 			expect(args[0]).eql(expected.projectName);
@@ -31,20 +31,20 @@ describe('Projcts collection reload method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `unload` method with project name', function() {
+			it('should call `unload` with project name', function() {
 				expect(mocks.projects.unload.calledOnce).equal(true);
 				var args = mocks.projects.unload.getCall(0).args;
 				expect(args[0]).eql(expected.projectName);
 			});
 		} else {
-			it('should not call `unload` method', function() {
+			it('should not call `unload`', function() {
 				expect(mocks.projects.unload.called).equal(false);
 			});
 		}
 	};
 
 	var checkProjectsLoadCall = function(expected) {
-		it('should call `load` method with project name', function() {
+		it('should call `load` with project name', function() {
 			expect(mocks.projects.load.calledOnce).equal(true);
 			var args = mocks.projects.load.getCall(0).args;
 			expect(args[0]).eql(expected.projectName);

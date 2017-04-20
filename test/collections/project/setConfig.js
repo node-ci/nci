@@ -6,7 +6,7 @@ var _ = require('underscore'),
 	proxyquire = require('proxyquire').noCallThru(),
 	path = require('path');
 
-describe('Projcts collection setConfig method', function() {
+describe('Projcts collection `setConfig` method', function() {
 
 	var getMocks = function(params) {
 		return {
@@ -50,7 +50,7 @@ describe('Projcts collection setConfig method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `_projectPathExists` method with project name', function() {
+			it('should call `_projectPathExists` with project name', function() {
 				expect(mocks.projects._projectPathExists.calledOnce).equal(true);
 				var args = mocks.projects._projectPathExists.getCall(0).args;
 				expect(args[0]).eql(expected.projectName);
@@ -82,7 +82,7 @@ describe('Projcts collection setConfig method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `_getProjectPath` method with project name', function() {
+			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
 				expect(args[0]).eql(expected.projectName);

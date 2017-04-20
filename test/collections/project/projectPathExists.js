@@ -5,7 +5,7 @@ var _ = require('underscore'),
 	sinon = require('sinon'),
 	proxyquire = require('proxyquire').noCallThru();
 
-describe('Projcts collection _projectPathExists method', function() {
+describe('Projcts collection `_projectPathExists` method', function() {
 
 	var getMocks = function(params) {
 		return {
@@ -25,7 +25,7 @@ describe('Projcts collection _projectPathExists method', function() {
 	var projects, mocks;
 
 	var checkProjectsGetPathCall = function(expected) {
-		it('should call `_getProjectPath` method with project name', function() {
+		it('should call `_getProjectPath` with project name', function() {
 			expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 			var args = mocks.projects._getProjectPath.getCall(0).args;
 			expect(args[0]).eql(expected.projectName);
@@ -33,7 +33,7 @@ describe('Projcts collection _projectPathExists method', function() {
 	};
 
 	var checkFsExistsCall = function(expected) {
-		it('should call `fs.exists` method with project path', function() {
+		it('should call `fs.exists` with project path', function() {
 			expect(mocks.fs.exists.calledOnce).equal(true);
 			var args = mocks.fs.exists.getCall(0).args;
 			expect(args[0]).eql(expected.projectPath);
