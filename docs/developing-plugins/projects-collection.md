@@ -28,6 +28,10 @@
   `projectUnloaded` event with unloaded config as argument will be emitted
   after unload.
 
+## ProjectsCollection.reload(name:String, [callback(err)]:Function)
+
+  Reload project.
+
 ## ProjectsCollection.get(name:String)
 
   Get project config by name.
@@ -53,3 +57,23 @@
 
   Rename project.
   Renames project on disk and db, also changes name for loaded project.
+
+## ProjectsCollection.create(params:Object, [callback(err)]:Function)
+
+  Create project.
+  - `params.name` - name of the project
+  - `params.config` - project configuratjion object
+  - `params.configFile` - project cconfig file object with `name` and
+  `content` fields (it's alternative for `config` option when need to set file
+  in specific format)
+  - `params.load` - if true then project will be loaded
+
+## ProjectsCollection.setConfig(params:Object, [callback(err)]:Function)
+
+  Set config file for the project.
+  - `params.projectName` - name of the project
+  - `params.config` - project configuratjion object
+  - `params.configFile` - project cconfig file object with `name` and
+  `content` fields (it's alternative for `config` option when need to set file
+  in specific format)
+  - `params.load` - if true then project will be loaded
