@@ -135,7 +135,7 @@ describe('Projcts collection `load` method', function() {
 			});
 		} else {
 			it('should not call `emit`', function() {
-				expect(mocks.projects.configs.push.called).equal(false);
+				expect(mocks.projects.emit.called).equal(false);
 			});
 		}
 	};
