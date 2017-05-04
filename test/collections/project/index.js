@@ -1,6 +1,7 @@
 'use strict';
 
 require('./load');
+require('./loadAll');
 require('./reload');
 require('./getProjectPath');
 require('./projectPathExists');
