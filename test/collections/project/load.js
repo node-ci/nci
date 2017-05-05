@@ -2,8 +2,7 @@
 
 var _ = require('underscore'),
 	expect = require('expect.js'),
-	sinon = require('sinon'),
-	path = require('path');
+	sinon = require('sinon');
 
 describe('Projcts collection `load` method', function() {
 
@@ -135,7 +134,7 @@ describe('Projcts collection `load` method', function() {
 			});
 		} else {
 			it('should not call `emit`', function() {
-				expect(mocks.projects.configs.push.called).equal(false);
+				expect(mocks.projects.emit.called).equal(false);
 			});
 		}
 	};

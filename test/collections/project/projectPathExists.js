@@ -22,6 +22,18 @@ describe('Projcts collection `_projectPathExists` method', function() {
 		};
 	};
 
+	var getProjectsCollection = function(mocks) {
+		var ProjectsCollection = proxyquire(
+			'../../../lib/project', _(mocks).pick('fs')
+		).ProjectsCollection;
+
+		projects = new ProjectsCollection({});
+
+		_(projects).extend(mocks.projects);
+
+		return projects;
+	};
+
 	var projects, mocks;
 
 	var checkProjectsGetPathCall = function(expected) {
@@ -50,11 +62,7 @@ describe('Projcts collection `_projectPathExists` method', function() {
 				pathExists: true
 			});
 
-			var ProjectsCollection = proxyquire(
-				'../../../lib/project', _(mocks).pick('fs')
-			).ProjectsCollection;
-
-			projects = new ProjectsCollection({});
+			projects = getProjectsCollection(mocks);
 
 			_(projects).extend(mocks.projects);
 		});
@@ -88,13 +96,7 @@ describe('Projcts collection `_projectPathExists` method', function() {
 				pathExists: false
 			});
 
-			var ProjectsCollection = proxyquire(
-				'../../../lib/project', mocks
-			).ProjectsCollection;
-
-			projects = new ProjectsCollection({});
-
-			_(projects).extend(mocks.projects);
+			projects = getProjectsCollection(mocks);
 		});
 
 		var pathExists;
