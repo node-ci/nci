@@ -2,8 +2,7 @@
 
 var _ = require('underscore'),
 	expect = require('expect.js'),
-	sinon = require('sinon'),
-	path = require('path');
+	sinon = require('sinon');
 
 describe('Projcts collection `load` method', function() {
 

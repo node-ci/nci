@@ -3,7 +3,6 @@
 var _ = require('underscore'),
 	expect = require('expect.js'),
 	sinon = require('sinon'),
-	path = require('path'),
 	utils = require('../../../lib/utils');
 
 describe('Projcts collection `loadConfig` method', function() {

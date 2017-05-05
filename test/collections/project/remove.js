@@ -3,8 +3,7 @@
 var _ = require('underscore'),
 	expect = require('expect.js'),
 	sinon = require('sinon'),
-	proxyquire = require('proxyquire').noCallThru(),
-	path = require('path');
+	proxyquire = require('proxyquire').noCallThru();
 
 describe('Projcts collection `remove` method', function() {
 
