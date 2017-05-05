@@ -2,7 +2,6 @@
 
 var _ = require('underscore'),
 	expect = require('expect.js'),
-	ProjectsCollection = require('../../../lib/project').ProjectsCollection,
 	sinon = require('sinon');
 
 describe('Projcts collection `reload` method', function() {
@@ -15,6 +14,18 @@ describe('Projcts collection `reload` method', function() {
 				load: sinon.stub().callsArgWithAsync(1, null)
 			}
 		};
+	};
+
+	var getProjectsCollection = function(mocks) {
+		var ProjectsCollection = require(
+			'../../../lib/project'
+		).ProjectsCollection;
+
+		projects = new ProjectsCollection({});
+
+		_(projects).extend(mocks.projects);
+
+		return projects;
 	};
 
 	var projects, mocks;
@@ -55,13 +66,11 @@ describe('Projcts collection `reload` method', function() {
 		var projectName = 'test_project';
 
 		before(function() {
-			projects = new ProjectsCollection({});
-
 			mocks = getMocks({
 				projectsGetResult: projectName
 			});
 
-			_(projects).extend(mocks.projects);
+			projects = getProjectsCollection(mocks);
 		});
 
 		it('should be called witout errors', function(done) {
@@ -79,13 +88,11 @@ describe('Projcts collection `reload` method', function() {
 		var projectName = 'test_project';
 
 		before(function() {
-			projects = new ProjectsCollection({});
-
 			mocks = getMocks({
 				projectsGetResult: null
 			});
 
-			_(projects).extend(mocks.projects);
+			projects = getProjectsCollection(mocks);
 		});
 
 		it('should be called witout errors', function(done) {
