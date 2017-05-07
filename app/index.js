@@ -49,12 +49,23 @@ App.prototype.init = function(callback) {
 			fs.exists(self.config.paths.db, function(isExists) {
 				dbDirExistsCallback(null, isExists);
 			});
+
+			var archivedProjectsDirExistsCallback = this.slot();
+			fs.exists(self.config.paths.archivedProjects, function(isExists) {
+				archivedProjectsDirExistsCallback(null, isExists);
+			});
 		},
-		function(err, isDbDirExists) {
+		function(err, isDbDirExists, isArchivedProjectsDirExists) {
 			if (isDbDirExists) {
 				this.pass(null);
 			} else {
 				fs.mkdir(self.config.paths.db, this.slot());
+			}
+
+			if (isArchivedProjectsDirExists) {
+				this.pass(null);
+			} else {
+				fs.mkdir(self.config.paths.archivedProjects, this.slot());
 			}
 		},
 		function() {
@@ -73,7 +84,8 @@ App.prototype.init = function(callback) {
 			self.projects = new ProjectsCollection({
 				db: db,
 				reader: self.reader,
-				baseDir: self.config.paths.projects
+				baseDir: self.config.paths.projects,
+				archiveDir: self.config.paths.archivedProjects
 			});
 
 			self.builds = new BuildsCollection({db: db});

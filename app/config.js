@@ -55,7 +55,8 @@ module.exports = function(params, callback) {
 			// try to read db and projects paths from config or set default values
 			_(config.paths).defaults(fileConfig.paths, {
 				db: path.join(config.paths.data, 'db'),
-				projects: path.join(config.paths.data, 'projects')
+				projects: path.join(config.paths.data, 'projects'),
+				archivedProjects: path.join(config.paths.data, 'archivedProjects')
 			});
 
 			this.pass(config);
