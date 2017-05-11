@@ -53,7 +53,7 @@ describe('Projcts collection `setConfig` method', function() {
 			it('should call `_projectPathExists` with project name', function() {
 				expect(mocks.projects._projectPathExists.calledOnce).equal(true);
 				var args = mocks.projects._projectPathExists.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `_projectPathExists`', function() {
@@ -85,7 +85,7 @@ describe('Projcts collection `setConfig` method', function() {
 			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `_getProjectPath`', function() {

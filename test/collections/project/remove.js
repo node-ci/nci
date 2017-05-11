@@ -17,6 +17,9 @@ describe('Projcts collection `remove` method', function() {
 
 		return {
 			projects: {
+				get: sinon.stub().returns(
+					params.getResult
+				),
 				_getProjectPath: sinon.stub().returns(
 					params.getProjectPathResult
 				),
@@ -59,6 +62,22 @@ describe('Projcts collection `remove` method', function() {
 
 	var projects, mocks;
 
+	var checkProjectsGetCall = function(expected) {
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `get` with project name', function() {
+				expect(mocks.projects.get.calledOnce).equal(true);
+				var args = mocks.projects.get.getCall(0).args;
+				expect(args[0]).eql(expected.projectName);
+			});
+		} else {
+			it('should not call `get`', function() {
+				expect(mocks.projects.get.called).equal(false);
+			});
+		}
+	};
+
 	var checkDbBuildsFindCall = function(expected) {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
@@ -73,6 +92,26 @@ describe('Projcts collection `remove` method', function() {
 		} else {
 			it('should not call `db.builds.find`', function() {
 				expect(mocks.projects.db.builds.find.called).equal(false);
+			});
+		}
+	};
+
+	var checkProjectsGetPathCall = function(expected) {
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `_getProjectPath` with project name', function() {
+				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
+				var args = mocks.projects._getProjectPath.getCall(0).args;
+				expect(args[0]).eql(
+					_({name: expected.projectName}).extend(
+						_(expected).pick('archived')
+					)
+				);
+			});
+		} else {
+			it('should not call `_getProjectPath`', function() {
+				expect(mocks.projects._getProjectPath.called).equal(false);
 			});
 		}
 	};
@@ -155,10 +194,12 @@ describe('Projcts collection `remove` method', function() {
 	describe('with project with builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
+			project = {name: projectName, dir: projectPath},
 			builds = [{id: 1}, {id: 2}];
 
 		before(function() {
 			mocks = getMocks({
+				getResult: project,
 				buildsFindResult: builds,
 				getProjectPathResult: projectPath
 			});
@@ -170,7 +211,11 @@ describe('Projcts collection `remove` method', function() {
 			projects.remove(projectName, done);
 		});
 
+		checkProjectsGetCall({projectName: projectName});
+
 		checkDbBuildsFindCall({projectName: projectName});
+
+		checkProjectsGetPathCall({projectName: projectName});
 
 		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
 
@@ -184,10 +229,12 @@ describe('Projcts collection `remove` method', function() {
 	describe('with project without builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
+			project = {name: projectName},
 			builds = [];
 
 		before(function() {
 			mocks = getMocks({
+				getResult: project,
 				buildsFindResult: builds,
 				getProjectPathResult: projectPath
 			});
@@ -199,11 +246,132 @@ describe('Projcts collection `remove` method', function() {
 			projects.remove(projectName, done);
 		});
 
+		checkProjectsGetCall({projectName: projectName});
+
 		checkDbBuildsFindCall({projectName: projectName});
+
+		checkProjectsGetPathCall({projectName: projectName});
 
 		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
 
 		checkProjectsUnloadCall({projectName: projectName});
+
+		checkDbBuildsDelCall({called: false});
+
+		checkDbLogLinesRemoveCall({called: false});
+	});
+
+	describe('with archived project with builds', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			project = {name: projectName, archived: true},
+			builds = [{id: 1}, {id: 2}];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds,
+				getProjectPathResult: projectPath
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called witout errors', function(done) {
+			projects.remove(projectName, done);
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkDbBuildsFindCall({projectName: projectName});
+
+		checkProjectsGetPathCall({projectName: projectName, archived: true});
+
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+
+		checkProjectsUnloadCall({projectName: projectName});
+
+		checkDbBuildsDelCall({builds: builds});
+
+		checkDbLogLinesRemoveCall({builds: builds});
+	});
+
+	describe('when project name is not set', function() {
+		var projectName = null,
+			projectPath = '/some/path',
+			project = {name: projectName},
+			builds = [];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds,
+				getProjectPathResult: projectPath
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called with error', function(done) {
+			projects.remove(projectName, function(err) {
+				expect(err).an(Error);
+				expect(err.message).eql('Project name is required');
+
+				done();
+			});
+		});
+
+		checkProjectsGetCall({called: false});
+
+		checkDbBuildsFindCall({called: false});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkCommandRunCall({called: false});
+
+		checkProjectsUnloadCall({called: false});
+
+		checkDbBuildsDelCall({called: false});
+
+		checkDbLogLinesRemoveCall({called: false});
+	});
+
+	describe('when project doesn`t exist', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			project = null,
+			builds = [];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds,
+				getProjectPathResult: projectPath
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called with error', function(done) {
+			projects.remove(projectName, function(err) {
+				expect(err).an(Error);
+				expect(err.message).eql(
+					'Can`t find project "' + projectName + '" for removing'
+				);
+
+				done();
+			});
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkDbBuildsFindCall({called: false});
+
+		checkProjectsGetPathCall({called: false});
+
+		checkCommandRunCall({called: false});
+
+		checkProjectsUnloadCall({called: false});
 
 		checkDbBuildsDelCall({called: false});
 

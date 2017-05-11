@@ -49,10 +49,13 @@ describe('Projcts collection `create` method', function() {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
 		if (expected.called) {
-			it('should call `_projectPathExists` with project name', function() {
-				expect(mocks.projects._projectPathExists.calledOnce).equal(true);
+			it('should call `_projectPathExists` twice with project name', function() {
+				expect(mocks.projects._projectPathExists.calledTwice).equal(true);
 				var args = mocks.projects._projectPathExists.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
+
+				args = mocks.projects._projectPathExists.getCall(1).args;
+				expect(args[0]).eql({name: expected.projectName, archived: true});
 			});
 		} else {
 			it('should not call `_projectPathExists`', function() {
@@ -68,7 +71,7 @@ describe('Projcts collection `create` method', function() {
 			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `_getProjectPath`', function() {

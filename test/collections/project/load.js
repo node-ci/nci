@@ -49,7 +49,7 @@ describe('Projcts collection `load` method', function() {
 			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `_getProjectPath`', function() {
@@ -160,7 +160,8 @@ describe('Projcts collection `load` method', function() {
 
 		var projectConfigExtended = _({
 			name: projectName,
-			dir: projectPath
+			dir: projectPath,
+			archived: false
 		}).extend(projectConfig);
 
 		before(function() {
