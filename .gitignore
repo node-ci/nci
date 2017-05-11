@@ -11,3 +11,5 @@ data/config.yaml
 data/config.json
 data/db
 data/projects/test*
+data/archivedProjects
+
