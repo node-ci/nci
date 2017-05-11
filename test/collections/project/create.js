@@ -157,7 +157,7 @@ describe('Projcts collection `create` method', function() {
 
 		checkProjectsSetConfigCall({
 			callParams: {
-				projectName: projectName,
+				projectDir: projectPath,
 				config: projectConfig
 			}
 		});
@@ -274,7 +274,7 @@ describe('Projcts collection `create` method', function() {
 
 		checkProjectsSetConfigCall({
 			callParams: {
-				projectName: projectName,
+				projectDir: projectPath,
 				config: projectConfig
 			}
 		});
