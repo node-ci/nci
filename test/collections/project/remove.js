@@ -20,9 +20,6 @@ describe('Projcts collection `remove` method', function() {
 				get: sinon.stub().returns(
 					params.getResult
 				),
-				_getProjectPath: sinon.stub().returns(
-					params.getProjectPathResult
-				),
 				db: {
 					builds: {
 						find: sinon.stub().callsArgWithAsync(
@@ -92,26 +89,6 @@ describe('Projcts collection `remove` method', function() {
 		} else {
 			it('should not call `db.builds.find`', function() {
 				expect(mocks.projects.db.builds.find.called).equal(false);
-			});
-		}
-	};
-
-	var checkProjectsGetPathCall = function(expected) {
-		expected.called = _(expected).has('called') ? expected.called : true;
-
-		if (expected.called) {
-			it('should call `_getProjectPath` with project name', function() {
-				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
-				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql(
-					_({name: expected.projectName}).extend(
-						_(expected).pick('archived')
-					)
-				);
-			});
-		} else {
-			it('should not call `_getProjectPath`', function() {
-				expect(mocks.projects._getProjectPath.called).equal(false);
 			});
 		}
 	};
@@ -200,8 +177,7 @@ describe('Projcts collection `remove` method', function() {
 		before(function() {
 			mocks = getMocks({
 				getResult: project,
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
@@ -215,9 +191,7 @@ describe('Projcts collection `remove` method', function() {
 
 		checkDbBuildsFindCall({projectName: projectName});
 
-		checkProjectsGetPathCall({projectName: projectName});
-
-		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
 
 		checkProjectsUnloadCall({projectName: projectName});
 
@@ -229,14 +203,13 @@ describe('Projcts collection `remove` method', function() {
 	describe('with project without builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
-			project = {name: projectName},
+			project = {name: projectName, dir: projectPath},
 			builds = [];
 
 		before(function() {
 			mocks = getMocks({
 				getResult: project,
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
@@ -250,9 +223,7 @@ describe('Projcts collection `remove` method', function() {
 
 		checkDbBuildsFindCall({projectName: projectName});
 
-		checkProjectsGetPathCall({projectName: projectName});
-
-		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
 
 		checkProjectsUnloadCall({projectName: projectName});
 
@@ -264,14 +235,13 @@ describe('Projcts collection `remove` method', function() {
 	describe('with archived project with builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
-			project = {name: projectName, archived: true},
+			project = {name: projectName, dir: projectPath, archived: true},
 			builds = [{id: 1}, {id: 2}];
 
 		before(function() {
 			mocks = getMocks({
 				getResult: project,
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
@@ -285,9 +255,7 @@ describe('Projcts collection `remove` method', function() {
 
 		checkDbBuildsFindCall({projectName: projectName});
 
-		checkProjectsGetPathCall({projectName: projectName, archived: true});
-
-		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
 
 		checkProjectsUnloadCall({projectName: projectName});
 
@@ -299,14 +267,13 @@ describe('Projcts collection `remove` method', function() {
 	describe('when project name is not set', function() {
 		var projectName = null,
 			projectPath = '/some/path',
-			project = {name: projectName},
+			project = {name: projectName, dir: projectPath},
 			builds = [];
 
 		before(function() {
 			mocks = getMocks({
 				getResult: project,
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
@@ -324,8 +291,6 @@ describe('Projcts collection `remove` method', function() {
 		checkProjectsGetCall({called: false});
 
 		checkDbBuildsFindCall({called: false});
-
-		checkProjectsGetPathCall({called: false});
 
 		checkCommandRunCall({called: false});
 
@@ -345,8 +310,7 @@ describe('Projcts collection `remove` method', function() {
 		before(function() {
 			mocks = getMocks({
 				getResult: project,
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
@@ -366,8 +330,6 @@ describe('Projcts collection `remove` method', function() {
 		checkProjectsGetCall({projectName: projectName});
 
 		checkDbBuildsFindCall({called: false});
-
-		checkProjectsGetPathCall({called: false});
 
 		checkCommandRunCall({called: false});
 
