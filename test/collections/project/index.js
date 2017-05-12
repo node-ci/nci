@@ -10,3 +10,6 @@ require('./loadConfig');
 require('./setConfig');
 require('./remove');
 require('./create');
+require('./archiveUnarchive');
+require('./archive');
+require('./unarchive');

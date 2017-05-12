@@ -110,22 +110,6 @@ describe('Projcts collection `setConfig` method', function() {
 		}
 	};
 
-	var checkProjectsGetPathCall = function(expected) {
-		expected.called = _(expected).has('called') ? expected.called : true;
-
-		if (expected.called) {
-			it('should call `_getProjectPath` with project name', function() {
-				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
-				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql({name: expected.projectName});
-			});
-		} else {
-			it('should not call `_getProjectPath`', function() {
-				expect(mocks.projects._getProjectPath.called).equal(false);
-			});
-		}
-	};
-
 	var checkFsWriteFileCall = function(expected) {
 		expected.called = _(expected).has('called') ? expected.called : true;
 
