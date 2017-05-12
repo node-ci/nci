@@ -65,7 +65,7 @@ describe('Projcts collection `unload` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.unload({name: projectName}, done);
 		});
 

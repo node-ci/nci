@@ -183,7 +183,7 @@ describe('Projcts collection `remove` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.remove({name: projectName}, done);
 		});
 
@@ -215,7 +215,7 @@ describe('Projcts collection `remove` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.remove({name: projectName}, done);
 		});
 
@@ -247,7 +247,7 @@ describe('Projcts collection `remove` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.remove({name: projectName}, done);
 		});
 

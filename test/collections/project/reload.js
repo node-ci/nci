@@ -78,7 +78,7 @@ describe('Projcts collection `reload` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.reload({name: projectName}, done);
 		});
 
@@ -101,7 +101,7 @@ describe('Projcts collection `reload` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.reload({name: projectName}, done);
 		});
 
@@ -124,7 +124,7 @@ describe('Projcts collection `reload` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.reload({name: projectName}, done);
 		});
 

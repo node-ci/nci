@@ -66,7 +66,7 @@ describe('Projcts collection `_getProjectPath` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function() {
+		it('should be called without errors', function() {
 			joinedPath = projects._getProjectPath({name: projectName});
 		});
 
@@ -94,7 +94,7 @@ describe('Projcts collection `_getProjectPath` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function() {
+		it('should be called without errors', function() {
 			joinedPath = projects._getProjectPath({name: projectName, archived: true});
 		});
 

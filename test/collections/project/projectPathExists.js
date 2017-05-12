@@ -69,7 +69,7 @@ describe('Projcts collection `_projectPathExists` method', function() {
 
 		var pathExists;
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._projectPathExists({name: projectName}, function(err, result) {
 				expect(err).not.ok();
 				pathExists = result;
@@ -101,7 +101,7 @@ describe('Projcts collection `_projectPathExists` method', function() {
 
 		var pathExists;
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._projectPathExists({name: projectName}, function(err, result) {
 				expect(err).not.ok();
 				pathExists = result;

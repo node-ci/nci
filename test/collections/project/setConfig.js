@@ -159,7 +159,7 @@ describe('Projcts collection `setConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.setConfig({
 				projectName: projectName,
 				config: projectConfig
@@ -196,7 +196,7 @@ describe('Projcts collection `setConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.setConfig({
 				projectName: projectName,
 				configFile: projectConfigFile
@@ -234,7 +234,7 @@ describe('Projcts collection `setConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.setConfig({
 				projectName: projectName,
 				config: projectConfig,
@@ -313,7 +313,7 @@ describe('Projcts collection `setConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects.setConfig({
 				projectDir: projectPath,
 				config: projectConfig

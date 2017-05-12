@@ -149,7 +149,7 @@ describe('Projcts collection `_archiveUnarchive` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._archiveUnarchive({
 				name: projectName,
 				action: 'archive'
@@ -185,7 +185,7 @@ describe('Projcts collection `_archiveUnarchive` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._archiveUnarchive({
 				name: projectName,
 				action: 'unarchive'
