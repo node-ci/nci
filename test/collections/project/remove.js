@@ -121,7 +121,7 @@ describe('Projcts collection `remove` method', function() {
 			it('should call `unload` with project name', function() {
 				expect(mocks.projects.unload.calledOnce).equal(true);
 				var args = mocks.projects.unload.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `unload`', function() {
@@ -184,7 +184,7 @@ describe('Projcts collection `remove` method', function() {
 		});
 
 		it('should be called witout errors', function(done) {
-			projects.remove(projectName, done);
+			projects.remove({name: projectName}, done);
 		});
 
 		checkProjectsGetCall({projectName: projectName});
@@ -216,7 +216,7 @@ describe('Projcts collection `remove` method', function() {
 		});
 
 		it('should be called witout errors', function(done) {
-			projects.remove(projectName, done);
+			projects.remove({name: projectName}, done);
 		});
 
 		checkProjectsGetCall({projectName: projectName});
@@ -248,7 +248,7 @@ describe('Projcts collection `remove` method', function() {
 		});
 
 		it('should be called witout errors', function(done) {
-			projects.remove(projectName, done);
+			projects.remove({name: projectName}, done);
 		});
 
 		checkProjectsGetCall({projectName: projectName});
@@ -280,7 +280,7 @@ describe('Projcts collection `remove` method', function() {
 		});
 
 		it('should be called with error', function(done) {
-			projects.remove(projectName, function(err) {
+			projects.remove({name: projectName}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql('Project name is required');
 
@@ -317,7 +317,7 @@ describe('Projcts collection `remove` method', function() {
 		});
 
 		it('should be called with error', function(done) {
-			projects.remove(projectName, function(err) {
+			projects.remove({name: projectName}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql(
 					'Can`t find project "' + projectName + '" for removing'

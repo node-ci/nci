@@ -135,7 +135,7 @@ describe('Projcts collection `setConfig` method', function() {
 			it('should call `reload` with project name', function() {
 				expect(mocks.projects.reload.calledOnce).equal(true);
 				var args = mocks.projects.reload.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `reload`', function() {

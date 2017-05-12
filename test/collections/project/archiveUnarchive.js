@@ -62,7 +62,7 @@ describe('Projcts collection `_archiveUnarchive` method', function() {
 			it('should call `unload` with project name', function() {
 				expect(mocks.projects.unload.calledOnce).equal(true);
 				var args = mocks.projects.unload.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `unload`', function() {
