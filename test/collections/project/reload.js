@@ -45,7 +45,7 @@ describe('Projcts collection `reload` method', function() {
 			it('should call `unload` with project name', function() {
 				expect(mocks.projects.unload.calledOnce).equal(true);
 				var args = mocks.projects.unload.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `unload`', function() {
@@ -58,23 +58,28 @@ describe('Projcts collection `reload` method', function() {
 		it('should call `load` with project name', function() {
 			expect(mocks.projects.load.calledOnce).equal(true);
 			var args = mocks.projects.load.getCall(0).args;
-			expect(args[0]).eql(expected.projectName);
+			expect(args[0]).eql(
+				_({name: expected.projectName}).extend(
+					_(expected).pick('archived')
+				)
+			);
 		});
 	};
 
 	describe('when project already loaded', function() {
-		var projectName = 'test_project';
+		var projectName = 'test_project',
+			project = {name: projectName};
 
 		before(function() {
 			mocks = getMocks({
-				projectsGetResult: projectName
+				projectsGetResult: project
 			});
 
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.reload(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.reload({name: projectName}, done);
 		});
 
 		checkProjectsGetCall({projectName: projectName});
@@ -84,19 +89,43 @@ describe('Projcts collection `reload` method', function() {
 		checkProjectsLoadCall({projectName: projectName});
 	});
 
-	describe('when project not previously loaded', function() {
-		var projectName = 'test_project';
+	describe('when archived project already loaded', function() {
+		var projectName = 'test_project',
+			project = {name: projectName, archived: true};
 
 		before(function() {
 			mocks = getMocks({
-				projectsGetResult: null
+				projectsGetResult: project
 			});
 
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.reload(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.reload({name: projectName}, done);
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkProjectsUnloadCall({projectName: projectName});
+
+		checkProjectsLoadCall({projectName: projectName, archived: true});
+	});
+
+	describe('when project not previously loaded', function() {
+		var projectName = 'test_project',
+			project = null;
+
+		before(function() {
+			mocks = getMocks({
+				projectsGetResult: project
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called without errors', function(done) {
+			projects.reload({name: projectName}, done);
 		});
 
 		checkProjectsGetCall({projectName: projectName});

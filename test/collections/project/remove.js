@@ -17,8 +17,8 @@ describe('Projcts collection `remove` method', function() {
 
 		return {
 			projects: {
-				_getProjectPath: sinon.stub().returns(
-					params.getProjectPathResult
+				get: sinon.stub().returns(
+					params.getResult
 				),
 				db: {
 					builds: {
@@ -58,6 +58,22 @@ describe('Projcts collection `remove` method', function() {
 	};
 
 	var projects, mocks;
+
+	var checkProjectsGetCall = function(expected) {
+		expected.called = _(expected).has('called') ? expected.called : true;
+
+		if (expected.called) {
+			it('should call `get` with project name', function() {
+				expect(mocks.projects.get.calledOnce).equal(true);
+				var args = mocks.projects.get.getCall(0).args;
+				expect(args[0]).eql(expected.projectName);
+			});
+		} else {
+			it('should not call `get`', function() {
+				expect(mocks.projects.get.called).equal(false);
+			});
+		}
+	};
 
 	var checkDbBuildsFindCall = function(expected) {
 		expected.called = _(expected).has('called') ? expected.called : true;
@@ -105,7 +121,7 @@ describe('Projcts collection `remove` method', function() {
 			it('should call `unload` with project name', function() {
 				expect(mocks.projects.unload.calledOnce).equal(true);
 				var args = mocks.projects.unload.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `unload`', function() {
@@ -155,24 +171,27 @@ describe('Projcts collection `remove` method', function() {
 	describe('with project with builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
+			project = {name: projectName, dir: projectPath},
 			builds = [{id: 1}, {id: 2}];
 
 		before(function() {
 			mocks = getMocks({
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				getResult: project,
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.remove(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.remove({name: projectName}, done);
 		});
+
+		checkProjectsGetCall({projectName: projectName});
 
 		checkDbBuildsFindCall({projectName: projectName});
 
-		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
 
 		checkProjectsUnloadCall({projectName: projectName});
 
@@ -184,26 +203,137 @@ describe('Projcts collection `remove` method', function() {
 	describe('with project without builds', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
+			project = {name: projectName, dir: projectPath},
 			builds = [];
 
 		before(function() {
 			mocks = getMocks({
-				buildsFindResult: builds,
-				getProjectPathResult: projectPath
+				getResult: project,
+				buildsFindResult: builds
 			});
 
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.remove(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.remove({name: projectName}, done);
 		});
+
+		checkProjectsGetCall({projectName: projectName});
 
 		checkDbBuildsFindCall({projectName: projectName});
 
-		checkCommandRunCall({cmd: 'rm', args: ['-Rf', projectPath]});
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
 
 		checkProjectsUnloadCall({projectName: projectName});
+
+		checkDbBuildsDelCall({called: false});
+
+		checkDbLogLinesRemoveCall({called: false});
+	});
+
+	describe('with archived project with builds', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			project = {name: projectName, dir: projectPath, archived: true},
+			builds = [{id: 1}, {id: 2}];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called without errors', function(done) {
+			projects.remove({name: projectName}, done);
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkDbBuildsFindCall({projectName: projectName});
+
+		checkCommandRunCall({cmd: 'rm', args: ['-Rf', project.dir]});
+
+		checkProjectsUnloadCall({projectName: projectName});
+
+		checkDbBuildsDelCall({builds: builds});
+
+		checkDbLogLinesRemoveCall({builds: builds});
+	});
+
+	describe('when project name is not set', function() {
+		var projectName = null,
+			projectPath = '/some/path',
+			project = {name: projectName, dir: projectPath},
+			builds = [];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called with error', function(done) {
+			projects.remove({name: projectName}, function(err) {
+				expect(err).an(Error);
+				expect(err.message).eql('Project name is required');
+
+				done();
+			});
+		});
+
+		checkProjectsGetCall({called: false});
+
+		checkDbBuildsFindCall({called: false});
+
+		checkCommandRunCall({called: false});
+
+		checkProjectsUnloadCall({called: false});
+
+		checkDbBuildsDelCall({called: false});
+
+		checkDbLogLinesRemoveCall({called: false});
+	});
+
+	describe('when project doesn`t exist', function() {
+		var projectName = 'test_project',
+			projectPath = '/some/path',
+			project = null,
+			builds = [];
+
+		before(function() {
+			mocks = getMocks({
+				getResult: project,
+				buildsFindResult: builds
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called with error', function(done) {
+			projects.remove({name: projectName}, function(err) {
+				expect(err).an(Error);
+				expect(err.message).eql(
+					'Can`t find project "' + projectName + '" for removing'
+				);
+
+				done();
+			});
+		});
+
+		checkProjectsGetCall({projectName: projectName});
+
+		checkDbBuildsFindCall({called: false});
+
+		checkCommandRunCall({called: false});
+
+		checkProjectsUnloadCall({called: false});
 
 		checkDbBuildsDelCall({called: false});
 

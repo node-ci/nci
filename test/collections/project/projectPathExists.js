@@ -40,7 +40,7 @@ describe('Projcts collection `_projectPathExists` method', function() {
 		it('should call `_getProjectPath` with project name', function() {
 			expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 			var args = mocks.projects._getProjectPath.getCall(0).args;
-			expect(args[0]).eql(expected.projectName);
+			expect(args[0]).eql({name: expected.projectName});
 		});
 	};
 
@@ -69,8 +69,8 @@ describe('Projcts collection `_projectPathExists` method', function() {
 
 		var pathExists;
 
-		it('should be called witout errors', function(done) {
-			projects._projectPathExists(projectName, function(err, result) {
+		it('should be called without errors', function(done) {
+			projects._projectPathExists({name: projectName}, function(err, result) {
 				expect(err).not.ok();
 				pathExists = result;
 				done();
@@ -101,8 +101,8 @@ describe('Projcts collection `_projectPathExists` method', function() {
 
 		var pathExists;
 
-		it('should be called witout errors', function(done) {
-			projects._projectPathExists(projectName, function(err, result) {
+		it('should be called without errors', function(done) {
+			projects._projectPathExists({name: projectName}, function(err, result) {
 				expect(err).not.ok();
 				pathExists = result;
 				done();

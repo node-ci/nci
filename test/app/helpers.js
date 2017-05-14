@@ -30,7 +30,12 @@ exports.requireApp = function(params) {
 		},
 		fs: {
 			exists: function(path, callback) {
-				if (path === config.paths.db) {
+				var existingPaths = [
+					config.paths.db,
+					config.paths.archivedProjects
+				];
+
+				if (_(existingPaths).contains(path)) {
 					callback(true);
 				} else {
 					fs.exists(path, callback);

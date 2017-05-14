@@ -9,4 +9,8 @@ require('./projectPathExists');
 require('./loadConfig');
 require('./setConfig');
 require('./remove');
+require('./rename');
 require('./create');
+require('./archiveUnarchive');
+require('./archive');
+require('./unarchive');

@@ -167,4 +167,35 @@ describe('Distributor main', function() {
 			});
 		});
 	});
+
+	describe('with archived project', function() {
+		var updateBuildSpy;
+		var project = {
+			name: 'test_project',
+			archived: true
+		};
+
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor({
+				projects: [project],
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
+			});
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+		});
+
+		it('should run with error', function(done) {
+			distributor.run({projectName: project.name}, function(err) {
+				expect(err).an(Error);
+				expect(err.message).eql(
+					'Can`t run archived project "' + project.name + '"'
+				);
+
+				done();
+			});
+		});
+
+		it('update build should not be called', function() {
+			expect(updateBuildSpy.called).equal(false);
+		});
+	});
 });

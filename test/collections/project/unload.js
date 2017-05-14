@@ -65,8 +65,8 @@ describe('Projcts collection `unload` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.unload(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.unload({name: projectName}, done);
 		});
 
 		it('should not contain project config in configs', function() {
@@ -101,7 +101,7 @@ describe('Projcts collection `unload` method', function() {
 		});
 
 		it('should be called with error', function(done) {
-			projects.unload(projectName, function(err) {
+			projects.unload({name: projectName}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql(
 					'Can`t unload not loaded project: "' + projectName + '"'

@@ -49,7 +49,7 @@ describe('Projcts collection `load` method', function() {
 			it('should call `_getProjectPath` with project name', function() {
 				expect(mocks.projects._getProjectPath.calledOnce).equal(true);
 				var args = mocks.projects._getProjectPath.getCall(0).args;
-				expect(args[0]).eql(expected.projectName);
+				expect(args[0]).eql({name: expected.projectName});
 			});
 		} else {
 			it('should not call `_getProjectPath`', function() {
@@ -160,7 +160,8 @@ describe('Projcts collection `load` method', function() {
 
 		var projectConfigExtended = _({
 			name: projectName,
-			dir: projectPath
+			dir: projectPath,
+			archived: false
 		}).extend(projectConfig);
 
 		before(function() {
@@ -174,8 +175,8 @@ describe('Projcts collection `load` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
-			projects.load(projectName, done);
+		it('should be called without errors', function(done) {
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
@@ -218,7 +219,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called with error', function(done) {
-			projects.load(projectName, function(err) {
+			projects.load({name: projectName}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql('Project name is required');
 
@@ -263,7 +264,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called withot errors', function(done) {
-			projects.load(projectName, done);
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
@@ -307,7 +308,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called withot errors', function(done) {
-			projects.load(projectName, done);
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});

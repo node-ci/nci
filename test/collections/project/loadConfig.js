@@ -89,7 +89,7 @@ describe('Projcts collection `loadConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._loadConfig(projectPath, function(err, result) {
 				expect(err).not.ok();
 				loadedProjectConfig = result;
@@ -131,7 +131,7 @@ describe('Projcts collection `loadConfig` method', function() {
 			projects = getProjectsCollection(mocks);
 		});
 
-		it('should be called witout errors', function(done) {
+		it('should be called without errors', function(done) {
 			projects._loadConfig(projectPath, function(err, result) {
 				expect(err).not.ok();
 				loadedProjectConfig = result;
