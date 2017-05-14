@@ -336,6 +336,45 @@ describe('Projcts collection `setConfig` method', function() {
 		checkProjectsReloadCall({called: false});
 	});
 
+	describe('with project dir, config, load true', function() {
+		var projectName = 'test_project',
+			projectPath = path.join('/some/path', projectName),
+			projectConfig = {someOption: 'someValue'};
+
+		before(function() {
+			mocks = getMocks({
+				projectPathExists: true,
+				projectPath: projectPath,
+				validateConfigResult: projectConfig
+			});
+
+			projects = getProjectsCollection(mocks);
+		});
+
+		it('should be called without errors', function(done) {
+			projects.setConfig({
+				projectDir: projectPath,
+				config: projectConfig,
+				load: true
+			}, done);
+		});
+
+		checkProjectsGetCall({called: false});
+
+		checkFsExistsCall({projectPath: projectPath});
+
+		checkProjectsValidateConfigCall({config: projectConfig});
+
+		checkFsWriteFileCall({
+			projectConfigFile: {
+				path: path.join(projectPath, 'config.json'),
+				content: JSON.stringify(projectConfig, null, 4)
+			}
+		});
+
+		checkProjectsReloadCall({projectName: projectName});
+	});
+
 	describe('when project dir doesn`t exist', function() {
 		var projectName = 'test_project',
 			projectPath = '/some/path',
