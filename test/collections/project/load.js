@@ -176,7 +176,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called without errors', function(done) {
-			projects.load(projectName, done);
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
@@ -219,7 +219,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called with error', function(done) {
-			projects.load(projectName, function(err) {
+			projects.load({name: projectName}, function(err) {
 				expect(err).an(Error);
 				expect(err.message).eql('Project name is required');
 
@@ -264,7 +264,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called withot errors', function(done) {
-			projects.load(projectName, done);
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
@@ -308,7 +308,7 @@ describe('Projcts collection `load` method', function() {
 		});
 
 		it('should be called withot errors', function(done) {
-			projects.load(projectName, done);
+			projects.load({name: projectName}, done);
 		});
 
 		checkProjectsGetPathCall({projectName: projectName});
