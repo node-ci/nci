@@ -215,13 +215,11 @@ describe('notifier module', function() {
 			sendSpy.reset();
 		});
 
-		it('should notify for the first build (without get prev build)',
+		it('should notify for the first build',
 			function(done) {
-				notifier._getPrevBuild.reset();
 				notifier.send(build, function(err) {
 					expect(err).not.ok();
 					expect(sendSpy.calledOnce).equal(true);
-					expect(notifier._getPrevBuild.called).equal(false);
 					done();
 				});
 			}
@@ -282,7 +280,7 @@ describe('notifier module', function() {
 		});
 
 		it(
-			'should not notify when first build (without get prev build) is error',
+			'should not notify when first build is error',
 			function(done) {
 				notifier.send(build, function(err) {
 					expect(err).not.ok();
@@ -296,13 +294,11 @@ describe('notifier module', function() {
 			build.status = 'done';
 		});
 
-		it('should notify for the first build (without get prev build) is done',
+		it('should notify for the first build is done',
 			function(done) {
-				notifier._getPrevBuild.reset();
 				notifier.send(build, function(err) {
 					expect(err).not.ok();
 					expect(sendSpy.calledOnce).equal(true);
-					expect(notifier._getPrevBuild.called).equal(false);
 					done();
 				});
 			}
