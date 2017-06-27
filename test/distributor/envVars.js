@@ -13,7 +13,13 @@ describe('Distributor build env vars usage', function() {
 			runExecutorSpy,
 			buildId = 20,
 			buildNumber = 10,
-			node = {name: 'local', type: 'local', maxExecutorsCount: 1};
+			env = {name: 'someEnv'},
+			node = {
+				name: 'local',
+				type: 'local',
+				maxExecutorsCount: 1,
+				envs: ['someEnv']
+			};
 
 		it('instance should be created without errors', function() {
 			distributor = helpers.createDistributor({
@@ -34,7 +40,7 @@ describe('Distributor build env vars usage', function() {
 		});
 
 		it('should run without errors', function(done) {
-			distributor.run({projectName: project.name}, function(err) {
+			distributor.run({projectName: project.name, env: env}, function(err) {
 				expect(err).not.ok();
 				done();
 			});
@@ -63,6 +69,10 @@ describe('Distributor build env vars usage', function() {
 
 		it('should provide NCI_NODE_NAME env var', function() {
 			expect(envVars.NCI_NODE_NAME).equal(String(node.name));
+		});
+
+		it('should provide NCI_ENV_NAME env var', function() {
+			expect(envVars.NCI_ENV_NAME).equal(String(env.name));
 		});
 	});
 });
