@@ -50,6 +50,8 @@
   - `params.status` - optional status filter, can be used only when
   `params.projectName` is set. When used builds in the result will contain
   only following fields: id, number, startDate, endDate
+  - `params.filter` - custom filter function which accepts build and returns
+  boolean
   - `params.limit` - maximum builds count to get
 
 ## BuildsCollection.getDoneStreak(params:Object, callback(err,doneStreak):Function)
