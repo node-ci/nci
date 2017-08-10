@@ -1,17 +1,20 @@
 'use strict';
 
-var env = process.env.NODE_ENV || 'development',
-	db = require('./db'),
-	fs = require('fs'),
-	Steppy = require('twostep').Steppy,
+var fs = require('fs'),
+	EventEmitter = require('events').EventEmitter,
+	inherits = require('util').inherits,
 	_ = require('underscore'),
+	Steppy = require('twostep').Steppy,
+	requireRelative = require('require-relative'),
+	db = require('./db'),
 	Reader = require('../lib/reader').Reader,
 	Notifier = require('../lib/notifier').Notifier,
 	ProjectsCollection = require('../lib/project').ProjectsCollection,
 	BuildsCollection = require('../lib/build').BuildsCollection,
-	EventEmitter = require('events').EventEmitter,
-	utils = require('../lib/utils'),
-	inherits = require('util').inherits;
+	utils = require('../lib/utils');
+
+var env = process.env.NODE_ENV || 'development';
+var cwd = process.cwd();
 
 function App(params) {
 	params = params || {};
@@ -19,6 +22,18 @@ function App(params) {
 }
 
 inherits(App, EventEmitter);
+
+App.prototype.require = function(id) {
+	return requireRelative(id, cwd);
+};
+
+App.prototype.loadPlugins = function(plugins) {
+	var self = this;
+	_(plugins).each(function(plugin) {
+		self.logger.log('Load plugin "%s"', plugin);
+		self.require(plugin).register(self);
+	});
+};
 
 App.prototype.init = function(callback) {
 	var self = this;
@@ -43,7 +58,7 @@ App.prototype.init = function(callback) {
 		function(err, config) {
 			self.config = config;
 
-			self.logger.log('Server config:', utils.toPrettyJson(self.config));
+			self.logger.log('Server config:\n%s', utils.toPrettyJson(self.config));
 
 			var dbDirExistsCallback = this.slot();
 			fs.exists(self.config.paths.db, function(isExists) {
@@ -69,7 +84,7 @@ App.prototype.init = function(callback) {
 			}
 		},
 		function() {
-			var dbBackend = require(self.config.storage.backend);
+			var dbBackend = self.require(self.config.storage.backend);
 
 			// monkey patch memdown to allow save empty strings which is correct
 			// at general but occasionally not allowed at _checkKey
@@ -106,10 +121,7 @@ App.prototype.init = function(callback) {
 			self.builds.completeUncompleted({logger: self.logger}, this.slot());
 
 			// register other plugins
-			_(self.config.plugins).each(function(plugin) {
-				self.logger.log('Load plugin "%s"', plugin);
-				require(plugin).register(self);
-			});
+			self.loadPlugins(self.config.plugins);
 
 			distributor.init();
 
@@ -145,7 +157,6 @@ App.prototype.init = function(callback) {
 		},
 		callback
 	);
-
 };
 
 App.prototype.listen = function() {
