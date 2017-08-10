@@ -10,7 +10,7 @@
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec --timeout 10000 --colors",
     "coverage": "nyc nrun test",
     "dev": "nodemon app.js",
-    "sync": "npm install && npm prune",
+    "sync": "npm prune && npm install",
     "lint": "jshint ./",
     "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
     "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
