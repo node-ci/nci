@@ -5,7 +5,7 @@ var fs = require('fs'),
 	inherits = require('util').inherits,
 	_ = require('underscore'),
 	Steppy = require('twostep').Steppy,
-	requireRelative = require('require-relative'),
+	importCwd = require('import-cwd'),
 	db = require('./db'),
 	Reader = require('../lib/reader').Reader,
 	Notifier = require('../lib/notifier').Notifier,
@@ -24,7 +24,7 @@ function App(params) {
 inherits(App, EventEmitter);
 
 App.prototype.require = function(id) {
-	return requireRelative(id, cwd);
+	return importCwd(id);
 };
 
 App.prototype.loadPlugins = function(plugins) {
