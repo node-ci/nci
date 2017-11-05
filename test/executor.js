@@ -178,6 +178,95 @@ _(['local']).each(function(type) {
 
 		});
 
+		describe(
+			'with scm rev default and catch rev first revision on matched rev',
+			function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					executor = createExecutor(makeExecutorParams({
+						project: {
+							catchRev: {
+								onRev: repository.scm.rev,
+								comment: 'first revision'
+							}
+						}
+					}));
+				});
+
+				it('should run without errors', function(done) {
+					executor.run(done);
+					executor.on('scmData', function(data) {
+						scmData = data;
+					});
+				});
+
+				it('scm data should be rev: 1, changes: [0, 1], not latest',
+					function() {
+						expect(scmData).eql({
+							rev: repository.revs[1],
+							changes: repository.revs.slice(0, 2).reverse(),
+							isLatest: false
+						});
+					});
+
+				itHasScmChanges(true);
+
+				it('should run it again without errors', function(done) {
+					executor.run(done);
+				});
+
+				it(
+					'scm data should be rev: last, changes: [2-last], is latest',
+					function() {
+						expect(scmData).eql({
+							rev: repository.revs[repository.revs.length - 1],
+							changes: repository.revs.slice(2).reverse(),
+							isLatest: true
+						});
+					}
+				);
+
+				itHasScmChanges(false);
+			}
+		);
+
+		describe(
+			'with scm rev default and catch rev first revision but on another rev',
+			function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					executor = createExecutor(makeExecutorParams({
+						project: {
+							catchRev: {
+								onRev: repository.scm.rev + '1',
+								comment: 'first revision'
+							}
+						}
+					}));
+				});
+
+				it('should run without errors', function(done) {
+					executor.run(done);
+					executor.on('scmData', function(data) {
+						scmData = data;
+					});
+				});
+
+				it(
+					'scm data should be rev: last, changes: [0-last], is latest',
+					function() {
+						expect(scmData).eql({
+							rev: repository.revs[repository.revs.length - 1],
+							changes: repository.revs.slice().reverse(),
+							isLatest: true
+						});
+					}
+				);
+			}
+		);
+
 	});
 
 });

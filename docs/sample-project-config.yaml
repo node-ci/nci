@@ -14,7 +14,9 @@ node:
 #specify which revisions should be built (by `tag` or `comment` regexp)
 #in any case (e.g. when several commits pushed at once)
 catchRev:
-    #for catching semver tags like 1.3.6, etc
+    #for catching semver tags like 1.3.6 on master branch (`onRev` could
+    #be omitted, then it will catch by tag on any scm target)
+    onRev: master
     tag: !!js/regexp /\d+\.\d+\.\d+/
 
 #notification settings
