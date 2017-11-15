@@ -7,3 +7,4 @@ require('./runSelfAfterCatchRev.js');
 require('./env.js');
 require('./cancel.js');
 require('./envVars.js');
+require('./buildEvents.js');
