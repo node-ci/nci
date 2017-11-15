@@ -38,52 +38,67 @@ describe('Distributor build events', function() {
 			expectStatus(updateBuildSpy, 0, 'queued');
 		});
 
-		it('should emit buildUpdate for queued build', function() {
+		it('should emit buildUpdated for queued build', function() {
 			var eventName = emitSpy.getCall(0).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
+		it('should emit buildUpdate for queued build', function() {
+			var eventName = emitSpy.getCall(1).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStatusChange for queued build', function() {
-			var eventName = emitSpy.getCall(1).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for queued build', function() {
+			var eventName = emitSpy.getCall(2).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should in-progress build', function() {
 			expectStatus(updateBuildSpy, 1, 'in-progress');
 		});
 
+		it('should emit buildUpdated for in-progress build', function() {
+			var eventName = emitSpy.getCall(3).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
 		it('should emit buildUpdate for in-progress build', function() {
-			var eventName = emitSpy.getCall(2).args[0];
+			var eventName = emitSpy.getCall(4).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStart for in-progress build', function() {
-			var eventName = emitSpy.getCall(3).args[0];
-			expect(eventName).equal('buildStart');
+		it('should emit buildStarted for in-progress build', function() {
+			var eventName = emitSpy.getCall(5).args[0];
+			expect(eventName).equal('buildStarted');
 		});
 
-		it('should emit buildStatusChange for in-progress build', function() {
-			var eventName = emitSpy.getCall(4).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for in-progress build', function() {
+			var eventName = emitSpy.getCall(6).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should done build', function() {
 			expectStatus(updateBuildSpy, 2, 'done');
 		});
 
+		it('should emit buildUpdated for done build', function() {
+			var eventName = emitSpy.getCall(7).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
 		it('should emit buildUpdate for done build', function() {
-			var eventName = emitSpy.getCall(5).args[0];
+			var eventName = emitSpy.getCall(8).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStatusChange for done build', function() {
-			var eventName = emitSpy.getCall(6).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for done build', function() {
+			var eventName = emitSpy.getCall(9).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should emit buildCompleted for done build', function() {
-			var eventName = emitSpy.getCall(7).args[0];
-			expect(eventName).equal('buildComplete');
+			var eventName = emitSpy.getCall(10).args[0];
+			expect(eventName).equal('buildCompleted');
 		});
 	});
 
@@ -114,52 +129,67 @@ describe('Distributor build events', function() {
 			expectStatus(updateBuildSpy, 0, 'queued');
 		});
 
-		it('should emit buildUpdate for queued build', function() {
+		it('should emit buildUpdated for queued build', function() {
 			var eventName = emitSpy.getCall(0).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
+		it('should emit buildUpdate for queued build', function() {
+			var eventName = emitSpy.getCall(1).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStatusChange for queued build', function() {
-			var eventName = emitSpy.getCall(1).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for queued build', function() {
+			var eventName = emitSpy.getCall(2).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should in-progress build', function() {
 			expectStatus(updateBuildSpy, 1, 'in-progress');
 		});
 
+		it('should emit buildUpdated for in-progress build', function() {
+			var eventName = emitSpy.getCall(3).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
 		it('should emit buildUpdate for in-progress build', function() {
-			var eventName = emitSpy.getCall(2).args[0];
+			var eventName = emitSpy.getCall(4).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStart for in-progress build', function() {
-			var eventName = emitSpy.getCall(3).args[0];
-			expect(eventName).equal('buildStart');
+		it('should emit buildStarted for in-progress build', function() {
+			var eventName = emitSpy.getCall(5).args[0];
+			expect(eventName).equal('buildStarted');
 		});
 
-		it('should emit buildStatusChange for in-progress build', function() {
-			var eventName = emitSpy.getCall(4).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for in-progress build', function() {
+			var eventName = emitSpy.getCall(6).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should error build', function() {
 			expectStatus(updateBuildSpy, 2, 'error');
 		});
 
+		it('should emit buildUpdated for error build', function() {
+			var eventName = emitSpy.getCall(7).args[0];
+			expect(eventName).equal('buildUpdated');
+		});
+
 		it('should emit buildUpdate for error build', function() {
-			var eventName = emitSpy.getCall(5).args[0];
+			var eventName = emitSpy.getCall(8).args[0];
 			expect(eventName).equal('buildUpdate');
 		});
 
-		it('should emit buildStatusChange for error build', function() {
-			var eventName = emitSpy.getCall(6).args[0];
-			expect(eventName).equal('buildStatusChange');
+		it('should emit buildStatusChanged for error build', function() {
+			var eventName = emitSpy.getCall(9).args[0];
+			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should emit buildCompleted for error build', function() {
-			var eventName = emitSpy.getCall(7).args[0];
-			expect(eventName).equal('buildComplete');
+			var eventName = emitSpy.getCall(10).args[0];
+			expect(eventName).equal('buildCompleted');
 		});
 
 	});
