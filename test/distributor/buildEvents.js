@@ -43,8 +43,13 @@ describe('Distributor build events', function() {
 			expect(eventName).equal('buildUpdated');
 		});
 
-		it('should emit buildStatusChanged for queued build', function() {
+		it('should emit buildQueued for queued build', function() {
 			var eventName = emitSpy.getCall(1).args[0];
+			expect(eventName).equal('buildQueued');
+		});
+
+		it('should emit buildStatusChanged for queued build', function() {
+			var eventName = emitSpy.getCall(2).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
@@ -53,17 +58,17 @@ describe('Distributor build events', function() {
 		});
 
 		it('should emit buildUpdated for in-progress build', function() {
-			var eventName = emitSpy.getCall(2).args[0];
+			var eventName = emitSpy.getCall(3).args[0];
 			expect(eventName).equal('buildUpdated');
 		});
 
 		it('should emit buildStarted for in-progress build', function() {
-			var eventName = emitSpy.getCall(3).args[0];
+			var eventName = emitSpy.getCall(4).args[0];
 			expect(eventName).equal('buildStarted');
 		});
 
 		it('should emit buildStatusChanged for in-progress build', function() {
-			var eventName = emitSpy.getCall(4).args[0];
+			var eventName = emitSpy.getCall(5).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
@@ -72,17 +77,17 @@ describe('Distributor build events', function() {
 		});
 
 		it('should emit buildUpdated for done build', function() {
-			var eventName = emitSpy.getCall(5).args[0];
+			var eventName = emitSpy.getCall(6).args[0];
 			expect(eventName).equal('buildUpdated');
 		});
 
 		it('should emit buildStatusChanged for done build', function() {
-			var eventName = emitSpy.getCall(6).args[0];
+			var eventName = emitSpy.getCall(7).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should emit buildCompleted for done build', function() {
-			var eventName = emitSpy.getCall(7).args[0];
+			var eventName = emitSpy.getCall(8).args[0];
 			expect(eventName).equal('buildCompleted');
 		});
 	});
@@ -119,8 +124,13 @@ describe('Distributor build events', function() {
 			expect(eventName).equal('buildUpdated');
 		});
 
-		it('should emit buildStatusChanged for queued build', function() {
+		it('should emit buildQueued for queued build', function() {
 			var eventName = emitSpy.getCall(1).args[0];
+			expect(eventName).equal('buildQueued');
+		});
+
+		it('should emit buildStatusChanged for queued build', function() {
+			var eventName = emitSpy.getCall(2).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
@@ -129,17 +139,17 @@ describe('Distributor build events', function() {
 		});
 
 		it('should emit buildUpdated for in-progress build', function() {
-			var eventName = emitSpy.getCall(2).args[0];
+			var eventName = emitSpy.getCall(3).args[0];
 			expect(eventName).equal('buildUpdated');
 		});
 
 		it('should emit buildStarted for in-progress build', function() {
-			var eventName = emitSpy.getCall(3).args[0];
+			var eventName = emitSpy.getCall(4).args[0];
 			expect(eventName).equal('buildStarted');
 		});
 
 		it('should emit buildStatusChanged for in-progress build', function() {
-			var eventName = emitSpy.getCall(4).args[0];
+			var eventName = emitSpy.getCall(5).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
@@ -148,17 +158,17 @@ describe('Distributor build events', function() {
 		});
 
 		it('should emit buildUpdated for error build', function() {
-			var eventName = emitSpy.getCall(5).args[0];
+			var eventName = emitSpy.getCall(6).args[0];
 			expect(eventName).equal('buildUpdated');
 		});
 
 		it('should emit buildStatusChanged for error build', function() {
-			var eventName = emitSpy.getCall(6).args[0];
+			var eventName = emitSpy.getCall(7).args[0];
 			expect(eventName).equal('buildStatusChanged');
 		});
 
 		it('should emit buildCompleted for error build', function() {
-			var eventName = emitSpy.getCall(7).args[0];
+			var eventName = emitSpy.getCall(8).args[0];
 			expect(eventName).equal('buildCompleted');
 		});
 
