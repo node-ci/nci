@@ -70,7 +70,7 @@ create `data/preload.json` (to apply yaml reader for server config):
 }
 ```
 
-create sever config `data/config.yaml`:
+create server config `data/config.yaml`:
 
 ```yaml
 
