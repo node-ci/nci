@@ -70,7 +70,7 @@ create `data/preload.json` (to apply yaml reader for server config):
 }
 ```
 
-create sever config `data/config.yaml`:
+create server config `data/config.yaml`:
 
 ```yaml
 
@@ -127,7 +127,7 @@ notify:
 
 Now we can add some projects for building them.
 
-Let's add nci it self as project.
+Let's add nci itself as project.
 
 Create project dir first:
 
@@ -181,7 +181,7 @@ node_modules/.bin/forever start -l `pwd`/app.log -a node_modules/.bin/nci
 
 ```
 
-see `app.log` it should ends with something similar to:
+see `app.log` it should end with something similar to:
 
 ```
 
