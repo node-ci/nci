@@ -273,6 +273,79 @@ _(['local']).each(function(type) {
 			}
 		);
 
+
+		describe(
+			'with error produced by project step',
+			function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					executor = createExecutor(makeExecutorParams({
+						project: {
+							steps: [
+								{type: 'shell', cmd: 'echo1'}
+							]
+						}
+					}));
+				});
+
+				var executorError;
+
+				it('should run with error', function(done) {
+					executor.run(function(err) {
+						expect(err).an(Error);
+						expect(err.message).match(/Error.*echo1/);
+						executorError = err;
+
+						done();
+					});
+				});
+
+				it(
+					'should produce error with `projectStepError`',
+					function() {
+						expect(executorError).have.key('projectStepError');
+						expect(executorError.projectStepError).equal(true);
+					}
+				);
+			}
+		);
+
+		describe(
+			'with error produced by internal call',
+			function() {
+				before(clearWorkspace);
+
+				it('instance should be created without errors', function() {
+					var executorParams = makeExecutorParams();
+					executorParams.project.scm.type = 'non-existing type';
+
+					executor = createExecutor(executorParams);
+				});
+
+				var executorError;
+
+				it('should run with error', function(done) {
+					executor.run(function(err) {
+						expect(err).an(Error);
+						expect(err.message).eql(
+							'unknown scm type: non-existing type'
+						);
+						executorError = err;
+
+						done();
+					});
+				});
+
+				it(
+					'should produce error without `projectStepError`',
+					function() {
+						expect(executorError).not.have.key('projectStepError');
+					}
+				);
+			}
+		);
+
 	});
 
 });
