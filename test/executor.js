@@ -312,13 +312,16 @@ _(['local']).each(function(type) {
 		);
 
 		describe(
-			'with error produced by internal call',
+			'with error produced by scm (internal call)',
 			function() {
 				before(clearWorkspace);
 
 				it('instance should be created without errors', function() {
 					var executorParams = makeExecutorParams();
-					executorParams.project.scm.type = 'non-existing type';
+					executorParams.project.scm = _({}).extend(
+						executorParams.project.scm,
+						{type: 'non-existing type'}
+					);
 
 					executor = createExecutor(executorParams);
 				});
