@@ -104,6 +104,50 @@ describe('Distributor main', function() {
 		});
 	});
 
+	describe('with success project but with internal error', function() {
+		var updateBuildSpy;
+
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor({
+				projects: projects,
+				nodes: [{type: 'local', maxExecutorsCount: 1}],
+				executorRun: sinon.stub().callsArgWithAsync(
+					0,
+					new Error('Some internal error')
+				)
+			});
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+		});
+
+		it('should run without errors', function(done) {
+			distributor.run({projectName: 'project1'}, function(err) {
+				expect(err).not.ok();
+				done();
+			});
+		});
+
+		it('build should be queued', function() {
+			var changes = updateBuildSpy.getCall(0).args[1];
+			expect(changes.status).equal('queued');
+		});
+
+		it('build should be in-progress', function() {
+			var changes = updateBuildSpy.getCall(1).args[1];
+			expect(changes.status).equal('in-progress');
+		});
+
+		it('build should be fail', function() {
+			var changes = updateBuildSpy.getCall(2).args[1];
+			expect(changes.status).equal('error');
+			expect(changes.completed).equal(true);
+			expect(changes.error.message).equal('Some internal error');
+		});
+
+		it('update build called 3 times in total', function() {
+			expect(updateBuildSpy.callCount).equal(3);
+		});
+	});
+
 	describe('with success project and buildParams.scmRev', function() {
 		var project1 = {
 				name: 'project1',
