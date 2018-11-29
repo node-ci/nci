@@ -69,7 +69,7 @@ describe('Distributor main', function() {
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
 				executorRun: sinon.stub().callsArgWithAsync(
 					0,
-					new Error('Some error')
+					helpers.createExecutorProjectStepError({message: 'Some error'})
 				)
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
