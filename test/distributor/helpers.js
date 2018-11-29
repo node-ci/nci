@@ -66,3 +66,10 @@ exports.createDistributor = function(params) {
 
 	return distributor;
 };
+
+exports.createExecutorProjectStepError = function(params) {
+	var error = new Error(params.message);
+	error.projectStepError = true;
+
+	return error;
+};
