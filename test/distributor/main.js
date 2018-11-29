@@ -104,7 +104,7 @@ describe('Distributor main', function() {
 		});
 	});
 
-	describe('with success project but with internal error', function() {
+	describe('with success project and internal error', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
