@@ -13,7 +13,8 @@ During build inside steps following environment variable are available:
 * NCI_NODE_NAME - name of the node that is building project
 * NCI_ENV_NAME - name of the environment within which project is building
 
-On the project level custom environment variables could be specified e.g.:
+Custom environment variables could be specified on node (at server config)
+and project levels using "envVars" object, e.g. for the project:
 
 ```json
     "envVars": {
