@@ -12,6 +12,7 @@ by plugins.
 [![Npm version](https://img.shields.io/npm/v/nci.svg)](https://www.npmjs.org/package/nci)
 [![Build Status](https://travis-ci.org/node-ci/nci.svg?branch=master)](https://travis-ci.org/node-ci/nci)
 [![Coverage Status](https://coveralls.io/repos/github/node-ci/nci/badge.svg?branch=master&v3)](https://coveralls.io/github/node-ci/nci?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/npm/nci/badge.svg)](https://snyk.io/test/npm/nci)
 
 
 ## Features
