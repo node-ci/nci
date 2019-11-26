@@ -39,9 +39,6 @@ pretty shell scripting (strings without quotes, nice multiline strings, etc)
 [sample project config](./docs/sample-project-config.yaml))
 
 
-Online demo is [here](http://classicui-ncidemo.rhcloud.com/).
-
-
 ## System requirements
 
 * unix-like operating system, not tested on windows
