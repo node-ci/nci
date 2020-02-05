@@ -35,11 +35,11 @@ describe('Distributor main', function() {
 			});
 		});
 
-		it('should not return error as run result', function() {
+		it('should not return error at run result', function() {
 			expect(runErr).not.ok();
 		});
 
-		it('should return build as run result', function() {
+		it('should return build at run result', function() {
 			expect(runResult).ok();
 			expect(runResult).only.have.keys('build');
 			expect(runResult.build).an('object');
@@ -95,13 +95,34 @@ describe('Distributor main', function() {
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function(done) {
-			distributor.run({projectName: 'project1'}, function(err) {
-				expect(err).not.ok();
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			var afterRunAndCopmplete = _.after(2, done);
+			distributor.run({projectName: 'project1'}, function(err, result) {
+				runErr = err;
+				runResult = result;
+				afterRunAndCopmplete();
 			});
 			distributor.on('buildCompleted', function() {
-				done();
+				afterRunAndCopmplete();
 			});
+		});
+
+		it('should not return error at run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return build at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('build');
+			expect(runResult.build).an('object');
+			expect(runResult.build).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate',
+				'error'
+			);
+			expect(runResult.build.error).an('object');
+			expect(runResult.build.error).have.keys('message');
 		});
 
 		it('build should be queued', function() {
@@ -126,7 +147,49 @@ describe('Distributor main', function() {
 		});
 	});
 
-	describe('with success project and internal error', function() {
+	describe('with success project and internal error at run', function() {
+		var updateBuildSpy;
+
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor({
+				projects: projects,
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
+			});
+			updateBuildSpy = sinon.stub().callsArgWithAsync(
+				2,
+				new Error('Some internal error at update build')
+			);
+			distributor._updateBuild = updateBuildSpy;
+		});
+
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			distributor.run({projectName: 'project1'}, function(err, result) {
+				runErr = err;
+				runResult = result;
+				done();
+			});
+		});
+
+		it('should return error at run result', function() {
+			expect(runErr).ok();
+			expect(runErr).an(Error);
+			expect(runErr.message).equal('Some internal error at update build');
+		});
+
+		it('should not return build at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('build');
+			expect(runResult.build).not.ok();
+		});
+
+		it('update build called once', function() {
+			expect(updateBuildSpy.callCount).equal(1);
+		});
+	});
+
+	describe('with success project and internal error at executor', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
@@ -135,19 +198,36 @@ describe('Distributor main', function() {
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
 				executorRun: sinon.stub().callsArgWithAsync(
 					0,
-					new Error('Some internal error')
+					new Error('Some internal error at executor')
 				)
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function(done) {
-			distributor.run({projectName: 'project1'}, function(err) {
-				expect(err).not.ok();
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			var afterRunAndCopmplete = _.after(2, done);
+			distributor.run({projectName: 'project1'}, function(err, result) {
+				runErr = err;
+				runResult = result;
 			});
 			distributor.on('buildCompleted', function() {
 				done();
 			});
+		});
+
+		it('should not return error at run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return build at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('build');
+			expect(runResult.build).an('object');
+			expect(runResult.build).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
 		});
 
 		it('build should be queued', function() {
@@ -164,7 +244,7 @@ describe('Distributor main', function() {
 			var changes = updateBuildSpy.getCall(2).args[1];
 			expect(changes.status).equal('error');
 			expect(changes.completed).equal(true);
-			expect(changes.error.message).equal('Some internal error');
+			expect(changes.error.message).equal('Some internal error at executor');
 		});
 
 		it('update build called 3 times in total', function() {
@@ -191,10 +271,7 @@ describe('Distributor main', function() {
 			});
 
 			it('should run without errors', function(done) {
-				distributor.run({projectName: 'project1'}, function(err) {
-					expect(err).not.ok();
-					done();
-				});
+				distributor.run({projectName: 'project1'}, done);
 			});
 
 			it('build should be queued with proper params', function() {
@@ -217,12 +294,7 @@ describe('Distributor main', function() {
 				distributor.run({
 					projectName: 'project1',
 					buildParams: buildParams
-				}, function(err) {
-					expect(err).not.ok();
-				});
-				distributor.on('buildCompleted', function() {
-					done();
-				});
+				}, done);
 			});
 
 			it('build should be queued with proper params', function() {
