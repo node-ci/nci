@@ -4,7 +4,7 @@
   Facade entity which accumulates operations with currently running and
   db saved builds.
 
-## BuildsCollection.create(params:Object, [callback(err)]:Function)
+## BuildsCollection.create(params:Object, [callback(err,:Function)
 
   Create build by running given project.
   - `params.projectName` - project to build
@@ -18,6 +18,9 @@
   - `params.buildParams` - params for current build (override project config)
   - `params.buildParams.scmRev` - target revision for the build
   - `params.env` - target environment for the build
+  
+  `result` will contain created `build` with at least following fields:
+  id, status, completed, project, params, createDate.
 
 ## BuildsCollection.cancel(params:Object, [callback(err)]:Function)
 
