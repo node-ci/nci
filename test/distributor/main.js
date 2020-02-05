@@ -147,7 +147,50 @@ describe('Distributor main', function() {
 		});
 	});
 
-	describe('with success project and internal error at run', function() {
+	describe('with success project and internal error at run next', function() {
+		var updateBuildSpy;
+
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor({
+				projects: projects,
+				nodes: [{type: 'local', maxExecutorsCount: 1}]
+			});
+			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
+			distributor._runNext = sinon.stub().callsArgWithAsync(
+				0,
+				new Error('Some internal error at run next')
+			);
+		});
+
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			distributor.run({projectName: 'project1'}, function(err, result) {
+				runErr = err;
+				runResult = result;
+				done();
+			});
+		});
+
+		it('should not return error at run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return build at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('build');
+			expect(runResult.build).an('object');
+			expect(runResult.build).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
+		});
+
+		it('update build called once', function() {
+			expect(updateBuildSpy.callCount).equal(1);
+		});
+	});
+
+	describe('with success project and internal error at update build', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
@@ -188,7 +231,6 @@ describe('Distributor main', function() {
 			expect(updateBuildSpy.callCount).equal(1);
 		});
 	});
-
 	describe('with success project and internal error at executor', function() {
 		var updateBuildSpy;
 
