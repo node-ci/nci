@@ -15,7 +15,12 @@ node_js:
 
 script:
   - npm run lint
-  - npm run coverage
+  - >
+    nodeVersionMajor=`node -e "console.log(process.versions.node.split('.')[0])"`;
 
-after_script:
-  - cat ./coverage/lcov.info | coveralls
+    if [ $nodeVersionMajor -eq 12 ]; then
+      npm run coverage;
+      coveralls < coverage/lcov.info;
+    else
+      echo "*** Do not make coverage reports for non node.js 12 builds ($nodeVersionMajor)";
+    fi;
