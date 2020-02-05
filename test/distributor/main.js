@@ -21,11 +21,31 @@ describe('Distributor main', function() {
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function(done) {
-			distributor.run({projectName: 'project1'}, function(err) {
-				expect(err).not.ok();
-				done();
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			var afterRunAndCopmplete = _.after(2, done);
+			distributor.run({projectName: 'project1'}, function(err, result) {
+				runErr = err;
+				runResult = result;
+				afterRunAndCopmplete();
 			});
+			distributor.on('buildCompleted', function() {
+				afterRunAndCopmplete();
+			});
+		});
+
+		it('should not return error as run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return build as run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('build');
+			expect(runResult.build).an('object');
+			expect(runResult.build).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
 		});
 
 		it('build should be queued', function() {
@@ -78,6 +98,8 @@ describe('Distributor main', function() {
 		it('should run without errors', function(done) {
 			distributor.run({projectName: 'project1'}, function(err) {
 				expect(err).not.ok();
+			});
+			distributor.on('buildCompleted', function() {
 				done();
 			});
 		});
@@ -122,6 +144,8 @@ describe('Distributor main', function() {
 		it('should run without errors', function(done) {
 			distributor.run({projectName: 'project1'}, function(err) {
 				expect(err).not.ok();
+			});
+			distributor.on('buildCompleted', function() {
 				done();
 			});
 		});
@@ -195,6 +219,8 @@ describe('Distributor main', function() {
 					buildParams: buildParams
 				}, function(err) {
 					expect(err).not.ok();
+				});
+				distributor.on('buildCompleted', function() {
 					done();
 				});
 			});

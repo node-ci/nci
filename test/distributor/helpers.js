@@ -29,10 +29,21 @@ var createProjects = function(configs) {
 	return projects;
 };
 
+var lastBuildId = 0;
+
 exports.createDistributor = function(params) {
 	var mockNode = _(params).has('mockNode') ? params.mockNode : true;
 
-	var distributorParams = _(params).clone();
+	var distributorParams = _({
+		saveBuild: function(build, callback) {
+			// generate ids for the builds like *down backend does
+			if (!build.id) {
+				lastBuildId++;
+				build.id = lastBuildId;
+			}
+			callback(null, build);
+		}
+	}).extend(params);
 
 	if (mockNode) {
 		var executorRun = (
