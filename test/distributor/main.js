@@ -147,7 +147,7 @@ describe('Distributor main', function() {
 		});
 	});
 
-	describe('with success project and internal error at run next', function() {
+	describe('with success project and error at run next', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
@@ -158,7 +158,7 @@ describe('Distributor main', function() {
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 			distributor._runNext = sinon.stub().callsArgWithAsync(
 				0,
-				new Error('Some internal error at run next')
+				new Error('Some error at run next')
 			);
 		});
 
@@ -190,7 +190,7 @@ describe('Distributor main', function() {
 		});
 	});
 
-	describe('with success project and internal error at update build', function() {
+	describe('with success project and error at update build', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
@@ -200,7 +200,7 @@ describe('Distributor main', function() {
 			});
 			updateBuildSpy = sinon.stub().callsArgWithAsync(
 				2,
-				new Error('Some internal error at update build')
+				new Error('Some error at update build')
 			);
 			distributor._updateBuild = updateBuildSpy;
 		});
@@ -218,7 +218,7 @@ describe('Distributor main', function() {
 		it('should return error at run result', function() {
 			expect(runErr).ok();
 			expect(runErr).an(Error);
-			expect(runErr.message).equal('Some internal error at update build');
+			expect(runErr.message).equal('Some error at update build');
 		});
 
 		it('should not return build at run result', function() {
@@ -231,7 +231,7 @@ describe('Distributor main', function() {
 			expect(updateBuildSpy.callCount).equal(1);
 		});
 	});
-	describe('with success project and internal error at executor', function() {
+	describe('with success project and error at executor', function() {
 		var updateBuildSpy;
 
 		it('instance should be created without errors', function() {
@@ -240,7 +240,7 @@ describe('Distributor main', function() {
 				nodes: [{type: 'local', maxExecutorsCount: 1}],
 				executorRun: sinon.stub().callsArgWithAsync(
 					0,
-					new Error('Some internal error at executor')
+					new Error('Some error at executor')
 				)
 			});
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
@@ -286,7 +286,7 @@ describe('Distributor main', function() {
 			var changes = updateBuildSpy.getCall(2).args[1];
 			expect(changes.status).equal('error');
 			expect(changes.completed).equal(true);
-			expect(changes.error.message).equal('Some internal error at executor');
+			expect(changes.error.message).equal('Some error at executor');
 		});
 
 		it('update build called 3 times in total', function() {
