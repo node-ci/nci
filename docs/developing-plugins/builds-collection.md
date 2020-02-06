@@ -4,7 +4,7 @@
   Facade entity which accumulates operations with currently running and
   db saved builds.
 
-## BuildsCollection.create(params:Object, [callback(err,:Function)
+## BuildsCollection.create(params:Object, [callback(err,result)]:Function)
 
   Create build by running given project.
   - `params.projectName` - project to build
