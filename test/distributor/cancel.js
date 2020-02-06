@@ -157,4 +157,22 @@ describe('Distributor cancel method', function() {
 		});
 	});
 
+	describe('when try to cancel unexisted build and no callback', function() {
+		it('instance should be created without errors', function() {
+			distributor = helpers.createDistributor(distributorParams);
+
+			var originalRunNext = distributor._runNext;
+			distributor._runNext = function() {
+				distributor.cancel({buildId: 2});
+				originalRunNext.apply(distributor, arguments);
+			};
+		});
+
+		it('should run without errors', function(done) {
+			distributor.run({projectName: 'project1'}, function(err) {
+				expect(err).not.ok();
+				done();
+			});
+		});
+	});
 });
