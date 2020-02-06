@@ -19,8 +19,9 @@
   - `params.buildParams.scmRev` - target revision for the build
   - `params.env` - target environment for the build
   
-  `result` will contain created `build` with at least following fields:
-  id, status, completed, project, params, createDate.
+  `result` will contain created `builds` if they were created, every build
+  with at least following fields: id, status, completed, project, params,
+  createDate.
 
 ## BuildsCollection.cancel(params:Object, [callback(err)]:Function)
 

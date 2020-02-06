@@ -39,11 +39,13 @@ describe('Distributor main', function() {
 			expect(runErr).not.ok();
 		});
 
-		it('should return build at run result', function() {
+		it('should return builds at run result', function() {
 			expect(runResult).ok();
-			expect(runResult).only.have.keys('build');
-			expect(runResult.build).an('object');
-			expect(runResult.build).have.keys(
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(1);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
 				'id', 'status', 'completed', 'project', 'params', 'createDate'
 			);
 		});
@@ -113,16 +115,18 @@ describe('Distributor main', function() {
 			expect(runErr).not.ok();
 		});
 
-		it('should return build at run result', function() {
+		it('should return builds at run result', function() {
 			expect(runResult).ok();
-			expect(runResult).only.have.keys('build');
-			expect(runResult.build).an('object');
-			expect(runResult.build).have.keys(
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(1);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
 				'id', 'status', 'completed', 'project', 'params', 'createDate',
 				'error'
 			);
-			expect(runResult.build.error).an('object');
-			expect(runResult.build.error).have.keys('message');
+			expect(runResult.builds[0].error).an('object');
+			expect(runResult.builds[0].error).have.keys('message');
 		});
 
 		it('build should be queued', function() {
@@ -176,11 +180,13 @@ describe('Distributor main', function() {
 			expect(runErr).not.ok();
 		});
 
-		it('should return build at run result', function() {
+		it('should return builds at run result', function() {
 			expect(runResult).ok();
-			expect(runResult).only.have.keys('build');
-			expect(runResult.build).an('object');
-			expect(runResult.build).have.keys(
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(1);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
 				'id', 'status', 'completed', 'project', 'params', 'createDate'
 			);
 		});
@@ -221,16 +227,16 @@ describe('Distributor main', function() {
 			expect(runErr.message).equal('Some error at update build');
 		});
 
-		it('should not return build at run result', function() {
+		it('should not return builds at run result', function() {
 			expect(runResult).ok();
-			expect(runResult).only.have.keys('build');
-			expect(runResult.build).not.ok();
+			expect(runResult).eql({});
 		});
 
 		it('update build called once', function() {
 			expect(updateBuildSpy.callCount).equal(1);
 		});
 	});
+
 	describe('with success project and error at executor', function() {
 		var updateBuildSpy;
 
@@ -263,11 +269,13 @@ describe('Distributor main', function() {
 			expect(runErr).not.ok();
 		});
 
-		it('should return build at run result', function() {
+		it('should return builds at run result', function() {
 			expect(runResult).ok();
-			expect(runResult).only.have.keys('build');
-			expect(runResult.build).an('object');
-			expect(runResult.build).have.keys(
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(1);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
 				'id', 'status', 'completed', 'project', 'params', 'createDate'
 			);
 		});
