@@ -22,11 +22,33 @@ describe('Distributor usage with environments', function() {
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function(done) {
-			distributor.run({projectName: project.name}, function(err) {
-				expect(err).not.ok();
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			distributor.run({projectName: project.name}, function(err, result) {
+				runErr = err;
+				runResult = result;
 				done();
 			});
+		});
+
+		it('should not return error at run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return builds at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(2);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
+			expect(runResult.builds[1]).an('object');
+			expect(runResult.builds[1]).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
 		});
 
 		it('run should be called with original params', function() {
@@ -93,11 +115,32 @@ describe('Distributor usage with environments', function() {
 			updateBuildSpy = sinon.spy(distributor, '_updateBuild');
 		});
 
-		it('should run without errors', function(done) {
-			distributor.run({projectName: project.name, env: env}, function(err) {
-				expect(err).not.ok();
-				done();
-			});
+		var runErr, runResult;
+
+		it('should run without sync errors', function(done) {
+			distributor.run(
+				{projectName: project.name, env: env},
+				function(err, result) {
+					runErr = err;
+					runResult = result;
+					done();
+				}
+			);
+		});
+
+		it('should not return error at run result', function() {
+			expect(runErr).not.ok();
+		});
+
+		it('should return builds at run result', function() {
+			expect(runResult).ok();
+			expect(runResult).only.have.keys('builds');
+			expect(runResult.builds).an('array');
+			expect(runResult.builds).length(1);
+			expect(runResult.builds[0]).an('object');
+			expect(runResult.builds[0]).have.keys(
+				'id', 'status', 'completed', 'project', 'params', 'createDate'
+			);
 		});
 
 		it('run called only once', function() {

@@ -141,6 +141,22 @@ describe('Distributor blocking with max 2 executors count', function() {
 		itRunSequentialProjects();
 	});
 
+	describe(
+		'should run project1, then 2, when 2 blocked by 1 using regexp',
+		function() {
+			before(function() {
+				projects = [{
+					name: 'project1'
+				}, {
+					name: 'project2',
+					blockedBy: [/project1/]
+				}];
+			});
+
+			itRunSequentialProjects();
+		}
+	);
+
 	describe('should run project1, then 2, when 1 blocks 2', function() {
 		before(function() {
 			projects = [{
@@ -153,6 +169,22 @@ describe('Distributor blocking with max 2 executors count', function() {
 
 		itRunSequentialProjects();
 	});
+
+	describe(
+		'should run project1, then 2, when 1 blocks 2 using regexp',
+		function() {
+			before(function() {
+				projects = [{
+					name: 'project1',
+					blocks: [/project2/]
+				}, {
+					name: 'project2'
+				}];
+			});
+
+			itRunSequentialProjects();
+		}
+	);
 
 	describe(
 		'should run 1, 2 in parallel, when 1 block 3, 2 blocked by 3',

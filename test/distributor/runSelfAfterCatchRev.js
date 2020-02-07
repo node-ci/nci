@@ -2,6 +2,7 @@
 
 var expect = require('expect.js'),
 	sinon = require('sinon'),
+	_ = require('underscore'),
 	helpers = require('../helpers'),
 	distributorHelpers = require('./helpers'),
 	path = require('path');
@@ -51,7 +52,10 @@ describe('Distributor run self after catch', function() {
 			distributor.run({projectName: 'project1'}, function(err, build) {
 				if (err) return done(err);
 				expect(build.error).not.ok();
-				done();
+			});
+			var doneAfter = _.after(4, done);
+			distributor.on('buildCompleted', function() {
+				doneAfter();
 			});
 		});
 
@@ -64,15 +68,14 @@ describe('Distributor run self after catch', function() {
 			});
 		};
 
-		itRunWithRev(0, 0);
-		itRunWithRev(1, 1);
-		itRunWithRev(2, 2);
-
 		var revsCount = helpers.repository.revs.length;
 		it('should call run ' + revsCount + ' times in total', function() {
 			expect(executorRunSpy.callCount).equal(revsCount);
 		});
 
+		itRunWithRev(0, 0);
+		itRunWithRev(1, 1);
+		itRunWithRev(2, 2);
 	});
 
 });
