@@ -62,7 +62,7 @@
     "expect.js": "0.3.1",
     "jshint": "2.12.0",
     "memdown": "1.1.0",
-    "mocha": "3.1.1",
+    "mocha": "3.5.3",
     "nci-projects-reloader": "2.0.0",
     "nci-rest-api-server": "1.0.4",
     "nci-static-server": "2.0.0",
