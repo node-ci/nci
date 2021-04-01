@@ -21,6 +21,10 @@ script:
     if [ $nodeVersionMajor -ge 14 ]; then
       npm run coverage;
       coveralls < coverage/lcov.info;
+    elif [ $nodeVersionMajor -ge 10 ]; then
+      npm test;
     else
+      # install old mocha for old nodejs versions
+      npm install mocha@3;
       npm test;
     fi;
