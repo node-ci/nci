@@ -18,9 +18,9 @@ script:
   - >
     nodeVersionMajor=`node -e "console.log(process.versions.node.split('.')[0])"`;
 
-    if [ $nodeVersionMajor -eq 14 ]; then
+    if [ $nodeVersionMajor -ge 14 ]; then
       npm run coverage;
       coveralls < coverage/lcov.info;
     else
-      echo "*** Do not make coverage reports for non node.js 14 builds ($nodeVersionMajor)";
+      npm test;
     fi;
