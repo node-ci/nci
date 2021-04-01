@@ -69,7 +69,7 @@
     "nci-yaml-reader": "1.2.2",
     "nodemon": "1.11.0",
     "nrun": "0.1.4",
-    "nyc": "8.3.1",
+    "nyc": "15.1.0",
     "proxyquire": "1.7.4",
     "sinon": "1.14.1"
   }
