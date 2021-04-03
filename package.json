@@ -11,10 +11,7 @@
     "coverage": "nyc nrun test",
     "dev": "nodemon app.js",
     "sync": "npm prune && npm install",
-    "lint": "jshint ./",
-    "docProjectsCollection": "dox --api --skipSingleStar < lib/project.js | sed '/^  - \\[ProjectsCollection/ d' > docs/developing-plugins/projects-collection.md",
-    "docBuildsCollection": "dox --api --skipSingleStar < lib/build.js | sed '/^  - \\[BuildsCollection/ d' > docs/developing-plugins/builds-collection.md",
-    "doc": "nrun docProjectsCollection && nrun docBuildsCollection"
+    "lint": "jshint ./"
   },
   "repository": {
     "type": "git",
@@ -58,7 +55,6 @@
   },
   "devDependencies": {
     "coveralls": "3.1.0",
-    "dox": "0.8.0",
     "expect.js": "0.3.1",
     "jshint": "2.12.0",
     "memdown": "1.1.0",
