@@ -1,63 +1,68 @@
 'use strict';
 
-var Steppy = require('twostep').Steppy,
-	_ = require('underscore'),
-	validateConfig = require('../lib/validateConfig'),
+var fs = require('fs'),
 	path = require('path'),
-	fs = require('fs');
+	_ = require('underscore'),
+	Steppy = require('twostep').Steppy,
+	validateConfig = require('../lib/validateConfig');
 
+var preload = function(app, preloadPath) {
+	var preloadConfig = null;
+
+	try {
+		preloadConfig = app.require(preloadPath);
+	} catch(error) {
+		if (error.code !== 'MODULE_NOT_FOUND') throw error;
+	}
+
+	// register preloadable plugins
+	if (preloadConfig) {
+		app.loadPlugins(preloadConfig.plugins);
+	}
+};
 
 module.exports = function(params, callback) {
-	var config = {};
 	var configDefaults = {
 		notify: {},
-		http: {host: '127.0.0.1', port: 3000, url: 'http://127.0.0.1:3000'}
+		http: {
+			host: '127.0.0.1',
+			port: 3000,
+			url: 'http://127.0.0.1:3000'
+		}
 	};
+
+	var paths = {};
 
 	Steppy(
 		function() {
-			config.paths = {};
+			// path to cwd
+			paths.cwd = process.cwd();
 
-			// path to root dir (with projects, builds etc)
-			config.paths.data = path.join(process.cwd(), 'data');
+			// path to data dir (with projects, builds etc)
+			paths.data = path.join(paths.cwd, 'data');
 
-			config.paths.preload = path.join(
-				config.paths.data,
-				'preload.json'
-			);
+			// path to preload.json file with preloadable plugins list
+			paths.preload = path.join(paths.data, 'preload.json');
 
-			var preloadExistsCallback = this.slot();
-			fs.exists(config.paths.preload, function(isExists) {
-				preloadExistsCallback(null, isExists);
-			});
+			// preload plugins first coz reader plugins could be loaded
+			preload(params.app, paths.preload);
+
+			// read config with reader help
+			params.reader.load(paths.data, 'config', this.slot());
 		},
-		function(err, isPreloadExists) {
-			// preload plugins before read config file coz maybe reader
-			// plugins will be loaded
-			if (isPreloadExists) {
-				var preload = require(config.paths.preload);
-				// register preloaded plugins
-				_(preload.plugins).each(function(plugin) {
-					params.logger.log('Preload plugin "%s"', plugin);
-					require(plugin).register(params.app);
-				});
-			}
-
-			params.reader.load(config.paths.data, 'config', this.slot());
+		function(err, config) {
+			validateConfig(config, this.slot());
 		},
-		function(err, fileConfig) {
-			validateConfig(fileConfig, this.slot());
-		},
-		function(err, fileConfig) {
-			_(config).defaults(fileConfig);
-			_(config).defaults(configDefaults);
-
+		function(err, config) {
 			// try to read db and projects paths from config or set default values
-			_(config.paths).defaults(fileConfig.paths, {
-				db: path.join(config.paths.data, 'db'),
-				projects: path.join(config.paths.data, 'projects'),
-				archivedProjects: path.join(config.paths.data, 'archivedProjects')
+			_(paths).defaults(config.paths, {
+				db: path.join(paths.data, 'db'),
+				projects: path.join(paths.data, 'projects'),
+				archivedProjects: path.join(paths.data, 'archivedProjects')
 			});
+
+			// combine all parts together
+			config = _({paths: paths}).defaults(config, configDefaults);
 
 			this.pass(config);
 		},
