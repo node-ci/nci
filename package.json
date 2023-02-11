@@ -63,7 +63,7 @@
     "nci-rest-api-server": "2.0.1",
     "nci-static-server": "2.0.1",
     "nci-yaml-reader": "1.2.3",
-    "nodemon": "2.0.7",
+    "nodemon": "2.0.20",
     "nrun": "0.1.4",
     "nyc": "15.1.0",
     "proxyquire": "1.7.4",
